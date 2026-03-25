@@ -6,6 +6,14 @@
 #include "util.h"
 #include "render.h"
 
+/************************************************/
+/*         Local Function Declaration           */
+/************************************************/
+
+ALLEGRO_EVENT_QUEUE* init_queue(void);
+ALLEGRO_TIMER* init_timer(ALLEGRO_EVENT_QUEUE* queue);
+void init_keyboard(ALLEGRO_EVENT_QUEUE* queue);
+
 int frames;
 
 // --- keyboard ---
@@ -37,24 +45,18 @@ void keyboard_update(ALLEGRO_EVENT* event)
     }
 }
 
-// --- main ---
-
+/************************************************/
+/*          Global Function Definition          */
+/************************************************/
 int main()
 {
     must_init(al_init(), "allegro");
-    must_init(al_install_keyboard(), "keyboard");
 
-    ALLEGRO_TIMER* timer = al_create_timer(1.0 / 60.0);
-    must_init(timer, "timer");
+    ALLEGRO_EVENT_QUEUE* queue = init_queue();
+    ALLEGRO_TIMER* timer = init_timer(queue);
 
-    ALLEGRO_EVENT_QUEUE* queue = al_create_event_queue();
-    must_init(queue, "queue");
-
-    render_init(queue);
-    keyboard_init();
-
-    al_register_event_source(queue, al_get_keyboard_event_source());
-    al_register_event_source(queue, al_get_timer_event_source(timer));
+    init_keyboard(queue);
+    init_render(queue);
 
     frames = 0;
 
@@ -70,14 +72,7 @@ int main()
         switch (event.type)
         {
         case ALLEGRO_EVENT_TIMER:
-#if (ENABLE_RENDER == 1)
-            fx_update();
-            shots_update();
-            stars_update();
-            ship_update();
-            aliens_update();
-            hud_update();
-#endif
+            render_update();
 
             if (key[ALLEGRO_KEY_ESCAPE])
                 done = true;
@@ -96,34 +91,44 @@ int main()
 
         keyboard_update(&event);
 
-#if (ENABLE_RENDER == 1)
         if (redraw && al_is_event_queue_empty(queue))
         {
-            disp_pre_draw();
-            al_clear_to_color(al_map_rgb(0, 0, 0));
-
-            stars_draw();
-            aliens_draw();
-            shots_draw();
-            fx_draw();
-            ship_draw();
-
-            hud_draw();
-
-            disp_post_draw();
+            render_draw();
             redraw = false;
         }
-#endif
     }
 
-#if (ENABLE_RENDER == 1)
-    sprites_deinit();
-    hud_deinit();
-#endif
-    render_deinit();
+    deinit_render();
 
     al_destroy_timer(timer);
     al_destroy_event_queue(queue);
 
     return 0;
+}
+
+/************************************************/
+/*          Local Function Definition           */
+/************************************************/
+static ALLEGRO_EVENT_QUEUE* init_queue(void)
+{
+    ALLEGRO_EVENT_QUEUE* queue = al_create_event_queue();
+    must_init(queue, "queue");
+
+    return queue;
+}
+
+static ALLEGRO_TIMER* init_timer(ALLEGRO_EVENT_QUEUE* queue)
+{
+    ALLEGRO_TIMER* timer = al_create_timer(1.0 / 60.0);
+    must_init(timer, "timer");
+    al_register_event_source(queue, al_get_timer_event_source(timer));
+
+    return timer;
+}
+
+static void init_keyboard(ALLEGRO_EVENT_QUEUE* queue)
+{
+    must_init(al_install_keyboard(), "keyboard");
+    keyboard_init();
+    al_register_event_source(queue, al_get_keyboard_event_source());
 }

@@ -8,10 +8,13 @@
 #define DISP_W (BUFFER_W * DISP_SCALE)
 #define DISP_H (BUFFER_H * DISP_SCALE)
 
-void render_init(ALLEGRO_EVENT_QUEUE* queue);
+void init_render(ALLEGRO_EVENT_QUEUE* queue);
+void render_update(void);
+void render_draw(void);
+void deinit_render();
+
 void disp_pre_draw();
 void disp_post_draw();
-void render_deinit();
 
 void test_disp(float x, float y);
 void test_scale_disp(float sx, float sy, float sw, float sh,

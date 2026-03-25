@@ -10,6 +10,36 @@
 ALLEGRO_DISPLAY* disp;
 ALLEGRO_BITMAP* buffer;
 
+void render_update(void)
+{
+#if 0
+    fx_update();
+    shots_update();
+    stars_update();
+    ship_update();
+    aliens_update();
+    hud_update();
+#endif
+}
+
+void render_draw(void)
+{
+#if 0
+    disp_pre_draw();
+    al_clear_to_color(al_map_rgb(0, 0, 0));
+
+    stars_draw();
+    aliens_draw();
+    shots_draw();
+    fx_draw();
+    ship_draw();
+
+    hud_draw();
+
+    disp_post_draw();
+#endif
+}
+
 void disp_init()
 {
     // TEST
@@ -211,7 +241,7 @@ void hud_draw()
 }
 #endif
 
-void render_init(ALLEGRO_EVENT_QUEUE* queue)
+void init_render(ALLEGRO_EVENT_QUEUE* queue)
 {
     disp_init();
 
@@ -228,7 +258,7 @@ void render_init(ALLEGRO_EVENT_QUEUE* queue)
 #endif
 }
 
-void render_deinit()
+void deinit_render()
 {
     disp_deinit();
 }
