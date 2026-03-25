@@ -1,11 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <allegro5/allegro5.h>
-#include <allegro5/allegro_font.h>
-#include <allegro5/allegro_primitives.h>
-#include <allegro5/allegro_audio.h>
-#include <allegro5/allegro_acodec.h>
-#include <allegro5/allegro_image.h>
 
 #include "bugglebuggle.h"
 #include "util.h"
@@ -54,12 +49,12 @@ int main()
 
     ALLEGRO_EVENT_QUEUE* queue = al_create_event_queue();
     must_init(queue, "queue");
+
     render_init(queue);
+    keyboard_init();
 
     al_register_event_source(queue, al_get_keyboard_event_source());
     al_register_event_source(queue, al_get_timer_event_source(timer));
-
-    keyboard_init();
 
     frames = 0;
 
@@ -68,7 +63,6 @@ int main()
     ALLEGRO_EVENT event;
 
     al_start_timer(timer);
-
     while (1)
     {
         al_wait_for_event(queue, &event);
@@ -127,6 +121,7 @@ int main()
     hud_deinit();
 #endif
     render_deinit();
+
     al_destroy_timer(timer);
     al_destroy_event_queue(queue);
 
