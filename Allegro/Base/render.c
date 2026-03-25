@@ -227,3 +227,8 @@ void render_init(ALLEGRO_EVENT_QUEUE* queue)
     fx_init();
 #endif
 }
+
+void render_deinit()
+{
+    disp_deinit();
+}

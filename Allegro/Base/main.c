@@ -46,8 +46,6 @@ void keyboard_update(ALLEGRO_EVENT* event)
 
 int main()
 {
-    printf("START\n");
-
     must_init(al_init(), "allegro");
     must_init(al_install_keyboard(), "keyboard");
 
@@ -56,9 +54,7 @@ int main()
 
     ALLEGRO_EVENT_QUEUE* queue = al_create_event_queue();
     must_init(queue, "queue");
-#if (ENABLE_RENDER == 1)
     render_init(queue);
-#endif
 
     al_register_event_source(queue, al_get_keyboard_event_source());
     al_register_event_source(queue, al_get_timer_event_source(timer));
@@ -124,19 +120,15 @@ int main()
             redraw = false;
         }
 #endif
-    printf("LOOP\n");
     }
 
 #if (ENABLE_RENDER == 1)
     sprites_deinit();
     hud_deinit();
-    audio_deinit();
-    disp_deinit();
 #endif
+    render_deinit();
     al_destroy_timer(timer);
     al_destroy_event_queue(queue);
-
-    printf("END!\n");
 
     return 0;
 }
