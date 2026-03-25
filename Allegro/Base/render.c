@@ -6,7 +6,7 @@
 
 #include "util.h"
 #include "render.h"
-gjj;
+
 ALLEGRO_DISPLAY* disp;
 ALLEGRO_BITMAP* buffer;
 
