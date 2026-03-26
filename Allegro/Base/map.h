@@ -9,7 +9,6 @@ typedef struct {
 } stTILE;
 
 stTILE* stTILE_init(stTILE *tile, stPOSITION *pos);
-void map_init_stage1();
-stTILE* map_get_stage_tile(int stage);
+void map_init_stage1(stTILE* map);
 
 #endif

@@ -7,16 +7,21 @@
 #include "util.h"
 #include "render.h"
 #include "map.h"
+#include "game_manager.h"
 /************************************************/
 /*         Local Structure Declaration          */
 /************************************************/
 
 #define MAP 28
+#define CHARACTER 48
 typedef struct SPRITES
 {
     ALLEGRO_BITMAP* _sheet;
 
-    ALLEGRO_BITMAP* map;
+    ALLEGRO_BITMAP* map; 
+    ALLEGRO_BITMAP* character;
+
+
 } SPRITES;
 
 /************************************************/
@@ -26,8 +31,9 @@ void disp_pre_draw();
 void disp_post_draw();
 
 void test_disp(float x, float y);
-void test_scale_disp(float dx, float dy, float dw, float dh, int flags);
-void map_render();
+void map_scale_disp(float dx, float dy, float dw, float dh, int flags);
+void character_scale_disp(float dx, float dy, float dw, float dh, int flags);
+void map_render(stTILE* tiles, size_t tile_len);
 static ALLEGRO_DISPLAY* disp;
 static ALLEGRO_BITMAP* buffer;
 
@@ -51,8 +57,8 @@ void render_draw(void)
 {
     disp_pre_draw();
     al_clear_to_color(al_map_rgb(0, 0, 0));
-    //test_scale_disp(20, 20, 14, 14, 0);
-    map_render(map_get_stage_tile(1), 10);
+    character_scale_disp(20, 20, 14, 14, 0);
+    map_render(GAME_MANAGER_GetMap(), 400);
 #if 0
 
     stars_draw();
@@ -107,8 +113,12 @@ static void test_disp(float x, float y)
     al_draw_bitmap(sprites.map, x, y, 0);
 }
 
-static void test_scale_disp(float dx, float dy, float dw, float dh, int flags) {
+static void map_scale_disp(float dx, float dy, float dw, float dh, int flags) {
     al_draw_scaled_bitmap(sprites.map,0,0, MAP, MAP, dx, dy, dw, dh, flags);
+}
+
+static void character_scale_disp(float dx, float dy, float dw, float dh, int flags) {
+    al_draw_scaled_bitmap(sprites.character, 0, 0, CHARACTER, CHARACTER, dx, dy, dw, dh, flags);
 }
 
 ALLEGRO_BITMAP* sprite_grab(int x, int y, int w, int h)
@@ -120,16 +130,19 @@ ALLEGRO_BITMAP* sprite_grab(int x, int y, int w, int h)
 
 void sprites_init()
 {
-    sprites._sheet = al_load_bitmap("Resource/map.png");
+    sprites._sheet = al_load_bitmap("Resource/Bubble_Bobble_sprite.png");
     must_init(sprites._sheet, "spritesheet");
 
-    sprites.map = sprite_grab(8, 9, MAP, MAP);
+    sprites.map = sprite_grab(8, 1578, MAP, MAP);
+
+    sprites.character = sprite_grab(12, 16, CHARACTER, CHARACTER);
 }
 
 
 void sprites_deinit()
 {
     al_destroy_bitmap(sprites.map);
+    al_destroy_bitmap(sprites.character);
 
     al_destroy_bitmap(sprites._sheet);
 }
@@ -139,7 +152,7 @@ static void map_render(stTILE  *tiles, size_t tile_len) {
     for (int i = 0; i < tile_len; ++i) {
         float x = tiles[i].obj.phy.pos.x;
         float y = tiles[i].obj.phy.pos.y;
-        test_scale_disp(x, y, 14, 14, 0);
+        map_scale_disp(x, y, 14, 14, 0);
     }
 }
 #if 0
