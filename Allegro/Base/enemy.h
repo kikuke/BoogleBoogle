@@ -37,11 +37,22 @@ typedef struct {
 //│   ├── stCOLLISION coll
 //│   │   ├── bool is_static
 //│   │   ├── eOBJ_TAG tag
+//│   │   │   ├── eOBJ_TAG_TILE(0)
+//│   │   │   ├── eOBJ_TAG_PLAYER(1)
+//│   │   │   ├── eOBJ_TAG_ENEMY(2)
+//│   │   │   ├── eOBJ_TAG_BUBBLE(3)
+//│   │   │   ├── eOBJ_TAG_ENEMY_ATTACK(4)
+//│   │   │   └── eOBJ_TAG_MAX(5)
 //│   │   └── stCOLLISION_BOX box
 //│   │       ├── double height
 //│   │       └── double width
 //│   ├── stPHYSICS phy
 //│   │   ├── eDIR_LOOK look
+//│   │   │   ├── eDIR_LOOK_RIGHT(0)
+//│   │   │   ├── eDIR_LOOK_LEFT(1)
+//│   │   │   ├── eDIR_LOOK_UP(2)
+//│   │   │   ├── eDIR_LOOK_DOWN(3)
+//│   │   │   └── eDIR_LOOK_MAX(4)
 //│   │   ├── stPOSITION pos
 //│   │   │   ├── double x
 //│   │   │   └── double y
@@ -51,7 +62,17 @@ typedef struct {
 //│   └── stRENDER rend
 //│       └── int is_active
 //├── eENEMY_STATE state
+//│   ├── eENEMY_STATE_IDLE(0)
+//│   ├── eENEMY_STATE_MOVE(1)
+//│   ├── eENEMY_STATE_JUMP(2)
+//│   ├── eENEMY_STATE_ATTACK(3)
+//│   ├── eENEMY_STATE_TRAPPED(4)
+//│   ├── eENEMY_STATE_DEAD(5)
+//│   └── eENEMY_STATE_MAX(6)
 //├── eENEMY_TYPE type
+//│   ├── eENEMY_TYPE_BASIC(0)
+//│   ├── eENEMY_TYPE_THROW(1)
+//│   └── eENEMY_TYPE_BOSS(2)
 //├── int state_timer
 //├── int proximity_to_player
 //├── int trapped_timer
