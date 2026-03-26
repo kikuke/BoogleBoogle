@@ -1,5 +1,7 @@
 #ifndef __PLAYER_H__
 #define __PLAYER_H__
+
+#include "bugglebuggle.h"
 #include "object.h"
 
 typedef enum {
@@ -19,5 +21,12 @@ typedef struct {
 	int lives;
 	int invincible_timer;
 } stPLAYER;
+
+void init_player(void);
+void player_update(int allegro_key, unsigned char flag);
+
+#if (DEBUG_PLAYER == 1)
+void player_debug(void);
+#endif
 
 #endif

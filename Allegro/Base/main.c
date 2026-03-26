@@ -4,6 +4,7 @@
 
 #include "bugglebuggle.h"
 #include "util.h"
+#include "player.h"
 #include "render.h"
 
 /************************************************/
@@ -14,6 +15,7 @@ ALLEGRO_EVENT_QUEUE* init_queue(void);
 ALLEGRO_TIMER* init_timer(ALLEGRO_EVENT_QUEUE* queue);
 void init_keyboard(ALLEGRO_EVENT_QUEUE* queue);
 void keyboard_update(ALLEGRO_EVENT* event);
+void send_input(void);
 
 /************************************************/
 /*         Local Variable Declaration           */
@@ -36,6 +38,7 @@ int main()
 
     init_keyboard(queue);
     init_render(queue);
+    init_player();
 
     frames = 0;
 
@@ -51,7 +54,12 @@ int main()
         switch (event.type)
         {
         case ALLEGRO_EVENT_TIMER:
+            send_input();
             render_update();
+
+#if (DEBUG_PLAYER == 1)
+            player_debug();
+#endif
 
             if (key[ALLEGRO_KEY_ESCAPE])
                 done = true;
@@ -127,5 +135,26 @@ static void keyboard_update(ALLEGRO_EVENT* event)
     case ALLEGRO_EVENT_KEY_UP:
         key[event->keyboard.keycode] &= ~KEY_DOWN;
         break;
+    }
+}
+
+static void send_input(void)
+{
+    for (int iKeyInput = 0; iKeyInput < ALLEGRO_KEY_MAX; ++iKeyInput) {
+        switch (iKeyInput) {
+        case ALLEGRO_KEY_LEFT:
+        case ALLEGRO_KEY_RIGHT:
+        case ALLEGRO_KEY_UP:
+        case ALLEGRO_KEY_DOWN:
+        case ALLEGRO_KEY_SPACE:
+            {
+                if (key[iKeyInput]) {
+                    player_update(iKeyInput, key[iKeyInput]);
+                }
+            }
+            break;
+        default :
+            break;
+        }
     }
 }

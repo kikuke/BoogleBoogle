@@ -3,4 +3,6 @@
 
 #define ENABLE_RENDER	(0)
 
+#define DEBUG_PLAYER	(1)
+
 #endif

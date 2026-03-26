@@ -13,7 +13,7 @@
 
 static stPLAYER player;
 
-void player_init()
+void init_player(void)
 {
     player = (stPLAYER){
         .obj.coll.box.height = 2, // fix it later
@@ -78,3 +78,11 @@ void player_draw()
 
     //al_draw_bitmap(sprites.ship, ship.x, ship.y, 0);
 }
+
+#if (DEBUG_PLAYER == 1)
+void player_debug(void)
+{
+    printf("\n[PLAYER DATA]\n\tSTAT: { %d }\n\tPOS: { X: %f, Y: %f }\n",
+        player.state, player.obj.phy.pos.x, player.obj.phy.pos.y);
+}
+#endif
