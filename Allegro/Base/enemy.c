@@ -2,26 +2,25 @@
 #if 01
 
 #include "enemy.h"
+#include "player.h"
+#include "bugglebuggle.h"
+#include "game_manager.c"
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
 #include <math.h>
-#define MAX_ENEMIES (6)
-#define REMAIN_TRAPPED_TIMER (30)
-
-static stENEMY enemy_pool[MAX_ENEMIES];			// for make
-static bool enemy_active[MAX_ENEMIES];          // manage active mob to arr
 
 void Enemy_InitializePool(void) { 
-    for (int i = 0; i < MAX_ENEMIES; i++) {
-        enemy_active[i] = false; // make sure defalt setting to 0
+    for (int i = 0; i < CONFIG_OBJECT_ENEMY_MAX; i++) {
+        (enemy+i)->obj.rend.is_active = 0; // make sure defalt setting to 0
     }
 }
 
 int Enemy_GetActiveCount(void) {
     int count = 0;
-    for (int i = 0; i < MAX_ENEMIES; i++) {
-        if (enemy_active[i]) {
+    for (int i = 0; i < CONFIG_OBJECT_ENEMY_MAX; i++) {
+        if ((enemy + i)->obj.rend.is_active) {
             count++;
         }
     }
@@ -30,18 +29,34 @@ int Enemy_GetActiveCount(void) {
 
 // input type: BASIC, THROW, BOSS  &  x, y
 stENEMY* Enemy_Create(eENEMY_TYPE type, int x, int y) {
-    for (int i = 0; i < MAX_ENEMIES; i++) {
-        if (!enemy_active[i]) {
-            stENEMY* enemy = &enemy_pool[i];
-            enemy_active[i] = true;
+    for (int i = 0; i < CONFIG_OBJECT_ENEMY_MAX; i++) {
+        if (!(enemy + i)->obj.rend.is_active) {
+            stENEMY* enemy = &enemy[i];
+            (enemy + i)->obj.rend.is_active = true;
 
             enemy->obj.phy.pos.x = x;
             enemy->obj.phy.pos.y = y;
-            enemy->obj.phy.speed.x = 0;
-            enemy->obj.phy.speed.y = 0;
-
-            enemy->obj.coll.box.width = 1;          // temp val. it should change later
-            enemy->obj.coll.box.height = 1;         // temp val. it should change later
+            switch (type) {
+            case eENEMY_TYPE_BASIC:
+                enemy->obj.phy.speed.x = 0;
+                enemy->obj.phy.speed.y = 0;
+                enemy->obj.coll.box.width = 1;          // temp val. it should change later
+                enemy->obj.coll.box.height = 1;         // temp val. it should change later
+                enemy->trapped_timer = 30;
+            case eENEMY_TYPE_THROW:
+                enemy->obj.phy.speed.x = 0;
+                enemy->obj.phy.speed.y = 0;
+                enemy->obj.coll.box.width = 1;          // temp val. it should change later
+                enemy->obj.coll.box.height = 1;         // temp val. it should change later
+                enemy->trapped_timer = 30;
+            case eENEMY_TYPE_BOSS:
+                enemy->obj.phy.speed.x = 0;
+                enemy->obj.phy.speed.y = 0;
+                enemy->obj.coll.box.width = 1;          // temp val. it should change later
+                enemy->obj.coll.box.height = 1;         // temp val. it should change later
+                enemy->trapped_timer = 1;
+            }
+            
             enemy->obj.coll.tag = eOBJ_TAG_ENEMY;
             enemy->obj.coll.is_static = false;
 
@@ -51,8 +66,6 @@ stENEMY* Enemy_Create(eENEMY_TYPE type, int x, int y) {
             enemy->type = type;
 
             enemy->state_timer = 0;
-            enemy->trapped_timer = REMAIN_TRAPPED_TIMER;
-            //enemy->proximity_to_player = 0;
             enemy->is_angry = false;
 
             return enemy;
@@ -60,11 +73,6 @@ stENEMY* Enemy_Create(eENEMY_TYPE type, int x, int y) {
     }
     return NULL; // fail to create. no room for pool
 }
-
-//// useless. if u wanna delete -> Enemy_UpdateDead!
-//void Enemy_Destroy(stENEMY* enemy) {
-//    if (enemy == NULL) return;
-//}
 
 void Enemy_ChangeState(stENEMY* enemy, eENEMY_STATE newState) {
     if (enemy == NULL) return;
@@ -105,8 +113,8 @@ void Enemy_UpdateTrapped(stENEMY* enemy) {
 // it doesn't reset all things. only active arr state
 void Enemy_UpdateDead(stENEMY* enemy) {
     if (enemy == NULL) return;
-    int index = enemy - enemy_pool;
-    enemy_active[index] = false;
+    int index = enemy - enemy;
+    (enemy + index)->obj.rend.is_active = false;
     //enemy->state = eENEMY_STATE_DEAD;
 }
 
@@ -142,9 +150,9 @@ void Enemy_Update(stENEMY* enemy) {
 }
 
 void Enemy_UpdateAll(void) {
-    for (int i = 0; i < MAX_ENEMIES; i++) {
-        if (enemy_active[i]) {
-            stENEMY* enemy = &enemy_pool[i];
+    for (int i = 0; i < CONFIG_OBJECT_ENEMY_MAX; i++) {
+        if ((enemy + i)->obj.rend.is_active) {
+            stENEMY* enemy = &enemy[i];
             Enemy_Update(enemy);
         }
     }
@@ -173,9 +181,23 @@ void Enemy_Throw(stENEMY* enemy) {
 }
 
 // maintain Throw to arr? or linked list?
-stENEMY* Throw_Create(int x, int y) {
+stOBJECT* Throw_Create(int x, int y) {
+    stOBJECT* throw;
+    throw->rend.is_active = true;
 
+    throw->phy.pos.x = x;
+    throw->phy.pos.y = y;
+    throw->phy.speed.x = 0;
+    throw->phy.speed.y = 0;
+    throw->coll.box.width = 1;          // temp val. it should change later
+    throw->coll.box.height = 1;         // temp val. it should change later
+    
+    throw->coll.tag = eOBJ_TAG_ENEMY_ATTACK;
+    throw->coll.is_static = false;
 
+    throw->rend.is_active = 1;
+
+    return throw;
 }
 
 void Throw_Update(stTHROW* throw) {
@@ -184,21 +206,19 @@ void Throw_Update(stTHROW* throw) {
 }
 
 
-// refrence
-//void SkelFollowPlayer(Enemy* skel, Player* p, float speed) {
-//    float dx = p->x - skel->x;
-//    float dy = p->y - skel->y;
-//    float dist = sqrt(dx * dx + dy * dy);
-//    if (dist > 0) {
-//        skel->vx = (dx / dist) * speed;
-//        skel->vy = (dy / dist) * speed;
-//    }
-//    skel->x += skel->vx;
-//    skel->y += skel->vy;
-//}
-void Throw_MoveTowardPlayer(stTHROW* throw) {
+void Throw_MoveTowardPlayer(stOBJECT* throw, stPLAYER* player) {
 
+    float dx = player->obj.phy.pos.x - throw->phy.pos.x;
+    float dy = player->obj.phy.pos.y - throw->phy.pos.y;
+    float dist = sqrt(dx * dx + dy * dy);
+    int speed = 10;
 
+    if (dist > 0) {
+        throw->phy.speed.x = (dx / dist) * speed;
+        throw->phy.speed.y = (dy / dist) * speed;
+    }
+    throw->phy.pos.x += throw->phy.speed.x;
+    throw->phy.pos.y += throw->phy.speed.y;
 }
 
 void Throw_Destroy(stTHROW* throw) {

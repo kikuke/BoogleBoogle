@@ -47,6 +47,8 @@ typedef struct {
 //│   │       ├── double height
 //│   │       └── double width
 //│   ├── stPHYSICS phy
+//│   │   ├── bool is_move
+//│   │   ├── bool is_gravity
 //│   │   ├── eDIR_LOOK look
 //│   │   │   ├── eDIR_LOOK_RIGHT(0)
 //│   │   │   ├── eDIR_LOOK_LEFT(1)
