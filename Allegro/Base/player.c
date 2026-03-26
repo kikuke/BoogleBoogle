@@ -40,10 +40,11 @@ void init_player()
 
 void player_update(int allegro_key, unsigned char flag)
 {
+#if 0
     if (player.lives < 0)
         player.state = ePLAYER_STATE_DEAD;
         return;
-
+#endif
     player.state = ePLAYER_STATE_IDLE;
 
     if (allegro_key == ALLEGRO_KEY_LEFT) {
