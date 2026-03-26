@@ -28,7 +28,7 @@ typedef struct {
 	int state_timer;		//
 	int proximity_to_player;// just in case
 	int trapped_timer;		// count down of bubble escape
-	bool is_angry;			// angry state
+	bool is_angry = false;			// angry state
 	
 } stENEMY;
 
