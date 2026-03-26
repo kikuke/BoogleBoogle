@@ -4,6 +4,7 @@
 stTILE* stTILE_init(stTILE* tile, stPOSITION* pos)
 {
 	tile->obj = (stOBJECT){
+		.is_active = true,
 		.coll = (stCOLLISION){
 			.is_static = true,
 			.tag = eOBJ_TAG_TILE,

@@ -45,6 +45,11 @@ void GAME_MANAGER_CheckCollision(void)
 	}
 }
 
+void GAME_MANAGER_UpdatePhysics(void)
+{
+	player_update_frame(&player[0]);
+}
+
 stTILE* GAME_MANAGER_GetMap(void)
 {
 	return map;

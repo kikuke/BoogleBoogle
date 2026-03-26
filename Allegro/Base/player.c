@@ -8,7 +8,7 @@
 
 // fix it later
 const double GRAVITY = 1.0;
-const double JUMP_SPEED = 15.0;
+const double JUMP_SPEED = 8.0;
 const double PALYER_SPEED = 3.0;
 
 void init_player(stPLAYER* player)
@@ -44,35 +44,26 @@ void player_update_input(stPLAYER* player, int allegro_key, unsigned char flag)
 	}
 	return;
 #endif
-	if (flag & KEY_DOWN) {
-		if (allegro_key == ALLEGRO_KEY_LEFT) {
-			player->obj.phy.speed.x = -PALYER_SPEED;
-			player->obj.phy.look = eDIR_LOOK_LEFT;
-			if (!player->is_jump) player->state = ePLAYER_STATE_MOVE;
-		}
-		else if (allegro_key == ALLEGRO_KEY_RIGHT) {
-			player->obj.phy.speed.x = PALYER_SPEED;
-			player->obj.phy.look = eDIR_LOOK_RIGHT;
-			if (!player->is_jump) player->state = ePLAYER_STATE_MOVE;
-		}
+	if (allegro_key == ALLEGRO_KEY_LEFT) {
+		player->obj.phy.speed.x = -PALYER_SPEED;
+		player->obj.phy.look = eDIR_LOOK_LEFT;
+		if (!player->is_jump) player->state = ePLAYER_STATE_MOVE;
 	}
-	else {
-		if (allegro_key == ALLEGRO_KEY_LEFT || allegro_key == ALLEGRO_KEY_RIGHT) {
-			player->obj.phy.speed.x = 0;
-		}
+	else if (allegro_key == ALLEGRO_KEY_RIGHT) {
+		player->obj.phy.speed.x = PALYER_SPEED;
+		player->obj.phy.look = eDIR_LOOK_RIGHT;
+		if (!player->is_jump) player->state = ePLAYER_STATE_MOVE;
 	}
 
-	if (flag & KEY_SEEN) {
-		if (allegro_key == ALLEGRO_KEY_UP && !player->is_jump) {
-			player->obj.phy.speed.y = -JUMP_SPEED;
-			player->is_jump = true;
-			player->state = ePLAYER_STATE_JUMP;
-		}
-		if (allegro_key == ALLEGRO_KEY_SPACE && !player->shot_timer) {
-			if (bubble_add(player)) {
-				player->shot_timer = 60;
-				player->state = ePLAYER_STATE_ATTACK;
-			}
+	if (allegro_key == ALLEGRO_KEY_UP && !player->is_jump) {
+		player->obj.phy.speed.y = -JUMP_SPEED;
+		player->is_jump = true;
+		player->state = ePLAYER_STATE_JUMP;
+	}
+	if (allegro_key == ALLEGRO_KEY_SPACE && !player->shot_timer) {
+		if (bubble_add(player)) {
+			player->shot_timer = 60;
+			player->state = ePLAYER_STATE_ATTACK;
 		}
 	}
 
@@ -98,13 +89,19 @@ void player_update_frame(stPLAYER* player) {
 	}
 
 	if (player->obj.phy.is_gravity) {
-		player->obj.phy.speed.y += GRAVITY;
+		//player->obj.phy.speed.y += GRAVITY;
 	}
+
 	player->obj.phy.pos.x += player->obj.phy.speed.x;
 	player->obj.phy.pos.y += player->obj.phy.speed.y;
 
 	if (player->shot_timer > 0) player->shot_timer--;
 	if (player->invincible_timer > 0) player->invincible_timer--;
+
+	if (player->state == ePLAYER_STATE_JUMP) {
+		player->obj.phy.speed.y += 1;
+	}
+	player->obj.phy.speed.x = 0;
 }
 
 #if (DEBUG_PLAYER == 1)

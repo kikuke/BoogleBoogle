@@ -12,6 +12,7 @@ stOBJECT* GAME_MANAGER_GetEnemyAttacks(void);
 void GAME_MANAGER_InitStageObject(eGAME_STAGE stage, stOBJECT *obj);
 stTILE* GAME_MANAGER_GetMap(void);
 void GAME_MANAGER_CheckCollision(void);
+void GAME_MANAGER_UpdatePhysics(void);
 
 void GAME_MANAGER_SetStage(eGAME_STAGE stage);
 
