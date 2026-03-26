@@ -41,7 +41,7 @@ int main()
 
     init_keyboard(queue);
     init_render(queue);
-    init_player();
+    init_player(GAME_MANAGER_GetPlayer(0));
 
     frames = 0;
 
@@ -64,7 +64,7 @@ int main()
             render_update();
 
 #if (DEBUG_PLAYER == 1)
-            player_debug();
+            player_debug(GAME_MANAGER_GetPlayer(0));
 #endif
 
             if (key[ALLEGRO_KEY_ESCAPE])
@@ -155,7 +155,7 @@ static void send_input(void)
         case ALLEGRO_KEY_SPACE:
             {
                 if (key[iKeyInput]) {
-                    player_update(iKeyInput, key[iKeyInput]);
+                    player_update(GAME_MANAGER_GetPlayer(0), iKeyInput, key[iKeyInput]);
                 }
             }
             break;

@@ -1,4 +1,5 @@
 #include <allegro5/allegro5.h>
+
 #include "player.h"
 #include "bubble.h"
 #include "collision.h"

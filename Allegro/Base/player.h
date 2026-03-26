@@ -23,11 +23,11 @@ typedef struct {
 	bool is_jump;
 } stPLAYER;
 
-void init_player(void);
-void player_update(int allegro_key, unsigned char flag);
+void init_player(stPLAYER* player);
+void player_update(stPLAYER* player, int allegro_key, unsigned char flag);
 
 #if (DEBUG_PLAYER == 1)
-void player_debug(void);
+void player_debug(stPLAYER* player);
 #endif
 
 #endif
