@@ -20,8 +20,6 @@ void send_input(void);
 /************************************************/
 /*         Local Variable Declaration           */
 /************************************************/
-#define KEY_SEEN     1
-#define KEY_DOWN     2
 static int frames;
 
 static unsigned char key[ALLEGRO_KEY_MAX];
