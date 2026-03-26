@@ -4,8 +4,6 @@
 #include "bugglebuggle.h"
 #include "object.h"
 
-#define MAP_TILE_SIZE		(2.0f)
-
 typedef struct {
 	stOBJECT obj;
 } stTILE;

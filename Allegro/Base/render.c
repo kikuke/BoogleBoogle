@@ -61,12 +61,9 @@ void render_draw(void)
     disp_pre_draw();
     al_clear_to_color(al_map_rgb(0, 0, 0));
 
-    printf("\n[PLAYER DATA]\n\tSTAT: { %d }\n\tPOS: { X: %f, Y: %f }\n",
-        player->state, player->obj.phy.pos.x, player->obj.phy.pos.y);
-
     map_render(GAME_MANAGER_GetMap(), CONFIG_MAP_Y_MAX * CONFIG_MAP_X_MAX);
     character_scale_disp(player->obj.phy.pos.x, player->obj.phy.pos.y, SCALE, SCALE, 0);
-    //character_scale_disp(5, 1, SCALE, SCALE, 0);
+    //character_scale_disp(10, 220, SCALE, SCALE, 0);
 #if 0
 
     stars_draw();
