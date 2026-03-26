@@ -2,7 +2,7 @@
 
 //void OneWay_Jump(stPLAYER* player, double plat_y) {
 //
-//    // °¡·Î ¹üÀ§
+//    // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 //    double player_left = player->obj.phy.pos.x;
 //    double player_right = player->obj.phy.pos.x + player->obj.coll.box.width;
 //    double plat_right = plat_x + plat_w;
