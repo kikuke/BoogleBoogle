@@ -1,6 +1,7 @@
 #include "game_manager.h"
 #include "player.h"
 #include "enemy.h"
+#include "collision.h"
 
 /* Collision */
 stPLAYER player[CONFIG_OBJECT_PLAYER_MAX];
@@ -23,7 +24,7 @@ void GAME_MANAGER_InitStageObject(eGAME_STAGE stage, stOBJECT *obj)
 
 void GAME_MANAGER_CheckCollision(void)
 {
-
+	Collide_Player_Wall(&player[0].obj, &map[1].obj);
 }
 
 stTILE* GAME_MANAGER_GetMap(void)

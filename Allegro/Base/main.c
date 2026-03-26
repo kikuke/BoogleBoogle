@@ -155,7 +155,7 @@ static void send_input(void)
         case ALLEGRO_KEY_SPACE:
             {
                 if (key[iKeyInput]) {
-                    player_update(GAME_MANAGER_GetPlayer(0), iKeyInput, key[iKeyInput]);
+                    player_update_input(GAME_MANAGER_GetPlayer(0), iKeyInput, key[iKeyInput]);
                 }
             }
             break;

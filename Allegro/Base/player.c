@@ -33,17 +33,24 @@ void init_player(stPLAYER* player)
 		.lives = 3,
 		.invincible_timer = 0,
 		.is_jump = false,
+		.obj.is_active = true,
+		.obj.phy.is_gravity = true,
+		.obj.phy.is_move = false,
 		//.obj.rend,
 	};
 }
 
-void player_update(stPLAYER* player, int allegro_key, unsigned char flag)
+void player_update_input(stPLAYER* player, int allegro_key, unsigned char flag)
 {
 #if 0
-	if (player.lives < 0)
+	if (player.lives < 0) {
 		player.state = ePLAYER_STATE_DEAD;
+		player->obj.is_active = false;
+	}
+		
 	return;
 #endif
+
 	player->state = ePLAYER_STATE_IDLE;
 
 	if (flag & KEY_DOWN) {
@@ -58,46 +65,55 @@ void player_update(stPLAYER* player, int allegro_key, unsigned char flag)
 			player->obj.phy.look = eDIR_LOOK_RIGHT;
 		}
 	}
-
 	else {
-		player->obj.phy.speed.x = 0;
+		if (allegro_key == ALLEGRO_KEY_LEFT || allegro_key == ALLEGRO_KEY_RIGHT) {
+			player->obj.phy.speed.x = 0;
+		}
 	}
+	if (flag & KEY_SEEN) {
+		if (allegro_key == ALLEGRO_KEY_UP && !player->is_jump) {
+			player->obj.phy.speed.y = -JUMP_SPEED;
+			player->is_jump = true;
+			player->state = ePLAYER_STATE_JUMP;
+		}
 
-	player->obj.phy.speed.y += GRAVITY;
-
-	if (allegro_key == ALLEGRO_KEY_UP && !player->is_jump) {
-		player->obj.phy.speed.y = -JUMP_SPEED; // jump func logic
-		player->is_jump = true;
-		player->state = ePLAYER_STATE_JUMP;
+		if (allegro_key == ALLEGRO_KEY_SPACE && !player->shot_timer)
+		{
+			if (bubble_add(player)) {
+				player->shot_timer = 60; // 1s delay
+				player->state = ePLAYER_STATE_ATTACK;
+			}
+		}
 	}
 	//if (allegro_key == ALLEGRO_KEY_DOWN)      downward jump implemented later
 	//    ship.y += SHIP_SPEED;  
 
+	if (player->shot_timer)
+		player->shot_timer--;
 
+	player->obj.phy.speed.y += GRAVITY;
 	player->obj.phy.pos.x += player->obj.phy.speed.x;
 	player->obj.phy.pos.y += player->obj.phy.speed.y;
 
 	if (player->invincible_timer)
 		player->invincible_timer--;
-	else
-	{
-		//if (shots_collide(true, ship.x, ship.y, SHIP_W, SHIP_H)) // enemy or projectile collide
-		//{
-		//    player.lives--;
-		//    player.invincible_timer = 180;
-		//}
-	}
 
-	if (player->shot_timer)
-		player->shot_timer--;
-	else if (allegro_key == ALLEGRO_KEY_SPACE)
-	{
-		if (bubble_add(player)) {
-			player->shot_timer = 60; // 1s delay
-			player->state = ePLAYER_STATE_ATTACK;
-		}
-	}
+
+	//else
+	//{
+	//	//if (shots_collide(true, ship.x, ship.y, SHIP_W, SHIP_H)) // enemy or projectile collide
+	//	//{
+	//	//    player.lives--;
+	//	//    player.invincible_timer = 180;
+	//	//}
+	//}
 }
+
+void player_update_frame(stPLAYER* player) {
+
+}
+
+
 //void player_draw()
 //{
 //    if (player.lives < 0)
