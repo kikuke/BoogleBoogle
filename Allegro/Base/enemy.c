@@ -35,7 +35,7 @@ stENEMY* Enemy_Create(eENEMY_TYPE type, int x, int y) {
         if (!new_enemy->obj.rend.is_active) {
             stOBJECT* obj = &new_enemy->obj;
             stPHYSICS* phy = &obj->phy;
-            stCOLL* coll = &obj->coll;
+            stCOLLISION* coll = &obj->coll;
 
             obj->rend.is_active = true;
             phy->pos.x = x;
@@ -191,8 +191,8 @@ stOBJECT* Throw_Create(int x, int y) {
     stOBJECT* obj;
 
     stPHYSICS* phy = &obj->phy;
-    stCOLL* coll = &obj->coll;
-    stREND* rend = &obj->rend;
+    stCOLLISION* coll = &obj->coll;
+    stRENDER* rend = &obj->rend;
 
     rend->is_active = true;
 
