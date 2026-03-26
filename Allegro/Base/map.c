@@ -3,13 +3,6 @@
 #define MAP_1_SIZE_Y  (20)
 #define MAP_1_SIZE_X  (23)
 
-stTILE stage1[400];
-stTILE* map_get_stage_tile(int stage)
-{
-	return stage1;
-}
-
-
 stTILE* stTILE_init(stTILE* tile, stPOSITION* pos)
 {
 	tile->obj = (stOBJECT){
@@ -27,7 +20,7 @@ stTILE* stTILE_init(stTILE* tile, stPOSITION* pos)
 	return tile;
 }
 
-void map_init_stage1() {
+void map_init_stage1(stTILE *map) {
 
 	int stage[MAP_1_SIZE_Y][MAP_1_SIZE_X] =
 	{ 
@@ -57,7 +50,7 @@ void map_init_stage1() {
 			if (stage[i][j] != 0) {
 				pos.x = j * 14;
 				pos.y = i * 14;
-				stTILE_init(&stage1[(i * MAP_1_SIZE_X) + j], &pos);
+				stTILE_init(&map[(i * MAP_1_SIZE_X) + j], &pos);
 			}
 		}
 	}
