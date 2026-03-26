@@ -137,6 +137,8 @@
     <ClCompile Include="ingame_manager.c" />
     <ClCompile Include="main.c" />
     <ClCompile Include="map.c" />
+    <ClCompile Include="map_1.c" />
+    <ClCompile Include="map_2.c" />
     <ClCompile Include="physics.c" />
     <ClCompile Include="player.c" />
     <ClCompile Include="render.c" />
@@ -150,6 +152,8 @@
     <ClInclude Include="game_manager.h" />
     <ClInclude Include="ingame_manager.h" />
     <ClInclude Include="map.h" />
+    <ClInclude Include="map_1.h" />
+    <ClInclude Include="map_2.h" />
     <ClInclude Include="object.h" />
     <ClInclude Include="physics.h" />
     <ClInclude Include="player.h" />

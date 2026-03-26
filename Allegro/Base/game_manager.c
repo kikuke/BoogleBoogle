@@ -1,6 +1,8 @@
 #include "game_manager.h"
 #include "player.h"
 #include "enemy.h"
+#include "map_1.h"
+#include "map_2.h"
 
 /* Collision */
 stPLAYER player[CONFIG_OBJECT_PLAYER_MAX];
@@ -36,9 +38,13 @@ void GAME_MANAGER_SetStage(eGAME_STAGE stage)
 	switch (stage) {
 	case eGAME_STAGE_1:
 		{
-			map_init_stage1(GAME_MANAGER_GetMap());
+			map_init_stage(GAME_MANAGER_GetMap(), MAP_1_GetData());
 		}
 		break;
+	case eGAME_STAGE_2:
+		{
+		map_init_stage(GAME_MANAGER_GetMap(), MAP_2_GetData());
+		}
 	default:
 		break;
 	}

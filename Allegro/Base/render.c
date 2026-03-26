@@ -13,6 +13,7 @@
 /************************************************/
 
 #define MAP 28
+#define SCALE 10
 #define CHARACTER 48
 typedef struct SPRITES
 {
@@ -57,8 +58,8 @@ void render_draw(void)
 {
     disp_pre_draw();
     al_clear_to_color(al_map_rgb(0, 0, 0));
-    character_scale_disp(20, 20, 14, 14, 0);
-    map_render(GAME_MANAGER_GetMap(), 400);
+    character_scale_disp(10, 10, SCALE, SCALE, 0);
+    map_render(GAME_MANAGER_GetMap(), CONFIG_MAP_Y_MAX * CONFIG_MAP_X_MAX);
 #if 0
 
     stars_draw();
@@ -152,7 +153,7 @@ static void map_render(stTILE  *tiles, size_t tile_len) {
     for (int i = 0; i < tile_len; ++i) {
         float x = tiles[i].obj.phy.pos.x;
         float y = tiles[i].obj.phy.pos.y;
-        map_scale_disp(x, y, 14, 14, 0);
+        map_scale_disp(x, y, SCALE, SCALE, 0);
     }
 }
 #if 0

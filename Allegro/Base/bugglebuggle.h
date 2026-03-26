@@ -2,8 +2,8 @@
 #define __BUGGLEBUGGLE_H__
 
 /* MAP Config */
-#define CONFIG_MAP_X_MAX				(30)
-#define CONFIG_MAP_Y_MAX				(20)
+#define CONFIG_MAP_X_MAX				(36)
+#define CONFIG_MAP_Y_MAX				(24)
 
 /* Object Config */
 #define CONFIG_OBJECT_PLAYER_MAX		(1)
