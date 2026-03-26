@@ -7,6 +7,7 @@
 #include "util.h"
 #include "render.h"
 #include "map.h"
+#include "game_manager.h"
 /************************************************/
 /*         Local Structure Declaration          */
 /************************************************/
@@ -32,7 +33,7 @@ void disp_post_draw();
 void test_disp(float x, float y);
 void map_scale_disp(float dx, float dy, float dw, float dh, int flags);
 void character_scale_disp(float dx, float dy, float dw, float dh, int flags);
-void map_render();
+void map_render(stTILE* tiles, size_t tile_len);
 static ALLEGRO_DISPLAY* disp;
 static ALLEGRO_BITMAP* buffer;
 
@@ -57,7 +58,7 @@ void render_draw(void)
     disp_pre_draw();
     al_clear_to_color(al_map_rgb(0, 0, 0));
     character_scale_disp(20, 20, 14, 14, 0);
-    map_render(map_get_stage_tile(1), 400);
+    map_render(GAME_MANAGER_GetMap(), 400);
 #if 0
 
     stars_draw();
