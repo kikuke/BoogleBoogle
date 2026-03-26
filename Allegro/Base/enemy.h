@@ -28,7 +28,7 @@ typedef struct {
 	int state_timer;		//
 	int proximity_to_player;// just in case
 	int trapped_timer;		// count down of bubble escape
-	bool is_angry = false;			// angry state
+	bool is_angry;			// angry state
 	
 } stENEMY;
 
@@ -121,26 +121,26 @@ void Enemy_ChangeState(stENEMY* enemy, eENEMY_STATE newState);	// change the ene
 eENEMY_STATE Enemy_GetCurrentState(stENEMY* enemy);				// get the enemy's current state
 
 // update state
-void Enemy_UpdateIdle(stENEMY* enemy);							// update IDLE state
-void Enemy_UpdateMove(stENEMY* enemy);							// update MOVE state
-void Enemy_UpdateJump(stENEMY* enemy);							// update JUMP state
-void Enemy_UpdateAttack(stENEMY* enemy);						// update ATTACK state
-void Enemy_UpdateTrapped(stENEMY* enemy);						// update TRAPPED (bubble) state
+void Enemy_UpdateIdle(stENEMY* enemy);							// 0 update IDLE state
+void Enemy_UpdateMove(stENEMY* enemy);							// 0 update MOVE state
+void Enemy_UpdateJump(stENEMY* enemy);							// 0 update JUMP state
+void Enemy_UpdateAttack(stENEMY* enemy);						// 0 update ATTACK state
+void Enemy_UpdateTrapped(stENEMY* enemy);						// 0 update TRAPPED (bubble) state
 void Enemy_UpdateDead(stENEMY* enemy);							// update DEAD state
 
 // for main update
-void Enemy_Update(stENEMY* enemy);								// update single enemy
-void Enemy_UpdateAll(void);										// update all active enemies
+void Enemy_Update(stENEMY* enemy);								// 0 update single enemy
+void Enemy_UpdateAll(void);										// 0 update all active enemies
 
 // AI n behavior
-bool Enemy_IsPlayerNearby(stENEMY* enemy, int range);			// check if player is within a certain range
-void Enemy_DecideNextAction(stENEMY* enemy);					// decide the next action based on AI
-void Enemy_MoveTowardPlayer(stENEMY* enemy);					// move enemy towards the player
+bool Enemy_IsPlayerNearby(stENEMY* enemy, int range);			// 0 check if player is within a certain range
+void Enemy_DecideNextAction(stENEMY* enemy);					// 0 decide the next action based on AI
+void Enemy_MoveTowardPlayer(stENEMY* enemy);					// 0 move enemy towards the player
 
 // actions
-void Enemy_Move(stENEMY* enemy);								// move enemy (generic movement)
-void Enemy_Jump(stENEMY* enemy);								// make enemy jump
-void Enemy_Throw(stENEMY* enemy);								// make enemy Throw
-void Enemy_TakeDamage(stENEMY* enemy, int damage);				// apply damage to enemy
+void Enemy_Move(stENEMY* enemy);								// 0 move enemy (generic movement)
+void Enemy_Jump(stENEMY* enemy);								// 0 make enemy jump
+void Enemy_Throw(stENEMY* enemy);								// 0 make enemy Throw
+void Enemy_TakeDamage(stENEMY* enemy, int damage);				// 0 apply damage to enemy
 
 #endif
