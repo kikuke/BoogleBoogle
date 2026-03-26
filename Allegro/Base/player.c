@@ -91,7 +91,7 @@ void player_update_input(stPLAYER* player, int allegro_key, unsigned char flag)
 	if (player->shot_timer)
 		player->shot_timer--;
 
-	player->obj.phy.speed.y += GRAVITY;
+	//player->obj.phy.speed.y += GRAVITY;
 	player->obj.phy.pos.x += player->obj.phy.speed.x;
 	player->obj.phy.pos.y += player->obj.phy.speed.y;
 

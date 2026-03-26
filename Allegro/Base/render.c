@@ -13,15 +13,23 @@
 /************************************************/
 
 #define MAP 28
+#define SCALE 10
 #define CHARACTER 48
+
+#define SPRITE_PLAYER_MAX (5)
+
+typedef struct {
+    int idx;
+    ALLEGRO_BITMAP* left[SPRITE_PLAYER_MAX];
+    ALLEGRO_BITMAP* right[SPRITE_PLAYER_MAX];
+} stSPRITE_PLAYER;
+
 typedef struct SPRITES
 {
     ALLEGRO_BITMAP* _sheet;
 
-    ALLEGRO_BITMAP* map; 
-    ALLEGRO_BITMAP* character;
-
-
+    ALLEGRO_BITMAP* map;
+    stSPRITE_PLAYER player;
 } SPRITES;
 
 /************************************************/
@@ -32,8 +40,8 @@ void disp_post_draw();
 
 void test_disp(float x, float y);
 void map_scale_disp(float dx, float dy, float dw, float dh, int flags);
-void character_scale_disp(float dx, float dy, float dw, float dh, int flags);
-void map_render(stTILE* tiles, size_t tile_len);
+void character_scale_disp(ALLEGRO_BITMAP* sprite, float px, float py, float dw, float dh, int flags);
+void render_map(stTILE* tiles, size_t tile_len);
 static ALLEGRO_DISPLAY* disp;
 static ALLEGRO_BITMAP* buffer;
 
@@ -47,6 +55,7 @@ SPRITES sprites;
 /************************************************/
 void render_update(void)
 {
+
 #if 0
     fx_update();
     hud_update();
@@ -55,10 +64,20 @@ void render_update(void)
 
 void render_draw(void)
 {
+    stPLAYER* player = GAME_MANAGER_GetPlayer(0);
     disp_pre_draw();
     al_clear_to_color(al_map_rgb(0, 0, 0));
-    character_scale_disp(20, 20, 14, 14, 0);
-    map_render(GAME_MANAGER_GetMap(), 400);
+
+    render_map(GAME_MANAGER_GetMap(), CONFIG_MAP_Y_MAX * CONFIG_MAP_X_MAX);
+
+    if (player->state == ePLAYER_STATE_MOVE) {
+        if (player->obj.phy.look == eDIR_LOOK_LEFT) {
+            sprites.player.idx = (sprites.player.idx + 1) % SPRITE_PLAYER_MAX;
+
+        }
+    }
+    character_scale_disp(sprites.player.left[sprites.player.idx], player->obj.phy.pos.x, player->obj.phy.pos.y, SCALE, SCALE, 0);
+    //character_scale_disp(10, 220, SCALE, SCALE, 0);
 #if 0
 
     stars_draw();
@@ -117,8 +136,8 @@ static void map_scale_disp(float dx, float dy, float dw, float dh, int flags) {
     al_draw_scaled_bitmap(sprites.map,0,0, MAP, MAP, dx, dy, dw, dh, flags);
 }
 
-static void character_scale_disp(float dx, float dy, float dw, float dh, int flags) {
-    al_draw_scaled_bitmap(sprites.character, 0, 0, CHARACTER, CHARACTER, dx, dy, dw, dh, flags);
+static void character_scale_disp(ALLEGRO_BITMAP *sprite, float px, float py, float dw, float dh, int flags) {
+    al_draw_scaled_bitmap(sprite, 0, 0, CHARACTER, CHARACTER, px, py, dw, dh, flags);
 }
 
 ALLEGRO_BITMAP* sprite_grab(int x, int y, int w, int h)
@@ -135,24 +154,33 @@ void sprites_init()
 
     sprites.map = sprite_grab(8, 1578, MAP, MAP);
 
-    sprites.character = sprite_grab(12, 16, CHARACTER, CHARACTER);
+    sprites.player.left[0] = sprite_grab(270, 16, CHARACTER, CHARACTER);
+    sprites.player.left[1] = sprite_grab(206, 16, CHARACTER, CHARACTER);
+    sprites.player.left[2] = sprite_grab(141, 16, CHARACTER, CHARACTER);
+    sprites.player.left[3] = sprite_grab(76, 16, CHARACTER, CHARACTER);
+    sprites.player.left[4] = sprite_grab(10, 16, CHARACTER, CHARACTER);
 }
 
 
 void sprites_deinit()
 {
     al_destroy_bitmap(sprites.map);
-    al_destroy_bitmap(sprites.character);
+
+    al_destroy_bitmap(sprites.player.left[0]);
+    al_destroy_bitmap(sprites.player.left[1]);
+    al_destroy_bitmap(sprites.player.left[2]);
+    al_destroy_bitmap(sprites.player.left[3]);
+    al_destroy_bitmap(sprites.player.left[4]);
 
     al_destroy_bitmap(sprites._sheet);
 }
 
-static void map_render(stTILE  *tiles, size_t tile_len) {
+static void render_map(stTILE  *tiles, size_t tile_len) {
     
     for (int i = 0; i < tile_len; ++i) {
         float x = tiles[i].obj.phy.pos.x;
         float y = tiles[i].obj.phy.pos.y;
-        map_scale_disp(x, y, 14, 14, 0);
+        map_scale_disp(x, y, SCALE, SCALE, 0);
     }
 }
 #if 0
