@@ -14,6 +14,8 @@
 #define CONFIG_OBJECT_COLLISION_TILE_SIZE		(10)
 #define KEY_SEEN     1
 #define KEY_DOWN     2
+#define PLAYER_W 10
+#define PLAYER_H 10
 
 #define ENABLE_RENDER	(0)
 

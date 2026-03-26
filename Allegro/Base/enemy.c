@@ -4,20 +4,19 @@
 #include "enemy.h"
 #include "player.h"
 #include "bugglebuggle.h"
-#include "game_manager.c"
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
 #include <math.h>
 
-void Enemy_InitializePool(void) { 
+void Enemy_InitializePool(stENEMY *enemy) {
     for (int i = 0; i < CONFIG_OBJECT_ENEMY_MAX; i++) {
         (enemy+i)->obj.rend.is_active = 0; // make sure defalt setting to 0
     }
 }
 
-int Enemy_GetActiveCount(void) {
+int Enemy_GetActiveCount(stENEMY* enemy) {
     int count = 0;
     for (int i = 0; i < CONFIG_OBJECT_ENEMY_MAX; i++) {
         if ((enemy + i)->obj.rend.is_active) {
@@ -28,7 +27,7 @@ int Enemy_GetActiveCount(void) {
 }
 
 // input type: BASIC, THROW, BOSS  &  x, y
-stENEMY* Enemy_Create(eENEMY_TYPE type, int x, int y) {
+stENEMY* Enemy_Create(stENEMY* enemy, eENEMY_TYPE type, int x, int y) {
     for (int i = 0; i < CONFIG_OBJECT_ENEMY_MAX; i++) {
         stENEMY* new_enemy = &enemy[i];
 
@@ -118,14 +117,14 @@ void Enemy_UpdateTrapped(stENEMY* e) {
 }
 
 // it doesn't reset all things. only active arr state
-void Enemy_UpdateDead(stENEMY* e) {
+void Enemy_UpdateDead(stENEMY* enemy, stENEMY* e) {
     if (e == NULL) return;
     int index = enemy - e;
     (e + index)->obj.rend.is_active = false;
     //enemy->state = eENEMY_STATE_DEAD;
 }
 
-void Enemy_Update(stENEMY* e) {
+void Enemy_Update(stENEMY* enemy, stENEMY* e) {
     if (e == NULL) return;
 
     // just maintain timer in Update func
@@ -140,7 +139,7 @@ void Enemy_Update(stENEMY* e) {
         Enemy_UpdateMove(e);
         break;
     case eENEMY_STATE_JUMP:
-        Enemy_UpdateJump(e);
+        //Enemy_UpdateJump(e);
         break;
     case eENEMY_STATE_ATTACK:
         Enemy_UpdateAttack(e);
@@ -149,18 +148,18 @@ void Enemy_Update(stENEMY* e) {
         Enemy_UpdateTrapped(e);
         break;
     case eENEMY_STATE_DEAD:
-        Enemy_UpdateDead(e);
+        Enemy_UpdateDead(enemy, e);
         break;
     default:
         break;
     }
 }
 
-void Enemy_UpdateAll(void) {
+void Enemy_UpdateAll(stENEMY* enemy) {
     for (int i = 0; i < CONFIG_OBJECT_ENEMY_MAX; i++) {
         stENEMY* e = &enemy[i];
         if (e->obj.rend.is_active) {
-            Enemy_Update(e);
+            Enemy_Update(enemy, e);
         }
     }
 }
@@ -187,8 +186,7 @@ void Enemy_Throw(stENEMY* e) {
 
 }
 
-stOBJECT* Throw_Create(int x, int y) {
-    stOBJECT* obj;
+stOBJECT* Throw_Create(stOBJECT* obj, int x, int y) {
 
     stPHYSICS* phy = &obj->phy;
     stCOLLISION* coll = &obj->coll;

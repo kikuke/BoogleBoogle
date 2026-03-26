@@ -1,5 +1,6 @@
 #ifndef __ENEMY_H__
 #define __ENEMY_H__
+
 #include "object.h"
 #include <stdbool.h>
 
@@ -91,11 +92,11 @@ typedef struct {
 
 
 // pool management
-void Enemy_InitializePool(void);								// initialize enemy pool when begin
-int Enemy_GetActiveCount(void);									// get number of active enemies
+void Enemy_InitializePool(stENEMY* enemy);								// initialize enemy pool when begin
+int Enemy_GetActiveCount(stENEMY* enemy);									// get number of active enemies
 
 // single enemy manage
-stENEMY* Enemy_Create(eENEMY_TYPE type, int x, int y);			// create n initialize an enemy
+stENEMY* Enemy_Create(stENEMY* enemy, eENEMY_TYPE type, int x, int y);			// create n initialize an enemy
 //void Enemy_Destroy(stENEMY* enemy);								// destroy an enemy
 
 // state manage
@@ -110,11 +111,11 @@ void Enemy_UpdateIdle(stENEMY* enemy);							// 0 update IDLE state
 void Enemy_UpdateMove(stENEMY* enemy);							// 0 update MOVE state
 void Enemy_UpdateAttack(stENEMY* enemy);						// 0 update ATTACK state
 void Enemy_UpdateTrapped(stENEMY* enemy);						// 0 update TRAPPED (bubble) state
-void Enemy_UpdateDead(stENEMY* enemy);							// update DEAD state
+void Enemy_UpdateDead(stENEMY* enemy, stENEMY* e);							// update DEAD state
 
 // for main update
-void Enemy_Update(stENEMY* enemy);								// update single enemy
-void Enemy_UpdateAll(void);										// update all active enemies
+void Enemy_Update(stENEMY* enemy, stENEMY* e);								// update single enemy
+void Enemy_UpdateAll(stENEMY* enemy);										// update all active enemies
 
 // AI n behavior
 void Enemy_DecideNextAction(stENEMY* enemy);					// 0 decide the next action based on AI
@@ -129,7 +130,7 @@ void Enemy_Move(stENEMY* enemy);								// 0 move enemy (generic movement)
 void Enemy_Throw(stENEMY* enemy);								// 0 make enemy Throw
 
 // throw maintain
-stENEMY* Throw_Create(int x, int y);							// 0 create throw obj
+stOBJECT* Throw_Create(stOBJECT* obj, int x, int y);							// 0 create throw obj
 void Throw_Update(stTHROW* throw);								// 0 update throw
 void Throw_MoveTowardPlayer(stTHROW* throw);					// 0 keep forward to player
 void Throw_Destroy(stTHROW* throw);								// 0 destroy touch player or out of map

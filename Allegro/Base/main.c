@@ -65,6 +65,7 @@ int main()
             GAME_MANAGER_CheckCollision();
             /* Apply Calculated State, Interaction */
             /* GAME_MANAGER_Update Object */
+            GAME_MANAGER_UpdatePhysics();
 
             render_update();
 
