@@ -19,7 +19,7 @@ typedef struct {
 	bool is_game_over;	// is game over?
 
 } stINGAME_MANAGER;
-
+/*
 // begine
 void GameManager_Initialize(stINGAME_MANAGER* manager);				// begin with default val
 void GameManager_ResetStage(stINGAME_MANAGER* manager);				// reset curr stage for replay
@@ -52,5 +52,5 @@ bool GameManager_IsEnemyTrapped(stOBJECT* enemy);					// check if enemy trapped 
 
 // update
 void GameManager_Update(stINGAME_MANAGER* manager);					// main game logic update per frame (collisions, timers, rules)
-
+*/
 #endif
