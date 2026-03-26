@@ -38,6 +38,8 @@ typedef struct {
 } stPOSITION;
 
 typedef struct {
+	bool is_move;
+	bool is_gravity;
 	eDIR_LOOK	look;
 	stPOSITION	pos;
 	stPOSITION	speed;
