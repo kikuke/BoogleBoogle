@@ -1,75 +1,77 @@
-#include "player.h"
 #include "collision.h"
-#include "map.h"
 
-void OneWay_Jump(stPLAYER* player, stTILE* tile) {
 
-    // x range
-    double player_left = player->obj.phy.pos.x;
-    double player_right = player->obj.phy.pos.x + player->obj.coll.box.width;
-    double tile_left = tile->obj.phy.pos.x;
-    double tile_right = tile->obj.phy.pos.x; + tile->obj.coll.box.width;
-    
-    // overlap
-    bool is_x_overlap = (player_right > tile_left) && (player_left < tile_right);
+void Collide_Object_Tile(stOBJECT* object, stTILE* tile) {
 
-    if (is_x_overlap) {
+    double obj_w = object->coll.box.width;
+    double obj_h = object->coll.box.height;
 
-        // y range
-        double current_bottom = player->obj.phy.pos.y + player->obj.coll.box.height;
-        double previous_bottom = current_bottom - player->obj.phy.speed.y;
-        double tile_top = tile->obj.phy.pos.y;
+    double next_x = object->phy.pos.x + object->phy.speed.x;
+    double next_y = object->phy.pos.y + object->phy.speed.y;
 
-        // falling, ground
-        if (player->obj.phy.speed.y >= 0) {
+    double tile_l = tile->obj.phy.pos.x;
+    double tile_r = tile->obj.phy.pos.x + tile->obj.coll.box.width;
+    double tile_t = tile->obj.phy.pos.y;
+    double tile_b = tile->obj.phy.pos.y + tile->obj.coll.box.height;
 
-            if (previous_bottom <= tile_top && current_bottom >= tile_top) {
+    //bool is_x_overlap = (obj_right > tile_left) && (obj_left < tile_right);
+    //bool is_y_overlap = (obj_bottom > tile_top) && (obj_top < tile_bottom);
 
-                // landing
-                player->obj.phy.pos.y = tile_top - player->obj.coll.box.height;
-                player->obj.phy.speed.y = 0;
-                if (player->is_jump) {
-                    player->is_jump = false;
-                    player->state = ePLAYER_STATE_IDLE;
+    bool is_y_overlap = (object->phy.pos.y + obj_h >= tile_t) && (object->phy.pos.y <= tile_b);
+    bool is_x_overlap = (object->phy.pos.x + obj_w >= tile_l) && (object->phy.pos.x <= tile_r);
+
+    // wall
+    if (is_y_overlap) {
+        if (object->phy.speed.x > 0) {  // right
+            if (object->phy.pos.x + obj_w <= tile_l && next_x + obj_w >= tile_l) {
+                object->phy.pos.x = tile_l - obj_w; 
+                object->phy.speed.x = 0;   
+                if (object->coll.tag == eOBJ_TAG_PLAYER) {
+                    stPLAYER* p = (stPLAYER*)object;
+                    p->state = ePLAYER_STATE_IDLE;
+                }
+                else if (object->coll.tag == eOBJ_TAG_ENEMY) {
+                    stENEMY* e = (stENEMY*)object;
+                    e->state = eENEMY_STATE_IDLE;
+                }
+            }
+        }
+        else if (object->phy.speed.x < 0) { // left
+            if (object->phy.pos.x >= tile_r && next_x <= tile_r) {
+                object->phy.pos.x = tile_r;
+                object->phy.speed.x = 0;
+                if (object->coll.tag == eOBJ_TAG_PLAYER) {
+                    stPLAYER* p = (stPLAYER*)object;
+                    p->state = ePLAYER_STATE_IDLE;
+                }
+                else if (object->coll.tag == eOBJ_TAG_ENEMY) {
+                    stENEMY* e = (stENEMY*)object;
+                    e->state = eENEMY_STATE_IDLE;
                 }
             }
         }
     }
-}
 
+    // one_way_jump
+    if (is_x_overlap) {
+        if (object->phy.speed.y >= 0) {
+            double curr_bottom = object->phy.pos.y + obj_h;
+            double next_bottom = next_y + obj_h;
 
-void Collide_Player_Wall(stPLAYER* player, stTILE* tile) {
+            if (curr_bottom <= tile_t && next_bottom >= tile_t) {
+                object->phy.pos.y = tile_t - obj_h; 
+                object->phy.speed.y = 0; 
 
-
-    double player_top = player->obj.phy.pos.y;
-    double player_bottom = player->obj.phy.pos.y + player->obj.coll.box.height;
-    double tile_top = tile->obj.phy.pos.y;
-    double tile_bottom = tile->obj.phy.pos.y + tile->obj.coll.box.height;
-
-    bool is_y_overlap = (player_bottom >= tile_top) && (player_top <= tile_bottom);
-
-    if (is_y_overlap) {
-
-        double curr_left = player->obj.phy.pos.x;
-        double curr_right = curr_left + player->obj.coll.box.width;
-        double prev_left = curr_left - player->obj.phy.speed.x;
-        double prev_right = prev_left + player->obj.coll.box.width;
-
-        double tile_left = tile->obj.phy.pos.x;
-        double tile_right = tile->obj.phy.pos.x + tile->obj.coll.box.width;
-
-        if (player->obj.phy.speed.x > 0 && prev_right < curr_right) { // right
-            if (prev_right <= tile_left) {
-                player->obj.phy.pos.x = tile_left - player->obj.coll.box.width;
-                player->obj.phy.speed.x = 0;
+                if (object->coll.tag == eOBJ_TAG_PLAYER) {
+                    stPLAYER* p = (stPLAYER*)object;
+                    p->is_jump = false;
+                    p->state = ePLAYER_STATE_IDLE;
+                }
+                else if (object->coll.tag == eOBJ_TAG_ENEMY) {
+                    stENEMY* e = (stENEMY*)object;
+                    e->state = eENEMY_STATE_IDLE;
+                }
             }
-        }
-        else if (player->obj.phy.speed.x < 0 && prev_left > curr_left) { // left
-            if (prev_left >= tile_right) {
-                player->obj.phy.pos.x = tile_right;
-                player->obj.phy.speed.x = 0;
-            }
-
         }
     }
 }

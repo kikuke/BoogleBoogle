@@ -1,7 +1,11 @@
 #ifndef __COLLISION_H__
 #define __COLLISION_H__
+#include "object.h"
+#include "player.h"
+#include "enemy.h"
+#include "map.h"
 
-void OneWay_Jump(stPLAYER* player, stOBJECT* tile);
-void Collide_Player_Wall(stPLAYER* player, stOBJECT* tile);
+
+void Collide_Object_Tile(stOBJECT* object, stTILE* tile);
 
 #endif

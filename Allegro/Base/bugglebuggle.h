@@ -13,6 +13,8 @@
 #define CONFIG_OBJECT_MAP_MAX			(CONFIG_MAP_X_MAX * CONFIG_MAP_Y_MAX)
 #define KEY_SEEN     1
 #define KEY_DOWN     2
+#define PLAYER_W 10
+#define PLAYER_H 10
 
 #define ENABLE_RENDER	(0)
 

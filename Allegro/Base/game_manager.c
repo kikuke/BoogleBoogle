@@ -34,7 +34,7 @@ void GAME_MANAGER_CheckCollision(void)
 			if (pPlayer->obj.is_active == false)
 				continue;
 
-			Collide_Player_Wall(pPlayer, tile);
+			Collide_Object_Tile(pPlayer, tile);
 		}
 	}
 }
