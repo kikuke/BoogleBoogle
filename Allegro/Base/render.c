@@ -15,14 +15,18 @@
 #define MAP 28
 #define SCALE 10
 #define CHARACTER 48
+
+typedef struct {
+    ALLEGRO_BITMAP* left[5];
+    ALLEGRO_BITMAP* right[5];
+} stSPRITE_PLAYER;
+
 typedef struct SPRITES
 {
     ALLEGRO_BITMAP* _sheet;
 
-    ALLEGRO_BITMAP* map; 
-    ALLEGRO_BITMAP* character;
-
-
+    ALLEGRO_BITMAP* map;
+    stSPRITE_PLAYER player;
 } SPRITES;
 
 /************************************************/
@@ -123,7 +127,7 @@ static void map_scale_disp(float dx, float dy, float dw, float dh, int flags) {
 }
 
 static void character_scale_disp(float px, float py, float dw, float dh, int flags) {
-    al_draw_scaled_bitmap(sprites.character, 0, 0, CHARACTER, CHARACTER, px, py, dw, dh, flags);
+    al_draw_scaled_bitmap(sprites.player.left[4], 0, 0, CHARACTER, CHARACTER, px, py, dw, dh, flags);
 }
 
 ALLEGRO_BITMAP* sprite_grab(int x, int y, int w, int h)
@@ -140,14 +144,23 @@ void sprites_init()
 
     sprites.map = sprite_grab(8, 1578, MAP, MAP);
 
-    sprites.character = sprite_grab(12, 16, CHARACTER, CHARACTER);
+    sprites.player.left[0] = sprite_grab(270, 16, CHARACTER, CHARACTER);
+    sprites.player.left[1] = sprite_grab(206, 16, CHARACTER, CHARACTER);
+    sprites.player.left[2] = sprite_grab(141, 16, CHARACTER, CHARACTER);
+    sprites.player.left[3] = sprite_grab(76, 16, CHARACTER, CHARACTER);
+    sprites.player.left[4] = sprite_grab(10, 16, CHARACTER, CHARACTER);
 }
 
 
 void sprites_deinit()
 {
     al_destroy_bitmap(sprites.map);
-    al_destroy_bitmap(sprites.character);
+
+    al_destroy_bitmap(sprites.player.left[0]);
+    al_destroy_bitmap(sprites.player.left[1]);
+    al_destroy_bitmap(sprites.player.left[2]);
+    al_destroy_bitmap(sprites.player.left[3]);
+    al_destroy_bitmap(sprites.player.left[4]);
 
     al_destroy_bitmap(sprites._sheet);
 }
