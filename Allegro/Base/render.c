@@ -16,9 +16,12 @@
 #define SCALE 10
 #define CHARACTER 48
 
+#define SPRITE_PLAYER_MAX (5)
+
 typedef struct {
-    ALLEGRO_BITMAP* left[5];
-    ALLEGRO_BITMAP* right[5];
+    int idx;
+    ALLEGRO_BITMAP* left[SPRITE_PLAYER_MAX];
+    ALLEGRO_BITMAP* right[SPRITE_PLAYER_MAX];
 } stSPRITE_PLAYER;
 
 typedef struct SPRITES
@@ -37,8 +40,8 @@ void disp_post_draw();
 
 void test_disp(float x, float y);
 void map_scale_disp(float dx, float dy, float dw, float dh, int flags);
-void character_scale_disp(float px, float py, float dw, float dh, int flags);
-void map_render(stTILE* tiles, size_t tile_len);
+void character_scale_disp(ALLEGRO_BITMAP* sprite, float px, float py, float dw, float dh, int flags);
+void render_map(stTILE* tiles, size_t tile_len);
 static ALLEGRO_DISPLAY* disp;
 static ALLEGRO_BITMAP* buffer;
 
@@ -65,8 +68,15 @@ void render_draw(void)
     disp_pre_draw();
     al_clear_to_color(al_map_rgb(0, 0, 0));
 
-    map_render(GAME_MANAGER_GetMap(), CONFIG_MAP_Y_MAX * CONFIG_MAP_X_MAX);
-    character_scale_disp(player->obj.phy.pos.x, player->obj.phy.pos.y, SCALE, SCALE, 0);
+    render_map(GAME_MANAGER_GetMap(), CONFIG_MAP_Y_MAX * CONFIG_MAP_X_MAX);
+
+    if (player->state == ePLAYER_STATE_MOVE) {
+        if (player->obj.phy.look == eDIR_LOOK_LEFT) {
+            sprites.player.idx = (sprites.player.idx + 1) % SPRITE_PLAYER_MAX;
+
+        }
+    }
+    character_scale_disp(sprites.player.left[sprites.player.idx], player->obj.phy.pos.x, player->obj.phy.pos.y, SCALE, SCALE, 0);
     //character_scale_disp(10, 220, SCALE, SCALE, 0);
 #if 0
 
@@ -126,8 +136,8 @@ static void map_scale_disp(float dx, float dy, float dw, float dh, int flags) {
     al_draw_scaled_bitmap(sprites.map,0,0, MAP, MAP, dx, dy, dw, dh, flags);
 }
 
-static void character_scale_disp(float px, float py, float dw, float dh, int flags) {
-    al_draw_scaled_bitmap(sprites.player.left[4], 0, 0, CHARACTER, CHARACTER, px, py, dw, dh, flags);
+static void character_scale_disp(ALLEGRO_BITMAP *sprite, float px, float py, float dw, float dh, int flags) {
+    al_draw_scaled_bitmap(sprite, 0, 0, CHARACTER, CHARACTER, px, py, dw, dh, flags);
 }
 
 ALLEGRO_BITMAP* sprite_grab(int x, int y, int w, int h)
@@ -165,7 +175,7 @@ void sprites_deinit()
     al_destroy_bitmap(sprites._sheet);
 }
 
-static void map_render(stTILE  *tiles, size_t tile_len) {
+static void render_map(stTILE  *tiles, size_t tile_len) {
     
     for (int i = 0; i < tile_len; ++i) {
         float x = tiles[i].obj.phy.pos.x;

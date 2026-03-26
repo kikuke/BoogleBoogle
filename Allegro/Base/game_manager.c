@@ -55,7 +55,7 @@ void GAME_MANAGER_SetStage(eGAME_STAGE stage)
 		break;
 	case eGAME_STAGE_2:
 		{
-		map_init_stage(GAME_MANAGER_GetMap(), MAP_2_GetData());
+			map_init_stage(GAME_MANAGER_GetMap(), MAP_2_GetData());
 		}
 	default:
 		break;

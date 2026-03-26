@@ -59,8 +59,13 @@ int main()
         switch (event.type)
         {
         case ALLEGRO_EVENT_TIMER:
+            /* Set Player & Enemy State, Direction, Delta Pos */
             send_input();
+            /* Calculate Interaction & State */
             GAME_MANAGER_CheckCollision();
+            /* Apply Calculated State, Interaction */
+            /* GAME_MANAGER_Update Object */
+
             render_update();
 
 #if (DEBUG_PLAYER == 1)
