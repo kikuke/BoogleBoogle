@@ -1,106 +1,91 @@
 #ifndef _BUBBLE_H_
 #include "bubble.h"
-#include "object.h"
-#include "player.h"
 
-#define BUBBLES_N 128
-stBUBBLE bubbles[BUBBLES_N];
+#define BUBBLES_N       (CONFIG_OBJECT_BUBBLE_MAX)
 
-#define SHIP_H 1
-#define SHOTS_N 1
-#define SHIP_SHOT_H 1
-#define SHIP_SHOT_W 1
+#define PLAYER_H      (10)
+#define BUBBLE_SHOT_H (10)
+#define BUBBLE_SHOT_W (10)
+
+#define BUBBLE_SPEED    (3.0)
+#define BUBBLE_UP_SPEED (-1.0)    
+#define SHOOT_DURATION  (60)
+#define TOTAL_DURATION  (300)
 
 
 
-void bubble_init()
+void bubble_init(stBUBBLE* bubbles)
 {
-    for (int i = 0; i < BUBBLES_N; i++)
-        bubbles[i].used = false;
+    for (int i = 0; i < BUBBLES_N; ++i) {
+        bubbles[i].obj.is_active = false;
+    }
 }
 
-// ����
-bool bubble_add(stPLAYER player)
+// bubble
+bool bubble_add(stPLAYER* player, stBUBBLE* bubbles)
 {
-
-    for (int i = 0; i < SHOTS_N; i++)
+    for (int i = 0; i < BUBBLES_N; ++i) 
     {
-        if (bubbles[i].used) continue;
+        if (bubbles[i].obj.is_active) continue;
 
-        bubbles[i].x = player.obj.phy.pos.x;
-        bubbles[i].y = player.obj.phy.pos.y + (SHIP_H / 2) - (SHIP_SHOT_H / 2); // center pos
+        bubbles[i].obj.is_active = true;
+        bubbles[i].obj.phy.pos.x = player->obj.phy.pos.x;
+        bubbles[i].obj.phy.pos.y = player->obj.phy.pos.y + (PLAYER_H / 2) - (BUBBLE_SHOT_H / 2);
 
+        if (player->obj.phy.look == eDIR_LOOK_RIGHT) {
+            bubbles[i].obj.phy.speed.x = BUBBLE_SPEED;
+        }
+        else if (player->obj.phy.look == eDIR_LOOK_LEFT) {
+            bubbles[i].obj.phy.speed.x = -BUBBLE_SPEED;
+        }
 
-        bubbles[i].frame = 0;   // 0 frame used
-        bubbles[i].used = true; // buble used
-        bubbles[i].dur = 300; // 5s
+        bubbles[i].obj.coll.tag = eOBJ_TAG_BUBBLE;
+        bubbles[i].obj.coll.box.height = BUBBLE_SHOT_H;
+        bubbles[i].obj.coll.box.width = BUBBLE_SHOT_W;
+        bubbles[i].obj.coll.is_static = false;
+        bubbles[i].obj.phy.speed.y = 0;
+        bubbles[i].frame = 0;
+        bubbles[i].dur = TOTAL_DURATION; 
         bubbles[i].state = eBUBBLE_STATE_SHOOTING;
+
         return true;
     }
     return false;
+
 }
 
-void bubble_update()
+void bubble_update(stBUBBLE* bubbles)
 {
-    for (int i = 0; i < BUBBLES_N; i++)
+    for (int i = 0; i < BUBBLES_N; ++i)
     {
-        if (!bubbles[i].used)
-            continue;
+        if (!bubbles[i].obj.is_active) continue;
 
-        // look, left: x-=, right: x+=
-        // bubbles[i].y -= 5;
-        if (bubbles[i].y < -SHIP_SHOT_H) // ĳ���� ũ�� �ޱ�
-        {
-            bubbles[i].used = false;
+        if (bubbles[i].frame >= bubbles[i].dur) {
+            bubbles[i].state = eBUBBLE_STATE_POP;
+            bubbles[i].obj.is_active = false;
             continue;
         }
 
-        bubbles[i].frame++; // ������ ����
+        if (bubbles[i].state == eBUBBLE_STATE_SHOOTING) {
+            if (bubbles[i].frame >= SHOOT_DURATION) {
+                bubbles[i].state = eBUBBLE_STATE_FLOAT;
+                bubbles[i].obj.phy.speed.x = 0;
+                bubbles[i].obj.phy.speed.y = BUBBLE_UP_SPEED;
+            }
+        }
     }
 }
 
-bool bubble_collide(bool ship, int x, int y, int w, int h)
+void bubble_update_frame(stBUBBLE* bubbles) 
 {
-    for (int i = 0; i < BUBBLES_N; i++)
-    {
-        if (!bubbles[i].used)
-            continue;
 
-        int sw, sh;
-        if (ship)
-        {
-            //sw = ALIEN_SHOT_W;
-            //sh = ALIEN_SHOT_H;
-        }
-        else
-        {
-            sw = SHIP_SHOT_W;
-            sh = SHIP_SHOT_H;
-        }
+    for (int i = 0; i < BUBBLES_N; i++) {
+        if (!bubbles[i].obj.is_active) continue;
 
-        //if (collide(x, y, x + w, y + h, bubbles[i].x, bubbles[i].y, bubbles[i].x + sw, bubbles[i].y + sh))
-        //{
-        //    bubbles[i].used = false;
-        //    return true;
-        //}
+        bubbles[i].obj.phy.pos.x += bubbles[i].obj.phy.speed.x;
+        bubbles[i].obj.phy.pos.y += bubbles[i].obj.phy.speed.y;
+        bubbles[i].frame++;
     }
-
-    return false;
 }
-
-//void bubble_draw()
-//{
-//    for (int i = 0; i < BUBBLES_N; i++)
-//    {
-//        if (!bubbles[i].used)
-//            continue;
-//
-//        int frame_display = (bubbles[i].frame / 2) % 2;
-//
-//        al_draw_bitmap(sprites.ship_shot[frame_display], bubbles[i].x, bubbles[i].y, 0);
-//    }
-//}
-
-
 
 #endif // !_BUBBLE_H_

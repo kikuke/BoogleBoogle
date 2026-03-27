@@ -3,15 +3,16 @@
 #include "player.h"
 #include "physics.h"
 #include "enemy.h"
+#include "bubble.h"
 #include "map_1.h"
-#include "map_2.h"
+#include "map_2.h" 
 
 /************************************************/
 /*         Local Variable Declaration           */
 /************************************************/
 /* Object Resourece */
-static stPLAYER player[CONFIG_OBJECT_PLAYER_MAX];
-static stOBJECT bubble[CONFIG_OBJECT_BUBBLE_MAX];
+static stPLAYER player[CONFIG_OBJECT_PLAYER_MAX]; 
+static stBUBBLE bubble[CONFIG_OBJECT_BUBBLE_MAX];
 static stENEMY enemy[CONFIG_OBJECT_ENEMY_MAX];
 static stOBJECT enemy_attack[CONFIG_OBJECT_ENEMY_ATTACK_MAX];
 static stTILE map[CONFIG_OBJECT_MAP_MAX];
