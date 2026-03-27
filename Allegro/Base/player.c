@@ -69,10 +69,10 @@ void player_update_input(stPLAYER* player, int allegro_key, unsigned char flag)
 	break;
 	case ALLEGRO_KEY_SPACE:
 	{
-		if (bubble_add(player)) {
-			player->shot_timer = 60;
-			player->state = ePLAYER_STATE_ATTACK;
-		}
+		//if (bubble_add(player, bubbles)) {
+		//	player->shot_timer = 60;
+		//	player->state = ePLAYER_STATE_ATTACK;
+		//}
 	}
 	break;
 	default:
