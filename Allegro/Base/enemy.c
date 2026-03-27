@@ -11,6 +11,14 @@
 #include <math.h>
 #include <time.h>
 
+int Get_RandNum_1_to_9(void) {
+    static uint32_t x = 123456789;
+    x ^= x << 13;
+    x ^= x >> 17;
+    x ^= x << 5;
+    return (x % 9) + 1;
+}
+
 void Enemy_InitializePool(stENEMY *enemy) {
     for (int i = 0; i < CONFIG_OBJECT_ENEMY_MAX; i++) {
         (enemy+i)->obj.rend.is_active = 0; // make sure defalt setting to 0
@@ -89,7 +97,7 @@ void Enemy_ChangeState(stENEMY* e, eENEMY_STATE newState) {
     e->state_timer = 0;
 }
 eENEMY_STATE Enemy_GetCurrentState(stENEMY* e) {
-    if (e == NULL) return;
+    if (e == NULL) return eENEMY_STATE_MAX;
     return e->state;
 }
 
@@ -120,9 +128,11 @@ void Enemy_UpdateTrapped(stENEMY* e) {
 // it doesn't reset all things. only active arr state
 void Enemy_UpdateDead(stENEMY* enemy, stENEMY* e) {
     if (e == NULL) return;
-    int index = enemy - e;
-    (e + index)->obj.rend.is_active = false;
-    //enemy->state = eENEMY_STATE_DEAD;
+    ptrdiff_t index = e - enemy;
+
+    if (index >= 0 && index < CONFIG_OBJECT_ENEMY_MAX) {
+        e->obj.rend.is_active = false;
+    }
 }
 
 void Enemy_Update(stENEMY* enemy, stENEMY* e) {
@@ -138,9 +148,6 @@ void Enemy_Update(stENEMY* enemy, stENEMY* e) {
         break;
     case eENEMY_STATE_MOVE:
         Enemy_UpdateMove(e);
-        break;
-    case eENEMY_STATE_JUMP:
-        //Enemy_UpdateJump(e);
         break;
     case eENEMY_STATE_ATTACK:
         Enemy_UpdateAttack(e);
@@ -164,24 +171,120 @@ void Enemy_UpdateAll(stENEMY* enemy) {
         }
     }
 }
+// reference
+//extern bool IsHittingWall(double x, double y);
+//extern bool HasGroundAhead(double x, double y, int dir);
+//void update_patrol_movement(Monster* m, Map* map, Player* p) {
+//    // if angry -> faster
+//    float current_speed = m->base_speed * (m->is_angry ? 1.8f : 1.0f);
+//    m->vx = m->dir * current_speed;
+//
+//    // wall collidion check n dir change
+//    if (is_hitting_wall(map, m->x + m->vx, m->y)) {
+//        m->dir *= -1; 
+//        m->vx = m->dir * current_speed;
+//    }
+//
+//    // jump logic
+//    // - if infront of fall || go up wall
+//    // - if player high floor -> 5%chance jump
+//    if (m->state == ST_WALK && can_jump(m)) {
+//        if (!has_ground_ahead(map, m->x, m->y, m->dir) |
+//
+//            |
+//            (p->y < m->y && rand() % 100 < 5)) { 
+//            m->vy = -JUMP_FORCE;
+//            m->state = ST_JUMP;
+//        }
+//    }
+//
+//    m->x += m->vx;
+//    m->y += m->vy;
+//}
+void Enemy_ToPlayer_Ground(stENEMY* enemy, stPLAYER* player) {
+    if (enemy == NULL || player == NULL) return;
 
-void Enemy_DecideNextAction(stENEMY* e) {
-    if (e == NULL) return;
+    stPOSITION* e_pos = &enemy->obj.phy.pos;
+    stPOSITION* e_speed = &enemy->obj.phy.speed;
+    eDIR_LOOK* e_look = &enemy->obj.phy.look;
+
+    float begin_speed = 1.0f;
+    float cur_speed = begin_speed * (enemy->is_angry ? 1.8f : 1.0f);
+
+    if (e_speed->x == 0) e_speed->x = cur_speed;
+
+    int dir = (e_speed->x > 0) ? 1 : -1;
+    e_speed->x = dir * cur_speed;
+
+    // wall collision check and reflect dir
+    if (IsHittingWall(e_pos->x + e_speed->x, e_pos->y)) {
+        e_speed->x *= -1; // reflect dir
+        if (*e_look == 0) *e_look = 1;
+        if (*e_look == 1) *e_look = 0;
+    }
+
+    // jump logic
+    if (enemy->state == eENEMY_STATE_MOVE) {
+
+        if (!HasGroundAhead(e_pos->x, e_pos->y, dir) 
+            || (player->obj.phy.pos.y < e_pos->y && (rand() % 100 < 5))) {
+            e_speed->y = -5.0f;
+            Enemy_ChangeState(enemy, eENEMY_STATE_MOVE);
+            // chage to MOVE!
+        }
+    }
+
+    // this part going to replace MOVE func that share with player
+    e_pos->x += e_speed->x;
+    e_pos->y += e_speed->y;
 
 }
-void Enemy_MoveTowardPlayer(stENEMY* e, int x, int y) {
-    if (e == NULL) return;
+
+// reference
+//float speed = m->base_speed * (m->is_angry ? 2.0f : 1.0f);
+//
+//if (is_hitting_wall(map, m->x + m->vx, m->y)) m->vx *= -1; 
+//if (is_hitting_wall(map, m->x, m->y + m->vy)) m->vy *= -1;
+//
+//m->x += m->vx;
+//m->y += m->vy;
+
+// bool IsHittingWall(double x, double y);
+
+void Enemy_ToPlayer_Fly(stENEMY* enemy, stPLAYER* player) {
+    if (enemy == NULL) return;
+
+    stPOSITION* e_pos = &enemy->obj.phy.pos;
+    stPOSITION* e_speed = &enemy->obj.phy.speed;
+    eDIR_LOOK* e_look = &enemy->obj.phy.look;
+
+
+    float begin_speed = 1.0f;
+    float speed_mul = (enemy->is_angry ? 2.0f : 1.0f);
+
+    // if speed == 0 -> setting
+    if (e_speed->x == 0) e_speed->x = begin_speed * speed_mul;
+    if (e_speed->y == 0) e_speed->y = begin_speed * speed_mul;
+
+    // reflect on collision -> keep 45 degree
+    if (IsHittingWall(e_pos->x + e_pos->x, e_pos->y)) {
+        e_speed->x *= -1; // reflect left/right
+        if (*e_look == 0) *e_look = 1;
+        if (*e_look == 1) *e_look = 0;
+    }
+    if (IsHittingWall(e_pos->x, e_pos->y + e_pos->y)) {
+        e_speed->y *= -1; // reflect up/down
+        if (*e_look == 2) *e_look = 3;
+        if (*e_look == 3) *e_look = 2;
+    }
+
+    // this part going to replace MOVE func that share with player
+    e_pos->x += e_speed->x;
+    e_pos->y += e_speed->y;
 
 }
 
-void Enemy_Move(stENEMY* e) {
-    if (e == NULL) return;
 
-}
-void Enemy_Jump(stENEMY* e) {
-    if (e == NULL) return;
-
-}
 void Enemy_Throw(stENEMY* e) {
     if (e == NULL) return;
 
@@ -224,35 +327,25 @@ void Throw_Update(stOBJECT* throw, stPLAYER* player) {
 
 
 void Throw_MoveTowardPlayer(stOBJECT* throw, stPLAYER* player) {
-    stPHYSICS* t_phy = &throw->phy;
-    stPHYSICS* p_phy = &player->obj.phy;
+    stPOSITION* p_pos = &player->obj.phy.pos;
+    stPOSITION* t_pos = &throw->phy.pos;
+    stPOSITION* t_speed = &throw->phy.speed;
 
-    float dx = p_phy->pos.x - t_phy->pos.x;
-    float dy = p_phy->pos.y - t_phy->pos.y;
+    float dx = (float)p_pos->x - (float)t_pos->x;
+    float dy = (float)p_pos->y - (float)t_pos->y;
 
-    float dist = sqrt(dx * dx + dy * dy);
-    int   speed = 10;
+    float dist = (float)sqrt(dx * dx + dy * dy);
+    int speed = 10;
 
     if (dist > 0) {
-        t_phy->speed.x = (dx / dist) * speed;
-        t_phy->speed.y = (dy / dist) * speed;
+        t_speed->x = (dx / dist) * speed;
+        t_speed->y = (dy / dist) * speed;
     }
 
-    t_phy->pos.x += t_phy->speed.x;
-    t_phy->pos.y += t_phy->speed.y;
+    t_pos->x += t_speed->x;
+    t_pos->y += t_speed->y;
 }
 
-void Throw_Destroy(stOBJECT* throw) {
 
-
-}
-
-int Get_RandNum_1_to_9(void) {
-    static uint32_t x = 123456789;
-    x ^= x << 13;
-    x ^= x >> 17;
-    x ^= x << 5;
-    return (x % 9) + 1;
-}
 
 #endif
