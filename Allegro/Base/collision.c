@@ -33,6 +33,16 @@ void Collide_Object_Tile(stOBJECT* object, stTILE* tile) {
                 if (object->coll.is_static == false) {
                     object->phy.is_jump = false;
                 }
+
+                if (object->coll.tag == eOBJ_TAG_PLAYER) {
+                    stPLAYER* p = (stPLAYER*)object;
+                }
+                else if (object->coll.tag == eOBJ_TAG_ENEMY) {
+                    stENEMY* e = (stENEMY*)object;
+                }
+                else if (object->coll.tag == eOBJ_TAG_BUBBLE) {
+                    stBUBBLE* b = (stBUBBLE*)object;
+                }
             }
         }
     }
@@ -50,6 +60,10 @@ void Collide_Object_Tile(stOBJECT* object, stTILE* tile) {
                 else if (object->coll.tag == eOBJ_TAG_ENEMY) {
                     stENEMY* e = (stENEMY*)object;
                 }
+                else if (object->coll.tag == eOBJ_TAG_BUBBLE) {
+                    stBUBBLE* b = (stBUBBLE*)object;
+                    b->state = eBUBBLE_STATE_FLOAT;
+                }
             }
         }
         else if (obj_speed_x < 0) { // left
@@ -62,7 +76,51 @@ void Collide_Object_Tile(stOBJECT* object, stTILE* tile) {
                 else if (object->coll.tag == eOBJ_TAG_ENEMY) {
                     stENEMY* e = (stENEMY*)object;
                 }
+                else if (object->coll.tag == eOBJ_TAG_BUBBLE) {
+                    stBUBBLE* b = (stBUBBLE*)object;
+                    b->state = eBUBBLE_STATE_FLOAT;
+                }
             }
         }
     }
+}
+
+void Collide_Enemy_Player(stOBJECT* object, stPLAYER* player) {
+    if (player->state == ePLAYER_STATE_DEAD || player->invincible_timer > 0) {
+        return;
+    }
+
+    if (AABB_to_AABB(object, &(player->obj))) {
+
+        player->lives--;
+
+        if (player->lives <= 0) {
+            player->state = ePLAYER_STATE_DEAD;
+            player->obj.is_active = false;
+        }
+        else {
+            player->invincible_timer = 120; // 2s
+        }
+    }
+
+    if (object->coll.tag == eOBJ_TAG_ENEMY_ATTACK) {
+        object->is_active = false;
+    }
+}
+static bool AABB_to_AABB(stOBJECT* object1, stOBJECT* object2)
+{
+    double a_max_x = object1->phy.pos.x + object1->coll.box.width;
+    double a_max_y = object1->phy.pos.y + object1->coll.box.height;
+    double b_max_x = object2->phy.pos.x + object2->coll.box.width;
+    double b_max_y = object2->phy.pos.y + object2->coll.box.height;
+
+    double a_min_x = object1->phy.pos.x;
+    double a_min_y = object1->phy.pos.y;
+
+    double b_min_x = object2->phy.pos.x;
+    double b_min_y = object2->phy.pos.y;
+
+    if (a_max_x < b_min_x || a_min_x > b_max_x) return false;
+    if (a_max_y < b_min_y || a_min_y > b_max_y) return false;
+    return true;
 }

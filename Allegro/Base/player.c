@@ -79,9 +79,7 @@ void player_update_input(stPLAYER* player, int allegro_key, unsigned char flag)
 
 void player_update_frame(stPLAYER* player) {
 #if 0
-	if (player.lives < 0) {
-		player.state = ePLAYER_STATE_DEAD;
-		player->obj.is_active = false;
+	if (!player->obj.is_active) {
 		return;
 	}
 #endif
