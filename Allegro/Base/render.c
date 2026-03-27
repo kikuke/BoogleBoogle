@@ -12,18 +12,22 @@
 /*         Local Structure Declaration          */
 /************************************************/
 
-#define MAP 28
-#define SCALE 10
-#define CHARACTER 48
-
+#define FLAG_0 (0)
+#define MAP (28)
+#define SCALE (10)
+#define CHARACTER (48)
+#define HEART (30)
 #define SPRITE_PLAYER_MAX (5)
 #define SPRITE_PLAYER_STAY (2)
 #define SPRITE_PLAYER_ATTACK (4)
-
+#define BUBBLE (55)
+#define BUBBLE_POP (70)
 #define SPRITE_ENEMY_MAX (5)
 #define SPRITE_ENEMY_STAY (2)
+#define SPRITE_ENEMY_EASY (50)
 
-typedef struct {
+typedef struct 
+{
     int idx;
     ALLEGRO_BITMAP* left[SPRITE_PLAYER_MAX];
     ALLEGRO_BITMAP* right[SPRITE_PLAYER_MAX];
@@ -33,21 +37,39 @@ typedef struct {
     ALLEGRO_BITMAP* curr_move;
 } stSPRITE_PLAYER;
 
-typedef struct {
+typedef struct 
+{
     int idx;
     ALLEGRO_BITMAP* left[SPRITE_ENEMY_MAX];
     ALLEGRO_BITMAP* right[SPRITE_ENEMY_MAX];
     ALLEGRO_BITMAP* stay[SPRITE_ENEMY_STAY];
     ALLEGRO_BITMAP* curr_move;
-} stSPRITE_ENEMY;
+} stSPRITE_ENEMY_EASY;
 
+typedef struct
+{
+    int idx;
+    ALLEGRO_BITMAP* left[SPRITE_ENEMY_MAX];
+    ALLEGRO_BITMAP* right[SPRITE_ENEMY_MAX];
+    ALLEGRO_BITMAP* stay[SPRITE_ENEMY_STAY];
+    ALLEGRO_BITMAP* curr_move;
+} stSPRITE_ENEMY_HARD;
+
+typedef struct 
+{
+    ALLEGRO_BITMAP* bubble_idle;
+    ALLEGRO_BITMAP* bubble_pop;
+} stSPRITE_BUBBLE;
 
 typedef struct SPRITES
 {
     ALLEGRO_BITMAP* _sheet;
-
+    ALLEGRO_BITMAP* heart;
     ALLEGRO_BITMAP* map;
     stSPRITE_PLAYER player;
+    stSPRITE_ENEMY_EASY enemy_easy;
+    stSPRITE_ENEMY_HARD enemy_hard;
+    stSPRITE_BUBBLE bubble;
 } SPRITES;
 
 /************************************************/
@@ -55,11 +77,14 @@ typedef struct SPRITES
 /************************************************/
 void disp_pre_draw();
 void disp_post_draw();
-
+void render_heart();
 void test_disp(float x, float y);
+void test_scale_disp(float dx, float dy, float dw, float dh, int flags);
 void map_scale_disp(float dx, float dy, float dw, float dh, int flags);
 void character_scale_disp(ALLEGRO_BITMAP* sprite, float px, float py, float dw, float dh, int flags);
+void heart_scale_disp(float dx, float dy, float dw, float dh, int flags);
 void render_map(stTILE* tiles, size_t tile_len);
+void render_player_move(stPLAYER* player);
 static ALLEGRO_DISPLAY* disp;
 static ALLEGRO_BITMAP* buffer;
 
@@ -67,42 +92,7 @@ static ALLEGRO_BITMAP* buffer;
 /*         Local Variable Declaration           */
 /************************************************/
 SPRITES sprites;
-static void render_player_move(stPLAYER* player) {
-    if (player == NULL) return;
 
-    static int time = 0;
-
-    switch(player->state)
-    {
-    case ePLAYER_STATE_MOVE:
-        time++;
-        sprites.player.idx = (time / 2) % SPRITE_PLAYER_MAX;;
-
-        switch (player->obj.phy.look)
-        {
-        case eDIR_LOOK_LEFT:
-            sprites.player.curr_move = sprites.player.left[sprites.player.idx];
-            break;
-        case eDIR_LOOK_RIGHT:
-            sprites.player.curr_move = sprites.player.right[sprites.player.idx];
-            break;
-        }
-    case ePLAYER_STATE_IDLE:
-        switch (player->obj.phy.look)
-        {
-        case eDIR_LOOK_LEFT:
-            sprites.player.curr_move = sprites.player.stay[0];
-            break;
-        case eDIR_LOOK_RIGHT:
-            sprites.player.curr_move = sprites.player.stay[1];
-            break;
-        }
-        
-
-    }
-    character_scale_disp(sprites.player.curr_move, player->obj.phy.pos.x, player->obj.phy.pos.y, SCALE, SCALE, 0);
-
-}
   
 
     
@@ -124,14 +114,11 @@ void render_draw(void)
     
     disp_pre_draw();
     al_clear_to_color(al_map_rgb(0, 0, 0));
-
     render_map(GAME_MANAGER_GetMap(), CONFIG_MAP_Y_MAX * CONFIG_MAP_X_MAX);
 
-    /* switch (player->state)
-    {
-    case ePLAYER_STATE_MOVE:
-
-    }*/
+    render_heart();
+    //test_scale_disp(30, 30, SCALE, SCALE, 0);
+   
     render_player_move(GAME_MANAGER_GetPlayer(0));
 
     //character_scale_disp(10, 220, SCALE, SCALE, 0);
@@ -186,7 +173,10 @@ static void disp_post_draw()
 
 static void test_disp(float x, float y)
 {
-    al_draw_bitmap(sprites.map, x, y, 0);
+    al_draw_bitmap(sprites.enemy_easy.left[0], x, y, 0);
+}
+static void test_scale_disp(float dx, float dy, float dw, float dh, int flags) {
+    al_draw_scaled_bitmap(sprites.player.right[1], 0, 0, CHARACTER, CHARACTER, dx, dy, dw, dh, flags);
 }
 
 static void map_scale_disp(float dx, float dy, float dw, float dh, int flags) {
@@ -195,6 +185,10 @@ static void map_scale_disp(float dx, float dy, float dw, float dh, int flags) {
 
 static void character_scale_disp(ALLEGRO_BITMAP *sprite, float px, float py, float dw, float dh, int flags) {
     al_draw_scaled_bitmap(sprite, 0, 0, CHARACTER, CHARACTER, px, py, dw, dh, flags);
+}
+
+static void heart_scale_disp(float dx, float dy, float dw, float dh, int flags) {
+    al_draw_scaled_bitmap(sprites.heart, 0, 0, HEART, HEART, dx, dy, dw, dh, flags);;
 }
 
 ALLEGRO_BITMAP* sprite_grab(int x, int y, int w, int h)
@@ -209,7 +203,10 @@ void sprites_init()
     sprites._sheet = al_load_bitmap("Resource/Bubble_Bobble_sprite.png");
     must_init(sprites._sheet, "spritesheet");
 
+    //map
     sprites.map = sprite_grab(8, 1578, MAP, MAP);
+
+    //p_move
     sprites.player.stay[0] = sprite_grab(268, 143, CHARACTER, CHARACTER);
     sprites.player.stay[1] = sprite_grab(332, 143, CHARACTER, CHARACTER);
     sprites.player.left[0] = sprite_grab(270, 16, CHARACTER, CHARACTER);
@@ -222,6 +219,8 @@ void sprites_init()
     sprites.player.right[2] = sprite_grab(465, 16, CHARACTER, CHARACTER);
     sprites.player.right[3] = sprite_grab(528, 16, CHARACTER, CHARACTER);
     sprites.player.right[4] = sprite_grab(590, 16, CHARACTER, CHARACTER);
+
+    //p_attack
     sprites.player.left_attack[0] = sprite_grab(268,335, CHARACTER, CHARACTER);
     sprites.player.left_attack[1] = sprite_grab(204, 335, CHARACTER, CHARACTER);
     sprites.player.left_attack[2] = sprite_grab(140, 335, CHARACTER, CHARACTER);
@@ -231,6 +230,26 @@ void sprites_init()
     sprites.player.right_attack[2] = sprite_grab(463, 335, CHARACTER, CHARACTER);
     sprites.player.right_attack[3] = sprite_grab(528, 335, CHARACTER, CHARACTER);
 
+    //enemy_easy
+    sprites.enemy_easy.left[0] = sprite_grab(14, 528,SPRITE_ENEMY_EASY, SPRITE_ENEMY_EASY);
+    sprites.enemy_easy.left[1] = sprite_grab(78, 528, SPRITE_ENEMY_EASY, SPRITE_ENEMY_EASY);
+    sprites.enemy_easy.left[2] = sprite_grab(142, 528, SPRITE_ENEMY_EASY, SPRITE_ENEMY_EASY);
+    sprites.enemy_easy.left[3] = sprite_grab(206, 528, SPRITE_ENEMY_EASY, SPRITE_ENEMY_EASY);
+    sprites.enemy_easy.left[4] = sprite_grab(270, 528, SPRITE_ENEMY_EASY, SPRITE_ENEMY_EASY);
+    
+    sprites.enemy_easy.right[0] = sprite_grab(589, 528, SPRITE_ENEMY_EASY, SPRITE_ENEMY_EASY);
+    sprites.enemy_easy.right[1] = sprite_grab(530, 528, SPRITE_ENEMY_EASY, SPRITE_ENEMY_EASY);
+    sprites.enemy_easy.right[2] = sprite_grab(467, 528, SPRITE_ENEMY_EASY, SPRITE_ENEMY_EASY);
+    sprites.enemy_easy.right[3] = sprite_grab(402, 528, SPRITE_ENEMY_EASY, SPRITE_ENEMY_EASY);
+    sprites.enemy_easy.right[4] = sprite_grab(332, 528, SPRITE_ENEMY_EASY, SPRITE_ENEMY_EASY);
+
+    //enemy_hard
+
+    //bubble
+    sprites.bubble.bubble_idle = sprite_grab(135,1467,BUBBLE ,BUBBLE);
+    sprites.bubble.bubble_pop = sprite_grab(416, 1460, BUBBLE_POP, BUBBLE_POP);
+    //hud
+    sprites.heart = sprite_grab(8, 1436, HEART, HEART);
 }
 
 
@@ -249,6 +268,19 @@ void sprites_deinit()
     al_destroy_bitmap(sprites.player.right[3]);
     al_destroy_bitmap(sprites.player.right[4]);
 
+    al_destroy_bitmap(sprites.player.left_attack[0]);
+    al_destroy_bitmap(sprites.player.left_attack[1]);
+    al_destroy_bitmap(sprites.player.left_attack[2]);
+    al_destroy_bitmap(sprites.player.left_attack[3]);
+    al_destroy_bitmap(sprites.player.right_attack[0]);
+    al_destroy_bitmap(sprites.player.right_attack[1]);
+    al_destroy_bitmap(sprites.player.right_attack[2]);
+    al_destroy_bitmap(sprites.player.right_attack[3]);
+
+    al_destroy_bitmap(sprites.heart);
+
+    al_destroy_bitmap(sprites.bubble.bubble_idle);
+    al_destroy_bitmap(sprites.bubble.bubble_pop);
 
     al_destroy_bitmap(sprites._sheet);
 }
@@ -258,8 +290,52 @@ static void render_map(stTILE  *tiles, size_t tile_len) {
     for (int i = 0; i < tile_len; ++i) {
         float x = tiles[i].obj.phy.pos.x;
         float y = tiles[i].obj.phy.pos.y;
-        map_scale_disp(x, y, SCALE, SCALE, 0);
+        map_scale_disp(x, y, SCALE, SCALE, FLAG_0);
     }
+}
+static void render_player_move(stPLAYER* player) {
+    if (player == NULL) return;
+
+    static int time = 0;
+
+    switch (player->state)
+    {
+    case ePLAYER_STATE_MOVE:
+        time++;
+        sprites.player.idx = (time / 2) % SPRITE_PLAYER_MAX;;
+
+        switch (player->obj.phy.look)
+        {
+        case eDIR_LOOK_LEFT:
+            sprites.player.curr_move = sprites.player.left[sprites.player.idx];
+            break;
+        case eDIR_LOOK_RIGHT:
+            sprites.player.curr_move = sprites.player.right[sprites.player.idx];
+            break;
+        }
+    case ePLAYER_STATE_IDLE:
+        time = 0;
+        switch (player->obj.phy.look)
+        {
+        case eDIR_LOOK_LEFT:
+            sprites.player.curr_move = sprites.player.stay[0];
+            break;
+        case eDIR_LOOK_RIGHT:
+            sprites.player.curr_move = sprites.player.stay[1];
+            break;
+        }
+        break;
+
+    }
+    character_scale_disp(sprites.player.curr_move, player->obj.phy.pos.x, player->obj.phy.pos.y, SCALE, SCALE, FLAG_0);
+
+}
+
+static void render_heart() {
+
+    heart_scale_disp(0, 0, SCALE, SCALE, FLAG_0);
+    heart_scale_disp(10, 0, SCALE, SCALE, FLAG_0);
+    heart_scale_disp(20, 0, SCALE, SCALE, FLAG_0);
 }
 #if 0
 // --- fx ---
