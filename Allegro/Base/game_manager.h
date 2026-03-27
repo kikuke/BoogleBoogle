@@ -4,6 +4,7 @@
 #include "bugglebuggle.h"
 #include "object.h"
 #include "player.h"
+#include "bubble.h"
 #include "map.h"
 #include "enemy.h"
 
@@ -26,6 +27,7 @@ typedef enum {
 eGAME_STATE GAME_MANAGER_UpdateState(void);
 
 stPLAYER* GAME_MANAGER_GetPlayer(int player_id);
+stBUBBLE* GAME_MANAGER_GetBubble(void);
 stOBJECT* GAME_MANAGER_GetEnemyAttacks(void);
 /* Need to apply map.c */
 void GAME_MANAGER_InitStageObject(eGAME_STAGE stage, stOBJECT *obj);

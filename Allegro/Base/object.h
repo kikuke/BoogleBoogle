@@ -45,7 +45,8 @@ typedef struct {
 } stPHYSICS;
 
 typedef struct {
-	int is_active;	/* TODO:  */
+	int is_active; /* unused */
+	bool is_move;
 } stRENDER;
 
 typedef struct {

@@ -1,5 +1,6 @@
 #ifndef __BUBBLE_H__
 #define __BUBBLE_H__
+
 #include <stdbool.h>
 #include "object.h"
 #include "player.h"
@@ -20,7 +21,7 @@ typedef struct _bubble
     int frame;        
     int dur;          
     eBUBBLE_STATE state;
-}stBUBBLE;
+} stBUBBLE;
 
 void bubble_init(stBUBBLE* bubbles);
 bool bubble_add(stPLAYER* player, stBUBBLE* bubbles);

@@ -14,5 +14,9 @@ void stOBJECT_UpdatePhysics(stOBJECT* obj) {
 	if (obj->phy.is_gravity) {
 		obj->phy.speed.y += GRAVITY;
 	}
+
+	/* Update Rendering */
+	obj->rend.is_move = obj->phy.speed.x != 0;
+
 	obj->phy.speed.x = 0;
 }

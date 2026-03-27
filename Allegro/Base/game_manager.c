@@ -32,6 +32,11 @@ stPLAYER *GAME_MANAGER_GetPlayer(int player_id)
 	return &player[player_id];
 }
 
+stBUBBLE* GAME_MANAGER_GetBubble(void)
+{
+	return bubble;
+}
+
 stOBJECT* GAME_MANAGER_GetEnemyAttacks(void)
 {
 	return enemy_attack;
@@ -64,11 +69,13 @@ void GAME_MANAGER_UpdatePhysics(void)
 {
 	// TODO: Need to apply enemy
 	stOBJECT_UpdatePhysics(&player[0].obj);
+	bubble_update(bubble);
 }
 
 void GAME_MANAGER_UpdateObject(void)
 {
 	player_update_frame(&player[0]);
+	bubble_update_frame(bubble);
 }
 
 stTILE* GAME_MANAGER_GetMap(void)

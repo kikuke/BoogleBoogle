@@ -1,8 +1,8 @@
 #include <allegro5/allegro5.h>
 
 #include "player.h"
-#include "bubble.h"
 #include "collision.h"
+#include "game_manager.h"
 
 // --- player ---
 
@@ -66,10 +66,10 @@ void player_update_input(stPLAYER* player, int allegro_key, unsigned char flag)
 	break;
 	case ALLEGRO_KEY_SPACE:
 	{
-		//if (bubble_add(player, bubbles)) {
-		//	player->shot_timer = 60;
-		//	player->state = ePLAYER_STATE_ATTACK;
-		//}
+		if (bubble_add(player, GAME_MANAGER_GetBubble())) {
+			player->shot_timer = 60;
+			player->state = ePLAYER_STATE_ATTACK;
+		}
 	}
 	break;
 	default:
@@ -86,9 +86,11 @@ void player_update_frame(stPLAYER* player) {
 	}
 #endif
 	// TODO: Need To Modify
-	if ((player->obj.phy.speed.x == 0)/* && (player->obj.phy.speed.y == 0)*/) {
+#if 01
+	if ((player->obj.phy.speed.x == 0 && player->state != ePLAYER_STATE_ATTACK)/* && (player->obj.phy.speed.y == 0)*/) {
 		player->state = ePLAYER_STATE_IDLE;
 	}
+#endif
 
 	if (player->shot_timer > 0) player->shot_timer--;
 	if (player->invincible_timer > 0) player->invincible_timer--;
