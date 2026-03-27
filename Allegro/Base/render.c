@@ -127,6 +127,10 @@ void render_update_ingame(void)
 
 void render_draw(eGAME_STATE state)
 {
+#if (DEBUG_PLAYER == 1)
+    player_debug(GAME_MANAGER_GetPlayer(0));
+#endif
+
     disp_pre_draw();
     al_clear_to_color(al_map_rgb(0, 0, 0));
     switch (state) {
@@ -360,9 +364,9 @@ static void render_player_move(stPLAYER* player) {
 
     static int time = 0;
 
-    switch (player->state)
+    switch (player->obj.rend.is_move)
     {
-    case ePLAYER_STATE_MOVE:
+    case true:
         time++;
         sprites.player.idx = (time / 2) % SPRITE_PLAYER_MAX;;
 
@@ -375,7 +379,7 @@ static void render_player_move(stPLAYER* player) {
             sprites.player.curr_move = sprites.player.right[sprites.player.idx];
             break;
         }
-    case ePLAYER_STATE_IDLE:
+    case false:
         time = 0;
         switch (player->obj.phy.look)
         {

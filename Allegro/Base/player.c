@@ -100,9 +100,9 @@ void player_update_frame(stPLAYER* player) {
 void player_debug(stPLAYER* player)
 {
 	printf("\n[PLAYER DATA]\
-			\n\tSTAT: { STAT: %d, IS_JUMP: %d}\
+			\n\tSTAT: { STAT: %d, IS_JUMP: %d, IS_MOVE: %d }\
 			\n\tPOS: { LOOK: %d, X: %f, Y: %f }\n",
-		player->state, player->is_jump,
+		player->state, player->is_jump, player->obj.rend.is_move,
 		player->obj.phy.look, player->obj.phy.pos.x, player->obj.phy.pos.y);
 }
 #endif

@@ -104,10 +104,6 @@ static void routine_ingame(void)
     GAME_MANAGER_UpdateObject();
     /* Update Rendering */
     render_update_ingame();
-
-#if (DEBUG_PLAYER == 1)
-    player_debug(GAME_MANAGER_GetPlayer(0));
-#endif
 }
 
 static ALLEGRO_EVENT_QUEUE* init_queue(void)
