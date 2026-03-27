@@ -29,4 +29,17 @@
 #define PLAYER_W 10
 #define PLAYER_H 10
 
+typedef enum {
+	eGAME_STATE_MAIN = 0,
+	eGAME_STATE_INGAME,
+	eGAME_STATE_END
+} eGAME_STATE;
+
+typedef enum {
+	eGAME_STAGE_1 = 0,
+	eGAME_STAGE_2,
+	eGAME_STAGE_3,
+	eGAME_STAGE_MAX
+} eGAME_STAGE;
+
 #endif

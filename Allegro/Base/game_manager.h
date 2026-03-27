@@ -8,19 +8,6 @@
 #include "map.h"
 #include "enemy.h"
 
-typedef enum {
-	eGAME_STATE_MAIN = 0,
-	eGAME_STATE_INGAME,
-	eGAME_STATE_END
-} eGAME_STATE;
-
-typedef enum {
-	eGAME_STAGE_1 = 0,
-	eGAME_STAGE_2,
-	eGAME_STAGE_3,
-	eGAME_STAGE_MAX
-} eGAME_STAGE;
-
 /************************************************/
 /*          Global Function Declaration         */
 /************************************************/
@@ -34,6 +21,7 @@ void GAME_MANAGER_InitStageObject(eGAME_STAGE stage, stOBJECT *obj);
 stTILE* GAME_MANAGER_GetMap(void);
 void GAME_MANAGER_CheckCollision(void);
 void GAME_MANAGER_UpdatePhysics(void);
+void GAME_MANAGER_UpdateObject(void);
 
 void GAME_MANAGER_SetStage(eGAME_STAGE stage);
 

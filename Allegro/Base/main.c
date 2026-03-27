@@ -76,7 +76,7 @@ int main()
 
         if (redraw && al_is_event_queue_empty(queue))
         {
-            render_draw();
+            render_draw(game_state);
             redraw = false;
         }
     }

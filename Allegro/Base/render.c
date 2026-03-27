@@ -67,6 +67,7 @@ typedef struct
 typedef struct SPRITES
 {
     ALLEGRO_BITMAP* _sheet;
+    ALLEGRO_BITMAP* _title_sheet;
     ALLEGRO_BITMAP* heart;
     ALLEGRO_BITMAP* map;
     stSPRITE_PLAYER player;
@@ -83,13 +84,22 @@ void disp_post_draw();
 void render_heart();
 void test_disp(float x, float y);
 void test_scale_disp(float dx, float dy, float dw, float dh, int flags);
-void map_scale_disp(float dx, float dy, float dw, float dh, int flags);
-void character_scale_disp(ALLEGRO_BITMAP* sprite, float px, float py, float dw, float dh, int flags);
+
 void heart_scale_disp(float dx, float dy, float dw, float dh, int flags);
 void test_render_heart(int heart_cnt);
+
+//map
+void map_scale_disp(float dx, float dy, float dw, float dh, int flags);
 void render_map(stTILE* tiles, size_t tile_len);
+
+//player
 void render_player_move(stPLAYER* player);
-void enemy_throw_attack(stOBJECT* enemy_throw);
+void character_scale_disp(ALLEGRO_BITMAP* sprite, float px, float py, float dw, float dh, int flags);
+
+//enemy
+void enemy_easy_scale_disp(ALLEGRO_BITMAP* sprite, float px, float py, float dw, float dh, int flags);
+void render_enemy_easy_move(stENEMY* enemy);
+void render_enemy_throw_attack(stOBJECT* enemy_throw);
 void enemy_throw_scale_disp(ALLEGRO_BITMAP* sprite, float px, float py, float dw, float dh, int flags);
 static ALLEGRO_DISPLAY* disp;
 static ALLEGRO_BITMAP* buffer;
@@ -115,20 +125,46 @@ void render_update_ingame(void)
 #endif
 }
 
-void render_draw(void)
+void render_draw(eGAME_STATE state)
 {
-    
     disp_pre_draw();
     al_clear_to_color(al_map_rgb(0, 0, 0));
-    render_map(GAME_MANAGER_GetMap(), CONFIG_MAP_Y_MAX * CONFIG_MAP_X_MAX);
-    test_render_heart(3);
-    //render_heart();
-    //test_scale_disp(30, 30, SCALE, SCALE, 0);
-    
-    render_player_move(GAME_MANAGER_GetPlayer(0));
+    switch (state) {
+    case eGAME_STATE_MAIN:
+        
+        break;
 
-    enemy_throw_attack(GAME_MANAGER_GetEnemyAttacks());
-    //character_scale_disp(10, 220, SCALE, SCALE, 0);
+    case eGAME_STATE_INGAME:
+
+        
+        render_map(GAME_MANAGER_GetMap(), CONFIG_MAP_Y_MAX * CONFIG_MAP_X_MAX);
+        test_render_heart(3);
+        //render_heart();
+        //test_scale_disp(30, 30, SCALE, SCALE, 0);
+
+        render_player_move(GAME_MANAGER_GetPlayer(0));
+        render_enemy_throw_attack(GAME_MANAGER_GetEnemyAttacks());
+        break;
+    }
+    //if (state == eGAME_STATE_MAIN) {
+    //    disp_pre_draw();
+    //    al_clear_to_color(al_map_rgb(0, 0, 0));
+    //}
+    //if (state == eGAME_STATE_INGAME) {
+
+    //    disp_pre_draw();
+    //    al_clear_to_color(al_map_rgb(0, 0, 0));
+    //    render_map(GAME_MANAGER_GetMap(), CONFIG_MAP_Y_MAX * CONFIG_MAP_X_MAX);
+    //    test_render_heart(3);
+    //    //render_heart();
+    //    //test_scale_disp(30, 30, SCALE, SCALE, 0);
+
+    //    render_player_move(GAME_MANAGER_GetPlayer(0));
+
+    //    enemy_throw_attack(GAME_MANAGER_GetEnemyAttacks());
+    //    //character_scale_disp(10, 220, SCALE, SCALE, 0);
+    //}
+    
 #if 0
 
     stars_draw();
@@ -194,6 +230,11 @@ static void character_scale_disp(ALLEGRO_BITMAP *sprite, float px, float py, flo
     al_draw_scaled_bitmap(sprite, 0, 0, CHARACTER, CHARACTER, px, py, dw, dh, flags);
 }
 
+static void enemy_easy_scale_disp(ALLEGRO_BITMAP* sprite, float px, float py, float dw, float dh, int flags) {
+    al_draw_scaled_bitmap(sprite, 0, 0, SPRITE_ENEMY_EASY, SPRITE_ENEMY_EASY, px, py, dw, dh, flags);
+}
+
+
 static void enemy_throw_scale_disp(ALLEGRO_BITMAP* sprite, float px, float py, float dw, float dh, int flags) {
     al_draw_scaled_bitmap(sprite, 0, 0, ENEMY_THROW, ENEMY_THROW, px, py, dw, dh, flags);
 }
@@ -206,13 +247,17 @@ ALLEGRO_BITMAP* sprite_grab(int x, int y, int w, int h)
 {
     ALLEGRO_BITMAP* sprite = al_create_sub_bitmap(sprites._sheet, x, y, w, h);
     must_init(sprite, "sprite grab");
+
     return sprite;
+
 }
 
 void sprites_init()
 {
     sprites._sheet = al_load_bitmap("Resource/Bubble_Bobble_sprite.png");
+    //sprites._title_sheet = al_load_bitmap("Resource/Bubble_Bobble_sprite_2.png");
     must_init(sprites._sheet, "spritesheet");
+    //must_init(sprites._title_sheet, "spritesheet");
 
     //map
     sprites.map = sprite_grab(8, 1578, MAP, MAP);
@@ -298,6 +343,10 @@ void sprites_deinit()
     al_destroy_bitmap(sprites._sheet);
 }
 
+static void render_main_title() {
+
+}
+
 static void render_map(stTILE  *tiles, size_t tile_len) {
     
     for (int i = 0; i < tile_len; ++i) {
@@ -344,7 +393,46 @@ static void render_player_move(stPLAYER* player) {
 
 }
 
-static void enemy_throw_attack(stOBJECT* enemy_throw) {
+static void render_enemy_easy_move(stENEMY* enemy) {
+    if (enemy == NULL) return;
+
+    static int time = 0;
+
+    switch (enemy->state)
+    {
+    case eENEMY_STATE_MOVE:
+        time++;
+        sprites.enemy_easy.idx = (time / 2) % SPRITE_PLAYER_MAX;;
+
+        switch (enemy->obj.phy.look)
+        {
+        case eDIR_LOOK_LEFT:
+            sprites.player.curr_move = sprites.enemy_easy.left[sprites.enemy_easy.idx];
+            break;
+        case eDIR_LOOK_RIGHT:
+            sprites.player.curr_move = sprites.enemy_easy.right[sprites.enemy_easy.idx];
+            break;
+        }
+    case ePLAYER_STATE_IDLE:
+        time = 0;
+        switch (enemy->obj.phy.look)
+        {
+        case eDIR_LOOK_LEFT:
+            sprites.enemy_easy.curr_move = sprites.enemy_easy.left[0];
+            break;
+        case eDIR_LOOK_RIGHT:
+            sprites.enemy_easy.curr_move = sprites.enemy_easy.right[0];
+            break;
+        }
+        break;
+
+    }
+    character_scale_disp(sprites.enemy_easy.curr_move, enemy->obj.phy.pos.x, enemy->obj.phy.pos.y, SCALE, SCALE, FLAG_0);
+
+}
+
+
+static void render_enemy_throw_attack(stOBJECT* enemy_throw) {
     if (enemy_throw == NULL) return;
     for (int i = 0; i < CONFIG_OBJECT_ENEMY_ATTACK_MAX; ++i) {
         if (enemy_throw[i].rend.is_active) {

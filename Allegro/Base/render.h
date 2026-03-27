@@ -1,5 +1,6 @@
 #ifndef __RENDER_H__
 #define __RENDER_H__
+#include "bugglebuggle.h"
 
 #define BUFFER_W 320
 #define BUFFER_H 240
@@ -10,7 +11,7 @@
 
 void init_render(ALLEGRO_EVENT_QUEUE* queue);
 void render_update_ingame(void);
-void render_draw(void);
+void render_draw(eGAME_STATE state);
 void deinit_render();
 
 #endif
