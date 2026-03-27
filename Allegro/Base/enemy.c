@@ -1,5 +1,5 @@
 
-#if 00
+#if 01
 
 #include "enemy.h"
 #include "bugglebuggle.h"
@@ -68,6 +68,7 @@ stENEMY* Enemy_Create(stENEMY* enemy, eENEMY_TYPE type, int x, int y) {
     return NULL; // fail to create. no room for pool
 }
 
+#if 0
 void Enemy_Update(stENEMY* enemy, stENEMY* e) {
     if (e == NULL) return;
 
@@ -352,5 +353,5 @@ static int Get_RandNum_1_to_9(void) {
     x ^= x << 5;
     return (x % 9) + 1;
 }
-
+#endif
 #endif

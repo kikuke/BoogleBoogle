@@ -81,17 +81,20 @@ typedef struct {
 //├── int throw_timer
 //└── bool is_angry
 
+#if 0
 // make random number between 1 to 9
 int Get_RandNum_1_to_9(void);
 
 // pool management
 void Enemy_InitializePool(stENEMY* enemy);						// initialize enemy pool when begin
 int Enemy_GetActiveCount(stENEMY* enemy);						// get number of active enemies
+#endif
 
 // single enemy manage
 stENEMY* Enemy_Create(stENEMY* enemy, eENEMY_TYPE type, int x, int y);	// create n initialize an enemy
 //void Enemy_Destroy(stENEMY* enemy);							// destroy an enemy
 
+#if 0
 // state manage
 void Enemy_ChangeState(stENEMY* enemy, eENEMY_STATE newState);	// change the enemy's current state
 eENEMY_STATE Enemy_GetCurrentState(stENEMY* enemy);				// get the enemy's current state
@@ -105,9 +108,11 @@ void Enemy_UpdateMove(stENEMY* enemy);							// update MOVE state
 void Enemy_UpdateAttack(stENEMY* enemy);						// update ATTACK state
 void Enemy_UpdateTrapped(stENEMY* enemy);						// update TRAPPED (bubble) state
 void Enemy_UpdateDead(stENEMY* enemy, stENEMY* e);				// update DEAD state
+#endif
 
 // for main update
 void Enemy_Update(stENEMY* enemy, stENEMY* e);					// update single enemy
+#if 0
 void Enemy_UpdateAll(stENEMY* enemy);							// update all active enemies
 
 // AI n behavior
@@ -121,5 +126,5 @@ void Enemy_Throw(stENEMY* enemy);								// make enemy Throw
 stOBJECT* Throw_Create(stOBJECT* obj, int x, int y);			// create throw obj
 void Throw_Update(stOBJECT* throw, stPLAYER* player);			// update throw
 void Throw_MoveTowardPlayer(stOBJECT* throw, stPLAYER* player);	// keep forward to player
-
+#endif
 #endif

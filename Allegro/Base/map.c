@@ -1,3 +1,4 @@
+#include "game_manager.h"
 #include "bugglebuggle.h"
 #include "map.h"
 
@@ -19,19 +20,28 @@ stTILE* stTILE_init(stTILE* tile, stPOSITION* pos)
 	return tile;
 }
 
-void map_init_stage(stTILE *map, int (*stage)[CONFIG_MAP_X_MAX]) {
+void map_init_stage(stTILE* map, stENEMY* enemy, stSTAGE_DATA *data) {
+	init_player(GAME_MANAGER_GetPlayer(0));
+
+	for (int i = 0; i < CONFIG_OBJECT_ENEMY_MAX; ++i) {
+		stSTAGE_ENEMY_DATA* e_data = data->enemies + i;
+		if (e_data->is_active == true) {
+			Enemy_Create(enemy, e_data->type, e_data->pos.x, e_data->pos.y);
+		}
+	}
+
 	for (int i = 0; i < CONFIG_MAP_Y_MAX; ++i) {
 		for (int j = 0; j < CONFIG_MAP_X_MAX; ++j) {
-			stPOSITION pos;
+			stPOSITION pos = {
+				.x = j * 10,
+				.y = i * 10
+			};
 
-			if (stage[i][j] != 0) {
-				pos.x = j * 10;
-				pos.y = i * 10;
+			if (data->stage[i][j] != 0) {
 				stTILE_init(&map[(i * CONFIG_MAP_X_MAX) + j], &pos);
 			}
 		}
 	}
-	
 }
 
 

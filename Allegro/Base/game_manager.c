@@ -17,13 +17,18 @@ static stENEMY enemy[CONFIG_OBJECT_ENEMY_MAX];
 static stOBJECT enemy_attack[CONFIG_OBJECT_ENEMY_ATTACK_MAX];
 static stTILE map[CONFIG_OBJECT_MAP_MAX];
 
+eGAME_STATE game_state = eGAME_STATE_MAIN;
+
 /************************************************/
 /*          Global Function Definition          */
 /************************************************/
 eGAME_STATE GAME_MANAGER_UpdateState(void)
 {
 	//TODO: Need to modify
-	GAME_MANAGER_SetStage(eGAME_STAGE_1);// Need To Condition
+	if (game_state == eGAME_STATE_MAIN) {
+		GAME_MANAGER_SetStage(eGAME_STAGE_1);// Need To Condition
+		game_state = eGAME_STATE_INGAME;
+	}
 	return eGAME_STATE_INGAME;
 }
 
@@ -88,12 +93,12 @@ void GAME_MANAGER_SetStage(eGAME_STAGE stage)
 	switch (stage) {
 	case eGAME_STAGE_1:
 		{
-			map_init_stage(GAME_MANAGER_GetMap(), MAP_1_GetData());
+			map_init_stage(map, enemy, MAP_1_GetData());
 		}
 		break;
 	case eGAME_STAGE_2:
 		{
-			map_init_stage(GAME_MANAGER_GetMap(), MAP_2_GetData());
+			//map_init_stage(map, enemy, MAP_2_GetData());
 		}
 	default:
 		break;

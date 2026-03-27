@@ -1,4 +1,4 @@
-#include "map.h"
+#include "map_1.h"
 
 static int stage1[CONFIG_MAP_Y_MAX][CONFIG_MAP_X_MAX] =
 {
@@ -28,7 +28,53 @@ static int stage1[CONFIG_MAP_Y_MAX][CONFIG_MAP_X_MAX] =
 {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1}
 };
 
-int** MAP_1_GetData(void)
+/*
+
+typedef struct {
+	bool is_active;
+	eENEMY_TYPE type;
+	stPOSITION	pos;
+} stSTAGE_ENEMY_DATA;
+*/
+static stSTAGE_ENEMY_DATA enemy1_data[CONFIG_OBJECT_ENEMY_MAX] = {
+	{
+		.is_active = true,
+		.type = eENEMY_TYPE_BASIC,
+		.pos = { .x = 30, .y = 50 }
+	},
+	{
+		.is_active = true,
+		.type = eENEMY_TYPE_BASIC,
+		.pos = {.x = 50, .y = 50 }
+	},
+	{
+		.is_active = true,
+		.type = eENEMY_TYPE_BASIC,
+		.pos = {.x = 70, .y = 50 }
+	},
+	{
+		.is_active = true,
+		.type = eENEMY_TYPE_BASIC,
+		.pos = {.x = 90, .y = 50 }
+	},
+	{
+		.is_active = true,
+		.type = eENEMY_TYPE_BASIC,
+		.pos = {.x = 120, .y = 50 }
+	},
+	{
+		.is_active = true,
+		.type = eENEMY_TYPE_BASIC,
+		.pos = {.x = 150, .y = 50 }
+	},
+};
+
+static stSTAGE_DATA stage1_data = {
+	.stage = stage1,
+	.enemies = enemy1_data
+};
+
+stSTAGE_DATA* MAP_1_GetData(void)
 {
-	return stage1;
+	return &stage1_data;
 }
