@@ -21,8 +21,13 @@ void init_player(stPLAYER* player)
 		.obj.phy.look = eDIR_LOOK_RIGHT,
 		.obj.phy.speed.x = 0.0,
 		.obj.phy.speed.y = 0.0,
+#if 0
 		.obj.phy.pos.x = 10.0, // init pos, fix it later
 		.obj.phy.pos.y = 220.0,
+#else
+		.obj.phy.pos.x = 15.0, // init pos, fix it later
+		.obj.phy.pos.y = 210.0,
+#endif
 		.state = ePLAYER_STATE_IDLE,
 		.shot_timer = 0,
 		.lives = 3,
@@ -42,14 +47,14 @@ void player_update_input(stPLAYER* player, int allegro_key, unsigned char flag)
 	{
 		player->obj.phy.speed.x = -PLAYER_SPEED;
 		player->obj.phy.look = eDIR_LOOK_LEFT;
-		if (!player->is_jump) player->state = ePLAYER_STATE_MOVE;
+		player->state = ePLAYER_STATE_MOVE;
 	}
 	break;
 	case ALLEGRO_KEY_RIGHT:
 	{
 		player->obj.phy.speed.x = PLAYER_SPEED;
 		player->obj.phy.look = eDIR_LOOK_RIGHT;
-		if (!player->is_jump) player->state = ePLAYER_STATE_MOVE;
+		player->state = ePLAYER_STATE_MOVE;
 	}
 	break;
 	case ALLEGRO_KEY_UP:
@@ -95,22 +100,14 @@ void player_update_frame(stPLAYER* player) {
 	}
 #endif
 
-	if (player->obj.phy.speed.x == 0 && !player->is_jump && player->state != ePLAYER_STATE_ATTACK) {
-		player->state = ePLAYER_STATE_IDLE;
-	}
-
-	if (player->obj.phy.is_gravity) {
-		//player->obj.phy.speed.y += GRAVITY;
-	}
-
 	player->obj.phy.pos.x += player->obj.phy.speed.x;
 	player->obj.phy.pos.y += player->obj.phy.speed.y;
 
 	if (player->shot_timer > 0) player->shot_timer--;
 	if (player->invincible_timer > 0) player->invincible_timer--;
 
-	if (player->is_jump == true) {
-		player->obj.phy.speed.y += 1;
+	if (player->obj.phy.is_gravity) {
+		player->obj.phy.speed.y += GRAVITY;
 	}
 	player->obj.phy.speed.x = 0;
 }
