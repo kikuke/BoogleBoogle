@@ -2,13 +2,25 @@
 #define __MAP_H__
 
 #include "bugglebuggle.h"
+#include "enemy.h"
 #include "object.h"
 
 typedef struct {
 	stOBJECT obj;
 } stTILE;
 
+typedef struct {
+	bool is_active;
+	eENEMY_TYPE type;
+	stPOSITION	pos;
+} stSTAGE_ENEMY_DATA;
+
+typedef struct {
+	int (*stage)[CONFIG_MAP_X_MAX];
+	stSTAGE_ENEMY_DATA *enemies;
+} stSTAGE_DATA;
+
 stTILE* stTILE_init(stTILE *tile, stPOSITION *pos);
-void map_init_stage(stTILE* map, int (*stage)[CONFIG_MAP_X_MAX]);
+void map_init_stage(stTILE* map, stENEMY* enemy, stSTAGE_DATA *data);
 
 #endif

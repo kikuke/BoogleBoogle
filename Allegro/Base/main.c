@@ -42,7 +42,8 @@ int main()
 
     init_keyboard(queue);
     init_render(queue);
-    init_player(GAME_MANAGER_GetPlayer(0));
+
+    /* TODO: Need to Modify */
 
     frames = 0;
     al_start_timer(timer);
