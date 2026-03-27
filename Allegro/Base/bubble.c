@@ -7,8 +7,6 @@
 #define BUBBLE_SHOT_H (10)
 #define BUBBLE_SHOT_W (10)
 
-#define BUBBLE_SPEED    (2.0)
-#define BUBBLE_UP_SPEED (-1.0)    
 #define SHOOT_DURATION  (60)
 #define TOTAL_DURATION  (300)
 

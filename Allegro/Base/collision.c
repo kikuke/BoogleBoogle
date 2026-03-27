@@ -81,6 +81,8 @@ void Collide_Object_Tile(stOBJECT* object, stTILE* tile) {
                 else if (object->coll.tag == eOBJ_TAG_BUBBLE) {
                     stBUBBLE* b = (stBUBBLE*)object;
                     b->state = eBUBBLE_STATE_FLOAT;
+                    b->obj.phy.speed.x = 0;
+                    b->obj.phy.speed.y = BUBBLE_UP_SPEED;
                 }
             }
         }
@@ -97,6 +99,8 @@ void Collide_Object_Tile(stOBJECT* object, stTILE* tile) {
                 else if (object->coll.tag == eOBJ_TAG_BUBBLE) {
                     stBUBBLE* b = (stBUBBLE*)object;
                     b->state = eBUBBLE_STATE_FLOAT;
+                    b->obj.phy.speed.x = 0;
+                    b->obj.phy.speed.y = BUBBLE_UP_SPEED;
                 }
             }
         }
@@ -108,30 +112,68 @@ void Collide_Enemy_Player(stOBJECT* object, stPLAYER* player) {
         return;
     }
 
-    if (AABB_to_AABB(object, &(player->obj))) {
-
-        player->lives--;
-
-        if (player->lives <= 0) {
-            player->state = ePLAYER_STATE_DEAD;
-            player->obj.is_active = false;
+    if (object->coll.tag == eOBJ_TAG_ENEMY) {
+        stENEMY* e = (stENEMY*)object;
+        /* fix? */
+        if (e->state == eENEMY_STATE_TRAPPED) {
+            e->state = eENEMY_STATE_DEAD;
+            e->obj.is_active = false;
         }
         else {
-            player->invincible_timer = 120; // 2s
+            if (AABB_to_AABB(object, &(player->obj))) {
+
+                player->lives--;
+
+                if (player->lives <= 0) {
+                    player->state = ePLAYER_STATE_DEAD;
+                    player->obj.is_active = false;
+                }
+                else {
+                    player->invincible_timer = 120; // 2s
+                }
+            }
         }
     }
 
     if (object->coll.tag == eOBJ_TAG_ENEMY_ATTACK) {
-        object->is_active = false;
+        if (AABB_to_AABB(object, &(player->obj))) {
+
+            player->lives--;
+
+            if (player->lives <= 0) {
+                player->state = ePLAYER_STATE_DEAD;
+                player->obj.is_active = false;
+            }
+            else {
+                player->invincible_timer = 120; // 2s
+            }
+
+            object->is_active = false;
+        }
     }
 }
 
 void Collide_Object_Bubble(stOBJECT* object, stBUBBLE* bubble) {
 
     if (object->coll.tag == eOBJ_TAG_PLAYER) {
+
+        if (AABB_to_AABB(object, &(bubble->obj))) {
+            if (bubble->state == eBUBBLE_STATE_FLOAT) {
+                if (object->phy.speed.y > 0) {
+                    object->phy.is_jump = false;
+                }
+            }
+        }
+
     }
     else if (object->coll.tag == eOBJ_TAG_ENEMY) {
 
+        if (bubble->state == eBUBBLE_STATE_SHOOTING) {
+            if (AABB_to_AABB(object, &(bubble->obj))) {
+                stENEMY* e = (stENEMY*)object;
+                e->state = eENEMY_STATE_TRAPPED;
+                bubble->obj.is_active = false;
+            }
+        }
     }
-
 }

@@ -5,6 +5,9 @@
 #include "object.h"
 #include "player.h"
 
+#define BUBBLE_SPEED    (2.0)
+#define BUBBLE_UP_SPEED (-1.0)    
+
 typedef enum _bubble_state {
 
     eBUBBLE_STATE_SHOOTING = 0, 
