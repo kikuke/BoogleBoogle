@@ -145,10 +145,11 @@ void render_draw(eGAME_STATE state)
 
         
         render_map(GAME_MANAGER_GetMap(), CONFIG_MAP_Y_MAX * CONFIG_MAP_X_MAX);
-        test_render_heart(3);
         //render_heart();
         //test_scale_disp(30, 30, SCALE, SCALE, 0);
         stPLAYER* player = GAME_MANAGER_GetPlayer(0);
+
+        test_render_heart(player->lives);
 
         if (player->obj.is_active) {
             render_player_move(player);
@@ -558,15 +559,15 @@ static void render_enemy_throw_attack(stOBJECT* enemy_throw) {
 
 static void test_render_heart(int heart_cnt) {
     if (heart_cnt >= 1) {
-        heart_scale_disp(0, 0, SCALE, SCALE, FLAG_0);
+        heart_scale_disp(10, 10, SCALE, SCALE, FLAG_0);
         
     }
     if (heart_cnt >= 2) {
-        heart_scale_disp(10, 0, SCALE, SCALE, FLAG_0);
+        heart_scale_disp(20, 10, SCALE, SCALE, FLAG_0);
     }
     if (heart_cnt >= 3) {
 
-        heart_scale_disp(20, 0, SCALE, SCALE, FLAG_0);
+        heart_scale_disp(30, 10, SCALE, SCALE, FLAG_0);
     }
     
 }
