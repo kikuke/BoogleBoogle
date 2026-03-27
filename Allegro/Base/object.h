@@ -39,6 +39,8 @@ typedef struct {
 
 typedef struct {
 	bool is_gravity;
+	bool is_jump;
+
 	eDIR_LOOK	look;
 	stPOSITION	pos;
 	stPOSITION	speed;

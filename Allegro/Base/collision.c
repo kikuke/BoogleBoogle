@@ -30,14 +30,8 @@ void Collide_Object_Tile(stOBJECT* object, stTILE* tile) {
             if (curr_bottom <= tile_t && next_bottom >= tile_t) {
                 object->phy.pos.y = tile_t - obj_h;
                 object->phy.speed.y = 0;
-
-                if (object->coll.tag == eOBJ_TAG_PLAYER) {
-                    stPLAYER* p = (stPLAYER*)object;
-                    p->is_jump = false;
-                }
-                else if (object->coll.tag == eOBJ_TAG_ENEMY) {
-                    stENEMY* e = (stENEMY*)object;
-                    // TODO:is jump
+                if (object->coll.is_static == false) {
+                    object->phy.is_jump = false;
                 }
             }
         }

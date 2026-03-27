@@ -30,9 +30,9 @@ void init_player(stPLAYER* player)
 		.shot_timer = 0,
 		.lives = 3,
 		.invincible_timer = 0,
-		.is_jump = false,
 		.obj.is_active = true,
 		.obj.phy.is_gravity = true,
+		.obj.phy.is_jump = false,
 		//.obj.rend,
 	};
 }
@@ -56,11 +56,11 @@ void player_update_input(stPLAYER* player, int allegro_key, unsigned char flag)
 	break;
 	case ALLEGRO_KEY_UP:
 	{
-		if (player->is_jump == true)
+		if (player->obj.phy.is_jump == true)
 			break;
 
 		player->obj.phy.speed.y = - CONFIG_PHYSICS_JUMP_FORCE;
-		player->is_jump = true;
+		player->obj.phy.is_jump = true;
 		player->state = ePLAYER_STATE_MOVE;
 	}
 	break;
@@ -102,7 +102,7 @@ void player_debug(stPLAYER* player)
 	printf("\n[PLAYER DATA]\
 			\n\tSTAT: { STAT: %d, IS_JUMP: %d, IS_MOVE: %d }\
 			\n\tPOS: { LOOK: %d, X: %f, Y: %f }\n",
-		player->state, player->is_jump, player->obj.rend.is_move,
+		player->state, player->obj.phy.is_jump, player->obj.rend.is_move,
 		player->obj.phy.look, player->obj.phy.pos.x, player->obj.phy.pos.y);
 }
 #endif
