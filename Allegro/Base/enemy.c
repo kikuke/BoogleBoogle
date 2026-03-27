@@ -1,5 +1,5 @@
 
-#if 00
+#if 01
 
 #include "enemy.h"
 #include "bugglebuggle.h"
@@ -58,7 +58,7 @@ stENEMY* Enemy_Create(stENEMY* enemy, eENEMY_TYPE type, int x, int y) {
                 new_enemy->trapped_timer = 10;
                 break;
             case eENEMY_TYPE_BOSS:
-                new_enemy->trapped_timer = 1;
+                new_enemy->trapped_timer = 10;
                 break;
             }
 
@@ -68,7 +68,7 @@ stENEMY* Enemy_Create(stENEMY* enemy, eENEMY_TYPE type, int x, int y) {
     return NULL; // fail to create. no room for pool
 }
 
-void Enemy_Update(stENEMY* enemy, stENEMY* e) {
+void Enemy_Update(stENEMY* e) {
     if (e == NULL) return;
 
     // just maintain timer in Update func
@@ -89,7 +89,7 @@ void Enemy_Update(stENEMY* enemy, stENEMY* e) {
         Enemy_UpdateTrapped(e);
         break;
     case eENEMY_STATE_DEAD:
-        Enemy_UpdateDead(enemy, e);
+        Enemy_UpdateDead(e);
         break;
     default:
         break;
@@ -127,23 +127,21 @@ void Enemy_UpdateMove(stENEMY* e) {
     phy->pos.y += phy->speed.y;
 }
 
+// only fly mob can attack
 void Enemy_UpdateAttack(stENEMY* e) {
-    if (e == NULL) return;
+    if (e == NULL || e->type != eENEMY_TYPE_THROW) return;
+    e->throw_timer = Get_RandNum_1_to_9();
 
 }
+
 void Enemy_UpdateTrapped(stENEMY* e) {
     if (e == NULL) return;
 
 }
 
-// it doesn't reset all things. only active arr state
-void Enemy_UpdateDead(stENEMY* enemy, stENEMY* e) {
+void Enemy_UpdateDead(stENEMY* e) {
     if (e == NULL) return;
-    ptrdiff_t index = e - enemy;
-
-    if (index >= 0 && index < CONFIG_OBJECT_ENEMY_MAX) {
-        e->obj.rend.is_active = false;
-    }
+    e->obj.is_active = false;
 }
 
 // reference
@@ -231,7 +229,7 @@ void Enemy_ToPlayer_Ground(stENEMY* enemy, stOBJECT* target) {
 
 // bool IsHittingWall(double x, double y);
 
-void Enemy_ToPlayer_Fly(stENEMY* enemy, stPLAYER* player) {
+void Enemy_ToPlayer_Fly(stENEMY* enemy, stOBJECT* player) {
     if (enemy == NULL) return;
 
     stPOSITION* e_pos = &enemy->obj.phy.pos;
@@ -285,8 +283,8 @@ stOBJECT* Throw_Create(stOBJECT* obj, int x, int y) {
     phy->speed.x = 0;
     phy->speed.y = 0;
 
-    coll->box.width = 1;                    // temp val. it should change later
-    coll->box.height = 1;                   // temp val. it should change later
+    coll->box.width = CONFIG_OBJECT_COLLISION_TILE_SIZE;
+    coll->box.height = CONFIG_OBJECT_COLLISION_TILE_SIZE;
     coll->tag = eOBJ_TAG_ENEMY_ATTACK;
     coll->is_static = false;
 
@@ -295,12 +293,12 @@ stOBJECT* Throw_Create(stOBJECT* obj, int x, int y) {
     return obj;
 }
 
-void Throw_Update(stOBJECT* throw, stPLAYER* player) {
+void Throw_Update(stOBJECT* throw, stOBJECT* target_player) {
     int* t_active = &throw->rend.is_active;
     stPOSITION* t_pos = &throw->phy.pos;
 
     if (throw == NULL || !t_active) return;
-    Throw_MoveTowardPlayer(throw, player);
+    Throw_MoveTowardPlayer(throw, target_player);
     if (t_pos->x < 0 || t_pos->x > CONFIG_MAP_X_MAX ||
         t_pos->y < 0 || t_pos->y > CONFIG_MAP_Y_MAX) {
         t_active = false;
@@ -308,8 +306,8 @@ void Throw_Update(stOBJECT* throw, stPLAYER* player) {
 }
 
 
-void Throw_MoveTowardPlayer(stOBJECT* throw, stPLAYER* player) {
-    stPOSITION* p_pos = &player->obj.phy.pos;
+void Throw_MoveTowardPlayer(stOBJECT* throw, stOBJECT* target_player) {
+    stPOSITION* p_pos = &target_player->phy.pos;
     stPOSITION* t_pos = &throw->phy.pos;
     stPOSITION* t_speed = &throw->phy.speed;
 
@@ -327,23 +325,6 @@ void Throw_MoveTowardPlayer(stOBJECT* throw, stPLAYER* player) {
     t_pos->x += t_speed->x;
     t_pos->y += t_speed->y;
 }
-
-void Enemy_InitializePool(stENEMY* enemy) {
-    for (int i = 0; i < CONFIG_OBJECT_ENEMY_MAX; i++) {
-        (enemy + i)->obj.rend.is_active = 0; // make sure defalt setting to 0
-    }
-}
-
-int Enemy_GetActiveCount(stENEMY* enemy) {
-    int count = 0;
-    for (int i = 0; i < CONFIG_OBJECT_ENEMY_MAX; i++) {
-        if ((enemy + i)->obj.rend.is_active) {
-            count++;
-        }
-    }
-    return count;
-}
-
 
 static int Get_RandNum_1_to_9(void) {
     static uint32_t x = 123456789;

@@ -27,70 +27,49 @@ typedef struct {
 	eENEMY_STATE	state;
 	
 	int state_timer;		// 
-	//int proximity_to_player;// just in case
 	int trapped_timer;		// count down of bubble escape
 	int throw_timer;		// 
 	bool is_angry;			// angry state
 	
 } stENEMY;
 
-//stENEMY
-//├── stOBJECT obj
-//│   ├── stCOLLISION coll
-//│   │   ├── bool is_static
-//│   │   ├── eOBJ_TAG tag
-//│   │   │   ├── eOBJ_TAG_TILE(0)
-//│   │   │   ├── eOBJ_TAG_PLAYER(1)
-//│   │   │   ├── eOBJ_TAG_ENEMY(2)
-//│   │   │   ├── eOBJ_TAG_BUBBLE(3)
-//│   │   │   ├── eOBJ_TAG_ENEMY_ATTACK(4)
-//│   │   │   └── eOBJ_TAG_MAX(5)
-//│   │   └── stCOLLISION_BOX box
-//│   │       ├── double height
-//│   │       └── double width
-//│   ├── stPHYSICS phy
-//│   │   ├── bool is_move
-//│   │   ├── bool is_gravity
-//│   │   ├── eDIR_LOOK look
-//│   │   │   ├── eDIR_LOOK_RIGHT(0)
-//│   │   │   ├── eDIR_LOOK_LEFT(1)
-//│   │   │   ├── eDIR_LOOK_UP(2)
-//│   │   │   ├── eDIR_LOOK_DOWN(3)
-//│   │   │   └── eDIR_LOOK_MAX(4)
-//│   │   ├── stPOSITION pos
-//│   │   │   ├── double x
-//│   │   │   └── double y
-//│   │   └── stPOSITION speed
-//│   │       ├── double x
-//│   │       └── double y
-//│   └── stRENDER rend
-//│       └── int is_active
-//├── eENEMY_STATE state
-//│   ├── eENEMY_STATE_IDLE(0)
-//│   ├── eENEMY_STATE_MOVE(1)
-//│   ├── eENEMY_STATE_ATTACK(3)
-//│   ├── eENEMY_STATE_TRAPPED(4)
-//│   ├── eENEMY_STATE_DEAD(5)
-//│   └── eENEMY_STATE_MAX(6)
-//├── eENEMY_TYPE type
-//│   ├── eENEMY_TYPE_BASIC(0)
-//│   ├── eENEMY_TYPE_THROW(1)
-//│   └── eENEMY_TYPE_BOSS(2)
-//├── int state_timer
-//├── int trapped_timer
-//├── int throw_timer
-//└── bool is_angry
-
-// make random number between 1 to 9
-int Get_RandNum_1_to_9(void);
-
-// pool management
-void Enemy_InitializePool(stENEMY* enemy);						// initialize enemy pool when begin
-int Enemy_GetActiveCount(stENEMY* enemy);						// get number of active enemies
+//stENEMY(Enemy Entity)
+//├──[stOBJECT] obj ───── ────────────┐
+//│   ├──[bool] is_active     
+//│   │   
+//│   ├──[stCOLLISION] coll ─────────────┤
+//│   │   ├──[bool] is_static 
+//│   │   ├──[eOBJ_TAG] tag 
+//│   │   └──[stCOLLISION_BOX] box 
+//│   │       ├──[double] height 
+//│   │       └──[double] width 
+//│   │                             
+//│   ├──[stPHYSICS] phy ───────────────┤
+//│   │   ├──[bool] is_gravity 
+//│   │   ├──[eDIR_LOOK] look 
+//│   │   ├──[stPOSITION] pos 
+//│   │   │   ├──[double] x 
+//│   │   │   └──[double] y
+//│   │   └──[stPOSITION] speed 
+//│   │       ├──[double] x 
+//│   │       └──[double] y 
+//│   │                     
+//│   └──[stRENDER] rend ───────────────┤
+//│       ├──[int] is_active(unused) 
+//│       └──[bool] is_move       
+//│                                              
+//├──[eENEMY_TYPE] type(BASIC, THROW, BOSS)
+//├──[eENEMY_STATE] state(IDLE, MOVE, ATTACK, TRAPPED, DEAD)
+//├──[int] state_timer
+//├──[int] trapped_timer
+//├──[int] throw_timer
+//└──[bool] is_angry
 
 // single enemy manage
 stENEMY* Enemy_Create(stENEMY* enemy, eENEMY_TYPE type, int x, int y);	// create n initialize an enemy
-//void Enemy_Destroy(stENEMY* enemy);							// destroy an enemy
+
+// for main update
+void Enemy_Update(stENEMY* enemy);								// update single enemy
 
 // state manage
 void Enemy_ChangeState(stENEMY* enemy, eENEMY_STATE newState);	// change the enemy's current state
@@ -104,22 +83,21 @@ void Enemy_UpdateIdle(stENEMY* enemy);							// update IDLE state
 void Enemy_UpdateMove(stENEMY* enemy);							// update MOVE state
 void Enemy_UpdateAttack(stENEMY* enemy);						// update ATTACK state
 void Enemy_UpdateTrapped(stENEMY* enemy);						// update TRAPPED (bubble) state
-void Enemy_UpdateDead(stENEMY* enemy, stENEMY* e);				// update DEAD state
-
-// for main update
-void Enemy_Update(stENEMY* enemy, stENEMY* e);					// update single enemy
-void Enemy_UpdateAll(stENEMY* enemy);							// update all active enemies
+void Enemy_UpdateDead(stENEMY* enemy);							// update DEAD state
 
 // AI n behavior
-void Enemy_ToPlayer_Ground(stENEMY* enemy, stPLAYER* player);	// move enemy toward the player
-void Enemy_ToPlayer_Fly(stENEMY* enemy, stPLAYER* player);		// move enemy toward the player
+void Enemy_ToPlayer_Ground(stENEMY* enemy, stOBJECT* target_player);	// move enemy toward the player
+void Enemy_ToPlayer_Fly(stENEMY* enemy, stOBJECT* target_player);		// move enemy toward the player
 
 // atomic actions
 void Enemy_Throw(stENEMY* enemy);								// make enemy Throw
 
 // throw maintain
 stOBJECT* Throw_Create(stOBJECT* obj, int x, int y);			// create throw obj
-void Throw_Update(stOBJECT* throw, stPLAYER* player);			// update throw
-void Throw_MoveTowardPlayer(stOBJECT* throw, stPLAYER* player);	// keep forward to player
+void Throw_Update(stOBJECT* throw, stOBJECT* target_player);			// update throw
+void Throw_MoveTowardPlayer(stOBJECT* throw, stOBJECT* target_player);	// keep forward to player
+
+// make random number between 1 to 9
+int Get_RandNum_1_to_9(void);
 
 #endif
