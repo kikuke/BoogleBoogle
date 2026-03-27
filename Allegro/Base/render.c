@@ -144,7 +144,7 @@ void render_draw(eGAME_STATE state)
         render_map(GAME_MANAGER_GetMap(), CONFIG_MAP_Y_MAX * CONFIG_MAP_X_MAX);
         test_render_heart(3);
         //render_heart();
-        //test_scale_disp(30, 30, SCALE, SCALE, 0);
+        test_scale_disp(30, 30, SCALE, SCALE, 0);
 
         render_player_move(GAME_MANAGER_GetPlayer(0));
         render_enemy_throw_attack(GAME_MANAGER_GetEnemyAttacks());
@@ -223,7 +223,7 @@ static void test_disp(float x, float y)
     al_draw_bitmap(sprites.enemy_easy.left[0], x, y, 0);
 }
 static void test_scale_disp(float dx, float dy, float dw, float dh, int flags) {
-    al_draw_scaled_bitmap(sprites.player.right[1], 0, 0, CHARACTER, CHARACTER, dx, dy, dw, dh, flags);
+    al_draw_scaled_bitmap(sprites.player.stay[1], 0, 0, CHARACTER, CHARACTER, dx, dy, dw, dh, flags);
 }
 
 static void map_scale_disp(float dx, float dy, float dw, float dh, int flags) {
@@ -368,7 +368,7 @@ static void render_player_move(stPLAYER* player) {
     {
     case true:
         time++;
-        sprites.player.idx = (time / 2) % SPRITE_PLAYER_MAX;;
+        sprites.player.idx = (time/6) % SPRITE_PLAYER_MAX;;
 
         switch (player->obj.phy.look)
         {
@@ -379,6 +379,7 @@ static void render_player_move(stPLAYER* player) {
             sprites.player.curr_move = sprites.player.right[sprites.player.idx];
             break;
         }
+        break;
     case false:
         time = 0;
         switch (player->obj.phy.look)
@@ -402,11 +403,11 @@ static void render_enemy_easy_move(stENEMY* enemy) {
 
     static int time = 0;
 
-    switch (enemy->state)
+    switch (enemy->obj.rend.is_move)
     {
-    case eENEMY_STATE_MOVE:
+    case true:
         time++;
-        sprites.enemy_easy.idx = (time / 2) % SPRITE_PLAYER_MAX;;
+        sprites.enemy_easy.idx = (time / 6) % SPRITE_PLAYER_MAX;;
 
         switch (enemy->obj.phy.look)
         {
@@ -417,7 +418,8 @@ static void render_enemy_easy_move(stENEMY* enemy) {
             sprites.player.curr_move = sprites.enemy_easy.right[sprites.enemy_easy.idx];
             break;
         }
-    case ePLAYER_STATE_IDLE:
+        break;
+    case false:
         time = 0;
         switch (enemy->obj.phy.look)
         {
