@@ -81,14 +81,6 @@ typedef struct {
 //├── int trapped_timer
 //└── bool is_angry
 
-typedef struct {
-	float x, y;
-	float vx, vy;			// speed
-	int state;				// 0: flying, 1: trapped, 2: blow
-	int lifetime_timer;	// obj disappear timer
-	//struct Bubble* next; // require when make it to linked list
-} stTHROW;
-
 
 
 // pool management
@@ -131,9 +123,12 @@ void Enemy_Throw(stENEMY* enemy);								// 0 make enemy Throw
 
 // throw maintain
 stOBJECT* Throw_Create(stOBJECT* obj, int x, int y);							// 0 create throw obj
-void Throw_Update(stTHROW* throw);								// 0 update throw
-void Throw_MoveTowardPlayer(stTHROW* throw);					// 0 keep forward to player
-void Throw_Destroy(stTHROW* throw);								// 0 destroy touch player or out of map
+void Throw_Update(stOBJECT* throw, stPLAYER* player);								// 0 update throw
+void Throw_MoveTowardPlayer(stOBJECT* throw, stPLAYER* player);					// 0 keep forward to player
+void Throw_Destroy(stOBJECT* throw);								// 0 destroy touch player or out of map
 
+
+// make random number between 1 to 9
+int Get_RandNum_1_to_9(void);
 
 #endif
