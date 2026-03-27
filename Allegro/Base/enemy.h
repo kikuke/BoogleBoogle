@@ -2,6 +2,7 @@
 #define __ENEMY_H__
 
 #include "object.h"
+#include "player.h"
 #include <stdbool.h>
 
 typedef enum {

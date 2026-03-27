@@ -2,7 +2,6 @@
 #if 01
 
 #include "enemy.h"
-#include "player.h"
 #include "bugglebuggle.h"
 
 #include <stdio.h>
