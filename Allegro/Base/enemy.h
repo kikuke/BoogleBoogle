@@ -8,7 +8,6 @@
 typedef enum {
 	eENEMY_STATE_IDLE = 0,
 	eENEMY_STATE_MOVE,
-	eENEMY_STATE_JUMP,
 	eENEMY_STATE_ATTACK,
 	eENEMY_STATE_TRAPPED,
 	eENEMY_STATE_DEAD,
@@ -68,7 +67,6 @@ typedef struct {
 //├── eENEMY_STATE state
 //│   ├── eENEMY_STATE_IDLE(0)
 //│   ├── eENEMY_STATE_MOVE(1)
-//│   ├── eENEMY_STATE_JUMP(2)
 //│   ├── eENEMY_STATE_ATTACK(3)
 //│   ├── eENEMY_STATE_TRAPPED(4)
 //│   ├── eENEMY_STATE_DEAD(5)
@@ -78,19 +76,19 @@ typedef struct {
 //│   ├── eENEMY_TYPE_THROW(1)
 //│   └── eENEMY_TYPE_BOSS(2)
 //├── int state_timer
-//├── int proximity_to_player
 //├── int trapped_timer
 //└── bool is_angry
 
-
+// make random number between 1 to 9
+int Get_RandNum_1_to_9(void);
 
 // pool management
-void Enemy_InitializePool(stENEMY* enemy);								// initialize enemy pool when begin
-int Enemy_GetActiveCount(stENEMY* enemy);									// get number of active enemies
+void Enemy_InitializePool(stENEMY* enemy);						// initialize enemy pool when begin
+int Enemy_GetActiveCount(stENEMY* enemy);						// get number of active enemies
 
 // single enemy manage
-stENEMY* Enemy_Create(stENEMY* enemy, eENEMY_TYPE type, int x, int y);			// create n initialize an enemy
-//void Enemy_Destroy(stENEMY* enemy);								// destroy an enemy
+stENEMY* Enemy_Create(stENEMY* enemy, eENEMY_TYPE type, int x, int y);	// create n initialize an enemy
+//void Enemy_Destroy(stENEMY* enemy);							// destroy an enemy
 
 // state manage
 void Enemy_ChangeState(stENEMY* enemy, eENEMY_STATE newState);	// change the enemy's current state
@@ -104,32 +102,22 @@ void Enemy_UpdateIdle(stENEMY* enemy);							// 0 update IDLE state
 void Enemy_UpdateMove(stENEMY* enemy);							// 0 update MOVE state
 void Enemy_UpdateAttack(stENEMY* enemy);						// 0 update ATTACK state
 void Enemy_UpdateTrapped(stENEMY* enemy);						// 0 update TRAPPED (bubble) state
-void Enemy_UpdateDead(stENEMY* enemy, stENEMY* e);							// update DEAD state
+void Enemy_UpdateDead(stENEMY* enemy, stENEMY* e);				// update DEAD state
 
 // for main update
-void Enemy_Update(stENEMY* enemy, stENEMY* e);								// update single enemy
-void Enemy_UpdateAll(stENEMY* enemy);										// update all active enemies
+void Enemy_Update(stENEMY* enemy, stENEMY* e);					// update single enemy
+void Enemy_UpdateAll(stENEMY* enemy);							// update all active enemies
 
 // AI n behavior
-void Enemy_DecideNextAction(stENEMY* enemy);					// 0 decide the next action based on AI
-void Enemy_MoveTowardPlayer(stENEMY* enemy, int x, int y);		// 0 move enemy toward the player
+void Enemy_ToPlayer_Ground(stENEMY* enemy, stPLAYER* player);		// 0 move enemy toward the player
+void Enemy_ToPlayer_Fly(stENEMY* enemy, stPLAYER* player);		// 0 move enemy toward the player
 
 // atomic actions
-// define how a single, specific action or behavior is physically performed
-// they are called when a specific action is needed
-// No State Decision: These functions typically do not decide state transitions themselves. 
-// They just perform their job.
-void Enemy_Move(stENEMY* enemy);								// 0 move enemy (generic movement)
 void Enemy_Throw(stENEMY* enemy);								// 0 make enemy Throw
 
 // throw maintain
-stOBJECT* Throw_Create(stOBJECT* obj, int x, int y);							// 0 create throw obj
-void Throw_Update(stOBJECT* throw, stPLAYER* player);								// 0 update throw
-void Throw_MoveTowardPlayer(stOBJECT* throw, stPLAYER* player);					// 0 keep forward to player
-void Throw_Destroy(stOBJECT* throw);								// 0 destroy touch player or out of map
-
-
-// make random number between 1 to 9
-int Get_RandNum_1_to_9(void);
+stOBJECT* Throw_Create(stOBJECT* obj, int x, int y);			// create throw obj
+void Throw_Update(stOBJECT* throw, stPLAYER* player);			// update throw
+void Throw_MoveTowardPlayer(stOBJECT* throw, stPLAYER* player);	// keep forward to player
 
 #endif
