@@ -10,6 +10,7 @@
 #include <stdint.h>
 #include <math.h>
 #include <time.h>
+#include <stddef.h> 
 
 int Get_RandNum_1_to_9(void) {
     static uint32_t x = 123456789;
