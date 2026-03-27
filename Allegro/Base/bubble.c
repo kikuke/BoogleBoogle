@@ -43,6 +43,7 @@ bool bubble_add(stPLAYER* player, stBUBBLE* bubbles)
         bubbles[i].obj.coll.box.height = BUBBLE_SHOT_H;
         bubbles[i].obj.coll.box.width = BUBBLE_SHOT_W;
         bubbles[i].obj.coll.is_static = false;
+        bubbles[i].obj.phy.is_gravity = false;
         bubbles[i].obj.phy.speed.y = 0;
         bubbles[i].frame = 0;
         bubbles[i].dur = TOTAL_DURATION; 

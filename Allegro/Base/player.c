@@ -86,8 +86,8 @@ void player_update_frame(stPLAYER* player) {
 	}
 #endif
 	// TODO: Need To Modify
-#if 0
-	if ((player->obj.phy.speed.x == 0)/* && (player->obj.phy.speed.y == 0)*/) {
+#if 01
+	if ((player->obj.phy.speed.x == 0 && player->state != ePLAYER_STATE_ATTACK)/* && (player->obj.phy.speed.y == 0)*/) {
 		player->state = ePLAYER_STATE_IDLE;
 	}
 #endif
