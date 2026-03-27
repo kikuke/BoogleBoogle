@@ -139,6 +139,11 @@ static void routine_ingame(void)
     GAME_MANAGER_UpdateObject();
     /* Update Rendering */
     render_update_ingame();
+    
+    /* TODO: TEST_CODE!!! */
+    if (test_next_stage_input()) {
+        GAME_MANAGER_SetGameStage_Next();
+    }
 }
 
 static ALLEGRO_EVENT_QUEUE* init_queue(void)

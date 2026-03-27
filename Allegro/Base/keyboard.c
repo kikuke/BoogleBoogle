@@ -61,3 +61,8 @@ void keyboard_processing_ingame(void)
         }
     }
 }
+
+bool test_next_stage_input(void)
+{
+    return key[ALLEGRO_KEY_N];
+}
