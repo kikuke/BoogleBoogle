@@ -4,6 +4,7 @@
 
 #include "bugglebuggle.h"
 #include "util.h"
+#include "keyboard.h"
 #include "player.h"
 #include "render.h"
 #include "game_manager.h"
@@ -11,67 +12,58 @@
 /************************************************/
 /*         Local Function Declaration           */
 /************************************************/
-
 /* Init Modules */
 ALLEGRO_EVENT_QUEUE* init_queue(void);
 ALLEGRO_TIMER* init_timer(ALLEGRO_EVENT_QUEUE* queue);
-
-/* Input Processing */
+void routine_ingame(void);
 
 /************************************************/
 /*         Local Variable Declaration           */
 /************************************************/
-static int frames;
 
 /************************************************/
 /*          Global Function Definition          */
 /************************************************/
 int main()
 {
+    int frames;
+    bool done = false;
+    bool redraw = true;
+    ALLEGRO_EVENT event;
+    ALLEGRO_EVENT_QUEUE* queue;
+    ALLEGRO_TIMER* timer;
+    eGAME_STATE game_state;
+
+    /* Module initialization */
     must_init(al_init(), "allegro");
 
-    ALLEGRO_EVENT_QUEUE* queue = init_queue();
-    ALLEGRO_TIMER* timer = init_timer(queue);
+    queue = init_queue();
+    timer = init_timer(queue);
 
     init_keyboard(queue);
     init_render(queue);
     init_player(GAME_MANAGER_GetPlayer(0));
 
     frames = 0;
-
-    bool done = false;
-    bool redraw = true;
-    ALLEGRO_EVENT event;
-
     al_start_timer(timer);
     while (1)
     {
         al_wait_for_event(queue, &event);
 
-        GAME_MANAGER_SetStage(eGAME_STAGE_1);// Need To Condition
+        /* Check Game Status */
+        game_state = GAME_MANAGER_UpdateState();
 
+        /* Event Processing */
         switch (event.type)
         {
         case ALLEGRO_EVENT_TIMER:
-            /* Set Player & Enemy State, Direction, Delta Pos */
-            send_input();
-            /* Calculate Interaction & State */
-            GAME_MANAGER_CheckCollision();
-            /* Apply Calculated Physics */
-            GAME_MANAGER_UpdatePhysics();
-            /* Apply Object Status */
-            GAME_MANAGER_UpdateObject();
-
-            render_update();
-
-#if (DEBUG_PLAYER == 1)
-            player_debug(GAME_MANAGER_GetPlayer(0));
-#endif
+            if (game_state == eGAME_STATE_INGAME) {
+                routine_ingame();
+            }
 
             redraw = true;
             frames++;
             break;
-
         case ALLEGRO_EVENT_DISPLAY_CLOSE:
             done = true;
             break;
@@ -100,6 +92,24 @@ int main()
 /************************************************/
 /*          Local Function Definition           */
 /************************************************/
+static void routine_ingame(void)
+{
+    /* Set Player & Enemy State, Direction, Delta Pos */
+    keyboard_processing_ingame();
+    /* Calculate Interaction & State */
+    GAME_MANAGER_CheckCollision();
+    /* Apply Calculated Physics */
+    GAME_MANAGER_UpdatePhysics();
+    /* Apply Object Status */
+    GAME_MANAGER_UpdateObject();
+    /* Update Rendering */
+    render_update_ingame();
+
+#if (DEBUG_PLAYER == 1)
+    player_debug(GAME_MANAGER_GetPlayer(0));
+#endif
+}
+
 static ALLEGRO_EVENT_QUEUE* init_queue(void)
 {
     ALLEGRO_EVENT_QUEUE* queue = al_create_event_queue();

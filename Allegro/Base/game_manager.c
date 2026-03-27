@@ -6,12 +6,25 @@
 #include "map_1.h"
 #include "map_2.h"
 
-/* Collision */
+/************************************************/
+/*         Local Variable Declaration           */
+/************************************************/
+/* Object Resourece */
 static stPLAYER player[CONFIG_OBJECT_PLAYER_MAX];
 static stOBJECT bubble[CONFIG_OBJECT_BUBBLE_MAX];
 static stENEMY enemy[CONFIG_OBJECT_ENEMY_MAX];
 static stOBJECT enemy_attack[CONFIG_OBJECT_ENEMY_ATTACK_MAX];
 static stTILE map[CONFIG_OBJECT_MAP_MAX];
+
+/************************************************/
+/*          Global Function Definition          */
+/************************************************/
+eGAME_STATE GAME_MANAGER_UpdateState(void)
+{
+	//TODO: Need to modify
+	GAME_MANAGER_SetStage(eGAME_STAGE_1);// Need To Condition
+	return eGAME_STATE_INGAME;
+}
 
 stPLAYER *GAME_MANAGER_GetPlayer(int player_id)
 {

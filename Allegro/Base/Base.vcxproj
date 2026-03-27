@@ -135,7 +135,7 @@
     <ClCompile Include="enemy.c" />
     <ClCompile Include="game_manager.c" />
     <ClCompile Include="ingame_manager.c" />
-    <ClCompile Include="input.c" />
+    <ClCompile Include="keyboard.c" />
     <ClCompile Include="main.c" />
     <ClCompile Include="map.c" />
     <ClCompile Include="map_1.c" />
@@ -152,7 +152,7 @@
     <ClInclude Include="enemy.h" />
     <ClInclude Include="game_manager.h" />
     <ClInclude Include="ingame_manager.h" />
-    <ClInclude Include="input.h" />
+    <ClInclude Include="keyboard.h" />
     <ClInclude Include="map.h" />
     <ClInclude Include="map_1.h" />
     <ClInclude Include="map_2.h" />

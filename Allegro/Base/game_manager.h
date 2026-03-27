@@ -6,6 +6,24 @@
 #include "player.h"
 #include "map.h"
 
+typedef enum {
+	eGAME_STATE_MAIN = 0,
+	eGAME_STATE_INGAME,
+	eGAME_STATE_END
+} eGAME_STATE;
+
+typedef enum {
+	eGAME_STAGE_1 = 0,
+	eGAME_STAGE_2,
+	eGAME_STAGE_3,
+	eGAME_STAGE_MAX
+} eGAME_STAGE;
+
+/************************************************/
+/*          Global Function Declaration         */
+/************************************************/
+eGAME_STATE GAME_MANAGER_UpdateState(void);
+
 stPLAYER* GAME_MANAGER_GetPlayer(int player_id);
 stOBJECT* GAME_MANAGER_GetEnemyAttacks(void);
 /* Need to apply map.c */

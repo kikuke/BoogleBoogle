@@ -1,5 +1,5 @@
 #include "bugglebuggle.h"
-#include "input.h"
+#include "keyboard.h"
 #include "game_manager.h"
 #include "player.h"
 
@@ -11,7 +11,6 @@ static unsigned char key[ALLEGRO_KEY_MAX];
 /************************************************/
 /*          Global Function Definition          */
 /************************************************/
-
 void init_keyboard(ALLEGRO_EVENT_QUEUE* queue)
 {
     must_init(al_install_keyboard(), "keyboard");
@@ -37,7 +36,7 @@ void keyboard_update(ALLEGRO_EVENT* event)
     }
 }
 
-void send_input(void)
+void keyboard_processing_ingame(void)
 {
     for (int iKeyInput = 0; iKeyInput < ALLEGRO_KEY_MAX; ++iKeyInput) {
         switch (iKeyInput) {

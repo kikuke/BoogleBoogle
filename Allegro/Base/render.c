@@ -100,7 +100,7 @@ SPRITES sprites;
 /************************************************/
 /*          Global Function Definition          */
 /************************************************/
-void render_update(void)
+void render_update_ingame(void)
 {
 
 #if 0

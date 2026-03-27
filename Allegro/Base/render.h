@@ -9,7 +9,7 @@
 #define DISP_H (BUFFER_H * DISP_SCALE)
 
 void init_render(ALLEGRO_EVENT_QUEUE* queue);
-void render_update(void);
+void render_update_ingame(void);
 void render_draw(void);
 void deinit_render();
 

@@ -6,6 +6,9 @@
 #include "map.h"
 
 
+/************************************************/
+/*          Global Function Declaration         */
+/************************************************/
 void Collide_Object_Tile(stOBJECT* object, stTILE* tile);
 
 #endif

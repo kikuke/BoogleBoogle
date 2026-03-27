@@ -54,7 +54,7 @@
     <ClCompile Include="map_2.c">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="input.c">
+    <ClCompile Include="keyboard.c">
       <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>
@@ -101,7 +101,7 @@
     <ClInclude Include="map_2.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="input.h">
+    <ClInclude Include="keyboard.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
   </ItemGroup>
