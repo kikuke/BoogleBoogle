@@ -29,6 +29,7 @@ typedef struct {
 	int state_timer;		// 
 	//int proximity_to_player;// just in case
 	int trapped_timer;		// count down of bubble escape
+	int throw_timer;		// 
 	bool is_angry;			// angry state
 	
 } stENEMY;
@@ -77,6 +78,7 @@ typedef struct {
 //│   └── eENEMY_TYPE_BOSS(2)
 //├── int state_timer
 //├── int trapped_timer
+//├── int throw_timer
 //└── bool is_angry
 
 // make random number between 1 to 9
@@ -98,10 +100,10 @@ eENEMY_STATE Enemy_GetCurrentState(stENEMY* enemy);				// get the enemy's curren
 // They define what the enemy continuously does while it is in a specific state, 
 // and when it should transition out of that state
 // They are called every frame by Enemy_Update loop
-void Enemy_UpdateIdle(stENEMY* enemy);							// 0 update IDLE state
-void Enemy_UpdateMove(stENEMY* enemy);							// 0 update MOVE state
-void Enemy_UpdateAttack(stENEMY* enemy);						// 0 update ATTACK state
-void Enemy_UpdateTrapped(stENEMY* enemy);						// 0 update TRAPPED (bubble) state
+void Enemy_UpdateIdle(stENEMY* enemy);							// update IDLE state
+void Enemy_UpdateMove(stENEMY* enemy);							// update MOVE state
+void Enemy_UpdateAttack(stENEMY* enemy);						// update ATTACK state
+void Enemy_UpdateTrapped(stENEMY* enemy);						// update TRAPPED (bubble) state
 void Enemy_UpdateDead(stENEMY* enemy, stENEMY* e);				// update DEAD state
 
 // for main update
@@ -109,11 +111,11 @@ void Enemy_Update(stENEMY* enemy, stENEMY* e);					// update single enemy
 void Enemy_UpdateAll(stENEMY* enemy);							// update all active enemies
 
 // AI n behavior
-void Enemy_ToPlayer_Ground(stENEMY* enemy, stPLAYER* player);		// 0 move enemy toward the player
-void Enemy_ToPlayer_Fly(stENEMY* enemy, stPLAYER* player);		// 0 move enemy toward the player
+void Enemy_ToPlayer_Ground(stENEMY* enemy, stPLAYER* player);	// move enemy toward the player
+void Enemy_ToPlayer_Fly(stENEMY* enemy, stPLAYER* player);		// move enemy toward the player
 
 // atomic actions
-void Enemy_Throw(stENEMY* enemy);								// 0 make enemy Throw
+void Enemy_Throw(stENEMY* enemy);								// make enemy Throw
 
 // throw maintain
 stOBJECT* Throw_Create(stOBJECT* obj, int x, int y);			// create throw obj

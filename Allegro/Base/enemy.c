@@ -202,7 +202,7 @@ void Enemy_UpdateAll(stENEMY* enemy) {
 //    m->x += m->vx;
 //    m->y += m->vy;
 //}
-/*
+
 void Enemy_ToPlayer_Ground(stENEMY* enemy, stPLAYER* player) {
     if (enemy == NULL || player == NULL) return;
 
@@ -284,12 +284,14 @@ void Enemy_ToPlayer_Fly(stENEMY* enemy, stPLAYER* player) {
     e_pos->x += e_speed->x;
     e_pos->y += e_speed->y;
 
-}*/
+}
 
 
 void Enemy_Throw(stENEMY* e) {
     if (e == NULL) return;
-
+    e->throw_timer = Get_RandNum_1_to_9();
+    
+    // create throw -> timer-- -> ....
 }
 
 stOBJECT* Throw_Create(stOBJECT* obj, int x, int y) {
