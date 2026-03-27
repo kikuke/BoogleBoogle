@@ -90,42 +90,39 @@ int Enemy_GetActiveCount(stENEMY* enemy);						// get number of active enemies
 #endif
 
 // single enemy manage
-stENEMY* Enemy_Create(stENEMY* enemy, eENEMY_TYPE type, int x, int y);	// create n initialize an enemy
+stENEMY* Enemy_Create(stENEMY* enemy, eENEMY_TYPE type, int x, int y);			// create n initialize an enemy
 
 // for main update
-void Enemy_Update(stENEMY* enemy);								// update single enemy
+void Enemy_Update(stENEMY* enemy, stOBJECT* target_player, stOBJECT* throw);	// update single enemy
+void Throw_Update(stOBJECT* throw, stOBJECT* target_player);					// update throw
 
 #if 0
 // state manage
-void Enemy_ChangeState(stENEMY* enemy, eENEMY_STATE newState);	// change the enemy's current state
-eENEMY_STATE Enemy_GetCurrentState(stENEMY* enemy);				// get the enemy's current state
+void Enemy_ChangeState(stENEMY* enemy, eENEMY_STATE newState);					// change the enemy's current state
+eENEMY_STATE Enemy_GetCurrentState(stENEMY* enemy);								// get the enemy's current state
 
 // state logic handler
 // They define what the enemy continuously does while it is in a specific state, 
 // and when it should transition out of that state
 // They are called every frame by Enemy_Update loop
-void Enemy_UpdateIdle(stENEMY* enemy);							// update IDLE state
-void Enemy_UpdateMove(stENEMY* enemy);							// update MOVE state
-void Enemy_UpdateAttack(stENEMY* enemy);						// update ATTACK state
-void Enemy_UpdateTrapped(stENEMY* enemy);						// update TRAPPED (bubble) state
-void Enemy_UpdateDead(stENEMY* enemy, stENEMY* e);				// update DEAD state
-#endif
-
-// for main update
-void Enemy_Update(stENEMY* enemy, stENEMY* e);					// update single enemy
-#if 0
-void Enemy_UpdateAll(stENEMY* enemy);							// update all active enemies
+void Enemy_UpdateIdle(stENEMY* enemy);											// update IDLE state
+void Enemy_UpdateMove(stENEMY* enemy, stOBJECT* target_player);					// update MOVE state
+void Enemy_UpdateAttack(stENEMY* enemy, stOBJECT* target_player, stOBJECT* throw);// update ATTACK state
+void Enemy_UpdateTrapped(stENEMY* enemy);										// update TRAPPED (bubble) state
+void Enemy_UpdateDead(stENEMY* enemy);											// update DEAD state
 
 // AI n behavior
-void Enemy_ToPlayer_Ground(stENEMY* enemy, stOBJECT* target_player);	// move enemy toward the player
-void Enemy_ToPlayer_Fly(stENEMY* enemy, stOBJECT* target_player);		// move enemy toward the player
+void Enemy_ToPlayer_Ground(stENEMY* enemy, stOBJECT* target_player);			// move enemy toward the player
+void Enemy_ToPlayer_Fly(stENEMY* enemy, stOBJECT* target_player);				// move enemy toward the player
 
 // atomic actions
-void Enemy_Throw(stENEMY* enemy);								// make enemy Throw
+void Enemy_Throw(stENEMY* enemy, stOBJECT* target_player, stOBJECT* throw);		// make enemy Throw
 
 // throw maintain
-stOBJECT* Throw_Create(stOBJECT* obj, int x, int y);			// create throw obj
-void Throw_Update(stOBJECT* throw, stPLAYER* player);			// update throw
-void Throw_MoveTowardPlayer(stOBJECT* throw, stPLAYER* player);	// keep forward to player
-#endif
+stOBJECT* Throw_Create(stOBJECT* throw, int x, int y);							// create throw obj
+void Throw_MoveTowardPlayer(stOBJECT* throw, stOBJECT* target_player);			// keep forward to player
+
+// make random number between 1 to 9
+int Get_RandNum_1_to_9(void);
+
 #endif
