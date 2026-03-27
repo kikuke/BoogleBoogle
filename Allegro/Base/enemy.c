@@ -2,13 +2,14 @@
 #if 01
 
 #include "enemy.h"
-#include "player.h"
 #include "bugglebuggle.h"
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
+#include <stdint.h>
 #include <math.h>
+#include <time.h>
 
 void Enemy_InitializePool(stENEMY *enemy) {
     for (int i = 0; i < CONFIG_OBJECT_ENEMY_MAX; i++) {
@@ -209,9 +210,16 @@ stOBJECT* Throw_Create(stOBJECT* obj, int x, int y) {
     return obj;
 }
 
-void Throw_Update(stTHROW* throw) {
+void Throw_Update(stOBJECT* throw, stPLAYER* player) {
+    int* t_active = &throw->rend.is_active;
+    stPOSITION* t_pos = &throw->phy.pos;
 
-
+    if (throw == NULL || !t_active) return;
+    Throw_MoveTowardPlayer(throw, player);
+    if (t_pos->x < 0 || t_pos->x > CONFIG_MAP_X_MAX ||
+        t_pos->y < 0 || t_pos->y > CONFIG_MAP_Y_MAX) {
+        t_active = false;
+    }
 }
 
 
@@ -234,9 +242,17 @@ void Throw_MoveTowardPlayer(stOBJECT* throw, stPLAYER* player) {
     t_phy->pos.y += t_phy->speed.y;
 }
 
-void Throw_Destroy(stTHROW* throw) {
+void Throw_Destroy(stOBJECT* throw) {
 
 
+}
+
+int Get_RandNum_1_to_9(void) {
+    static uint32_t x = 123456789;
+    x ^= x << 13;
+    x ^= x >> 17;
+    x ^= x << 5;
+    return (x % 9) + 1;
 }
 
 #endif

@@ -59,7 +59,7 @@ void bubble_update(stPLAYER* player, stBUBBLE* bubbles)
             bubbles[i].dx -= 5;
         }
 
-        bubbles[i].frame++; // «¡∑π¿” ¡ı∞°
+        bubbles[i].frame++; // ÌîÑÎ†àÏûÑ Ï¶ùÍ∞Ä
     }
 }
 
@@ -92,6 +92,18 @@ void bubble_update(stPLAYER* player, stBUBBLE* bubbles)
 //    return false;
 //}
 
+//void bubble_draw()
+//{
+//    for (int i = 0; i < BUBBLES_N; i++)
+//    {
+//        if (!bubbles[i].used)
+//            continue;
+//
+//        int frame_display = (bubbles[i].frame / 2) % 2;
+//
+//        al_draw_bitmap(sprites.ship_shot[frame_display], bubbles[i].x, bubbles[i].y, 0);
+//    }
+//}
 
 
 
