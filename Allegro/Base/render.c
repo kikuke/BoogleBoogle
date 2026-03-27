@@ -61,8 +61,10 @@ typedef struct
 
 typedef struct 
 {
+    int idx;
     ALLEGRO_BITMAP* bubble_idle;
     ALLEGRO_BITMAP* bubble_pop;
+    ALLEGRO_BITMAP* curr_move;
 } stSPRITE_BUBBLE;
 
 typedef struct SPRITES
@@ -106,6 +108,10 @@ void render_enemy_throw_attack(stOBJECT* enemy_throw);
 void enemy_throw_scale_disp(ALLEGRO_BITMAP* sprite, float px, float py, float dw, float dh, int flags);
 static ALLEGRO_DISPLAY* disp;
 static ALLEGRO_BITMAP* buffer;
+
+//bubble
+void bubble_scale_disp(ALLEGRO_BITMAP* sprite, float px, float py, float dw, float dh, int flags);
+void render_bubble(stBUBBLE* bubble_throw);
 
 /************************************************/
 /*         Local Variable Declaration           */
@@ -153,6 +159,16 @@ void render_draw(eGAME_STATE state)
         if (player->obj.is_active) {
             render_player_move(player);
         }
+
+        stBUBBLE* bubbles = GAME_MANAGER_GetBubble();
+        for (int i = 0; i < CONFIG_OBJECT_BUBBLE_MAX; ++i) {
+    
+            if (bubbles[i].obj.is_active) {
+                render_bubble(&bubbles[i]);
+            }
+        }
+        
+
         render_enemy_throw_attack(GAME_MANAGER_GetEnemyAttacks());
         stENEMY* enemies = GAME_MANAGER_GetEnemy();
         for (int i = 0; i < CONFIG_OBJECT_ENEMY_MAX; ++i) {
@@ -271,9 +287,12 @@ static void enemy_throw_scale_disp(ALLEGRO_BITMAP* sprite, float px, float py, f
 }
 
 static void heart_scale_disp(float dx, float dy, float dw, float dh, int flags) {
-    al_draw_scaled_bitmap(sprites.heart, 0, 0, HEART, HEART, dx, dy, dw, dh, flags);;
+    al_draw_scaled_bitmap(sprites.heart, 0, 0, HEART, HEART, dx, dy, dw, dh, flags);
 }
 
+static void bubble_scale_disp(ALLEGRO_BITMAP* sprite, float px, float py, float dw, float dh, int flags) {
+    al_draw_scaled_bitmap(sprite, 0, 0, BUBBLE, BUBBLE, px, py, dw, dh, flags);
+}
 ALLEGRO_BITMAP* sprite_grab(int x, int y, int w, int h)
 {
     ALLEGRO_BITMAP* sprite = al_create_sub_bitmap(sprites._sheet, x, y, w, h);
@@ -554,6 +573,37 @@ static void render_enemy_throw_attack(stOBJECT* enemy_throw) {
     
 
 }
+
+static void render_bubble(stBUBBLE* bubble_throw) {
+    if (bubble_throw == NULL) return;
+
+    static int time = 0;
+
+    
+    switch (bubble_throw->state)
+    {
+    case eBUBBLE_STATE_SHOOTING:
+        sprites.bubble.curr_move = sprites.bubble.bubble_idle;
+        break;
+    case eBUBBLE_STATE_FLOAT:
+        sprites.bubble.curr_move = sprites.bubble.bubble_idle;
+        break;
+    case eBUBBLE_STATE_POP:
+        sprites.bubble.curr_move = sprites.bubble.bubble_pop;
+        break;
+    }
+       
+    
+
+    
+    if (sprites.bubble.curr_move == NULL) return;
+    bubble_scale_disp(sprites.bubble.curr_move, bubble_throw->obj.phy.pos.x, bubble_throw->obj.phy.pos.y, SCALE, SCALE, FLAG_0);
+
+}
+
+
+
+
 
 
 static void test_render_heart(int heart_cnt) {
