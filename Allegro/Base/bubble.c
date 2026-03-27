@@ -19,7 +19,7 @@ void bubble_init()
         bubbles[i].used = false;
 }
 
-// bubble
+// ï¿½ï¿½ï¿½ï¿½
 bool bubble_add(stPLAYER player)
 {
 
@@ -49,13 +49,13 @@ void bubble_update()
 
         // look, left: x-=, right: x+=
         // bubbles[i].y -= 5;
-        if (bubbles[i].y < -SHIP_SHOT_H) // Ä³¸¯ÅÍ Å©±â ¹Þ±â
+        if (bubbles[i].y < -SHIP_SHOT_H) // Ä³ï¿½ï¿½ï¿½ï¿½ Å©ï¿½ï¿½ ï¿½Þ±ï¿½
         {
             bubbles[i].used = false;
             continue;
         }
 
-        bubbles[i].frame++; // ÇÁ·¹ÀÓ Áõ°¡
+        bubbles[i].frame++; // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
     }
 }
 
@@ -88,6 +88,18 @@ bool bubble_collide(bool ship, int x, int y, int w, int h)
     return false;
 }
 
+//void bubble_draw()
+//{
+//    for (int i = 0; i < BUBBLES_N; i++)
+//    {
+//        if (!bubbles[i].used)
+//            continue;
+//
+//        int frame_display = (bubbles[i].frame / 2) % 2;
+//
+//        al_draw_bitmap(sprites.ship_shot[frame_display], bubbles[i].x, bubbles[i].y, 0);
+//    }
+//}
 
 
 
