@@ -28,7 +28,47 @@ static int stage2[CONFIG_MAP_Y_MAX][CONFIG_MAP_X_MAX] =
 {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1}
 };
 
-int** MAP_2_GetData(void)
+static stSTAGE_ENEMY_DATA enemy2_data[CONFIG_OBJECT_ENEMY_MAX] = {
+	{
+		.is_active = true,
+		.type = eENEMY_TYPE_THROW,
+		.pos = {.x = 30, .y = 50 }
+	},
+	{
+		.is_active = true,
+		.type = eENEMY_TYPE_THROW,
+		.pos = {.x = 50, .y = 50 }
+	},
+	{
+		.is_active = true,
+		.type = eENEMY_TYPE_THROW,
+		.pos = {.x = 70, .y = 50 }
+	},
+	{
+		.is_active = true,
+		.type = eENEMY_TYPE_THROW,
+		.pos = {.x = 90, .y = 50 }
+	},
+	{
+		.is_active = true,
+		.type = eENEMY_TYPE_THROW,
+		.pos = {.x = 120, .y = 50 }
+	},
+	{
+		.is_active = true,
+		.type = eENEMY_TYPE_THROW,
+		.pos = {.x = 150, .y = 50 }
+	},
+};
+
+static stSTAGE_DATA stage2_data = {
+	.stage = stage2,
+	.enemies = enemy2_data
+};
+
+stSTAGE_DATA* MAP_2_GetData(void)
 {
-	return stage2;
+	return &stage2_data;
 }
+
+

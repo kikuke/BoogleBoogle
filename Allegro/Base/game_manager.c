@@ -103,7 +103,7 @@ void GAME_MANAGER_SetStage(eGAME_STAGE stage)
 		break;
 	case eGAME_STAGE_2:
 		{
-			//map_init_stage(map, enemy, MAP_2_GetData());
+			map_init_stage(map, enemy, MAP_2_GetData());
 		}
 	default:
 		break;
