@@ -75,17 +75,6 @@ void player_update_input(stPLAYER* player, int allegro_key, unsigned char flag)
 	default:
 		break;
 	}
-
-	//if (allegro_key == ALLEGRO_KEY_DOWN)      downward jump implemented later
-	//    ship.y += SHIP_SPEED;  
-	//else
-	//{
-	//	if (shots_collide(true, ship.x, ship.y, SHIP_W, SHIP_H)) // enemy or projectile collide
-	//	{
-	//	    player.lives--;
-	//	    player.invincible_timer = 180;
-	//	}
-	//}
 }
 
 void player_update_frame(stPLAYER* player) {

@@ -54,6 +54,9 @@
     <ClCompile Include="map_2.c">
       <Filter>소스 파일</Filter>
     </ClCompile>
+    <ClCompile Include="input.c">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="player.h">
@@ -98,9 +101,11 @@
     <ClInclude Include="map_2.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
+    <ClInclude Include="input.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
-    <None Include=".gitignore" />
   </ItemGroup>
 </Project>

@@ -16,18 +16,12 @@
 ALLEGRO_EVENT_QUEUE* init_queue(void);
 ALLEGRO_TIMER* init_timer(ALLEGRO_EVENT_QUEUE* queue);
 
-void init_keyboard(ALLEGRO_EVENT_QUEUE* queue);
-
 /* Input Processing */
-void keyboard_update(ALLEGRO_EVENT* event);
-void send_input(void);
 
 /************************************************/
 /*         Local Variable Declaration           */
 /************************************************/
 static int frames;
-
-static unsigned char key[ALLEGRO_KEY_MAX];
 
 /************************************************/
 /*          Global Function Definition          */
@@ -73,9 +67,6 @@ int main()
 #if (DEBUG_PLAYER == 1)
             player_debug(GAME_MANAGER_GetPlayer(0));
 #endif
-
-            if (key[ALLEGRO_KEY_ESCAPE])
-                done = true;
 
             redraw = true;
             frames++;
@@ -124,50 +115,4 @@ static ALLEGRO_TIMER* init_timer(ALLEGRO_EVENT_QUEUE* queue)
     al_register_event_source(queue, al_get_timer_event_source(timer));
 
     return timer;
-}
-
-static void init_keyboard(ALLEGRO_EVENT_QUEUE* queue)
-{
-    must_init(al_install_keyboard(), "keyboard");
-    al_register_event_source(queue, al_get_keyboard_event_source());
-    memset(key, 0, sizeof(key));
-}
-
-static void keyboard_update(ALLEGRO_EVENT* event)
-{
-    switch (event->type)
-    {
-    case ALLEGRO_EVENT_TIMER:
-        for (int i = 0; i < ALLEGRO_KEY_MAX; i++)
-            key[i] &= ~KEY_SEEN;
-        break;
-
-    case ALLEGRO_EVENT_KEY_DOWN:
-        key[event->keyboard.keycode] = KEY_SEEN | KEY_DOWN;
-        break;
-    case ALLEGRO_EVENT_KEY_UP:
-        key[event->keyboard.keycode] &= ~KEY_DOWN;
-        break;
-    }
-}
-
-static void send_input(void)
-{
-    for (int iKeyInput = 0; iKeyInput < ALLEGRO_KEY_MAX; ++iKeyInput) {
-        switch (iKeyInput) {
-        case ALLEGRO_KEY_LEFT:
-        case ALLEGRO_KEY_RIGHT:
-        case ALLEGRO_KEY_UP:
-        case ALLEGRO_KEY_DOWN:
-        case ALLEGRO_KEY_SPACE:
-            {
-                if (key[iKeyInput]) {
-                    player_update_input(GAME_MANAGER_GetPlayer(0), iKeyInput, key[iKeyInput]);
-                }
-            }
-            break;
-        default :
-            break;
-        }
-    }
 }

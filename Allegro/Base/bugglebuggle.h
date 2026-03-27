@@ -14,8 +14,6 @@
 #define CONFIG_OBJECT_COLLISION_TILE_SIZE		(10)
 #define CONFIG_PHYSICS_GRAVITY_FORCE			(1.0)
 #define CONFIG_PHYSICS_JUMP_FORCE				(8.0)
-#define KEY_SEEN     1
-#define KEY_DOWN     2
 #define PLAYER_W 10
 #define PLAYER_H 10
 
