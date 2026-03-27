@@ -42,6 +42,11 @@ stBUBBLE* GAME_MANAGER_GetBubble(void)
 	return bubble;
 }
 
+stENEMY* GAME_MANAGER_GetEnemy(void)
+{
+	return enemy;
+}
+
 stOBJECT* GAME_MANAGER_GetEnemyAttacks(void)
 {
 	return enemy_attack;

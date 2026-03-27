@@ -15,6 +15,7 @@ eGAME_STATE GAME_MANAGER_UpdateState(void);
 
 stPLAYER* GAME_MANAGER_GetPlayer(int player_id);
 stBUBBLE* GAME_MANAGER_GetBubble(void);
+stENEMY* GAME_MANAGER_GetEnemy(void);
 stOBJECT* GAME_MANAGER_GetEnemyAttacks(void);
 /* Need to apply map.c */
 void GAME_MANAGER_InitStageObject(eGAME_STAGE stage, stOBJECT *obj);

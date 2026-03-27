@@ -151,6 +151,13 @@ void render_draw(eGAME_STATE state)
 
         render_player_move(GAME_MANAGER_GetPlayer(0));
         render_enemy_throw_attack(GAME_MANAGER_GetEnemyAttacks());
+        stENEMY* enemies = GAME_MANAGER_GetEnemy();
+        for (int i = 0; i < CONFIG_OBJECT_ENEMY_MAX; ++i) {
+            stENEMY* enemy = enemies + i;
+            if (enemy->obj.is_active == true) {
+                render_enemy_easy_move(enemy);
+            }
+        }
         break;
     }
     //if (state == eGAME_STATE_MAIN) {
