@@ -154,16 +154,7 @@ void render_draw_main(void)
     disp_post_draw();
 }
 
-void render_update_ingame(void)
-{
-
-#if 0
-    fx_update();
-    hud_update();
-#endif
-}
-
-void render_draw_ingame(eGAME_STATE state)
+void render_draw_ingame(void)
 {
 #if (DEBUG_PLAYER == 1)
     player_debug(GAME_MANAGER_GetPlayer(0));
@@ -171,98 +162,59 @@ void render_draw_ingame(eGAME_STATE state)
 
     disp_pre_draw();
     al_clear_to_color(al_map_rgb(0, 0, 0));
-    switch (state) {
-    case eGAME_STATE_MAIN:
         
-        break;
+    render_map(GAME_MANAGER_GetMap(), CONFIG_MAP_Y_MAX * CONFIG_MAP_X_MAX);
+    //render_heart();
+    //test_scale_disp(30, 30, SCALE, SCALE, 0);
+    stPLAYER* player = GAME_MANAGER_GetPlayer(0);
 
-    case eGAME_STATE_INGAME:
-
+    test_render_heart(player->lives);
+    al_draw_textf(font, al_map_rgb(255, 255, 255), 10, 0, 0, "score %04d", 1234);
+    if ((player->obj.is_active == true) && (player->invincible_timer % 10 == 0)) {
+        switch (player->state)
+        {
+        case ePLAYER_STATE_ATTACK:
+            render_player_attack(player);
+            break;
+        default:
+            render_player_move(player);
+            break;
         
-        render_map(GAME_MANAGER_GetMap(), CONFIG_MAP_Y_MAX * CONFIG_MAP_X_MAX);
-        //render_heart();
-        //test_scale_disp(30, 30, SCALE, SCALE, 0);
-        stPLAYER* player = GAME_MANAGER_GetPlayer(0);
 
-        test_render_heart(player->lives);
-        al_draw_textf(font, al_map_rgb(255, 255, 255), 10, 0, 0, "score %04d", 1234);
-        if ((player->obj.is_active == true) && (player->invincible_timer % 10 == 0)) {
-            switch (player->state)
-            {
-            case ePLAYER_STATE_ATTACK:
-                render_player_attack(player);
-                break;
-            default:
-                render_player_move(player);
-                break;
-            
-
-            }
+        }
     
-            
-        }
-
-        stBUBBLE* bubbles = GAME_MANAGER_GetBubble();
-        for (int i = 0; i < CONFIG_OBJECT_BUBBLE_MAX; ++i) {
-    
-            if (bubbles[i].obj.is_active) {
-                render_bubble(&bubbles[i]);
-            }
-        }
         
-
-        render_enemy_throw_attack(GAME_MANAGER_GetEnemyAttacks());
-        stENEMY* enemies = GAME_MANAGER_GetEnemy();
-        for (int i = 0; i < CONFIG_OBJECT_ENEMY_MAX; ++i) {
-            stENEMY* enemy = enemies + i;
-            if (!enemy->obj.is_active) continue;
-            switch (enemy->type) 
-            {
-            case eENEMY_TYPE_BASIC:
-                
-                render_enemy_easy_move(enemy);
-                break;
-               
-            case eENEMY_TYPE_THROW:
-                render_enemy_hard_move(enemy);
-                break;
-            }
-            /*if (enemy->obj.is_active == true) {
-                render_enemy_easy_move(enemy);
-            }*/
-        }
-        break;
     }
-    //if (state == eGAME_STATE_MAIN) {
-    //    disp_pre_draw();
-    //    al_clear_to_color(al_map_rgb(0, 0, 0));
-    //}
-    //if (state == eGAME_STATE_INGAME) {
 
-    //    disp_pre_draw();
-    //    al_clear_to_color(al_map_rgb(0, 0, 0));
-    //    render_map(GAME_MANAGER_GetMap(), CONFIG_MAP_Y_MAX * CONFIG_MAP_X_MAX);
-    //    test_render_heart(3);
-    //    //render_heart();
-    //    //test_scale_disp(30, 30, SCALE, SCALE, 0);
-
-    //    render_player_move(GAME_MANAGER_GetPlayer(0));
-
-    //    enemy_throw_attack(GAME_MANAGER_GetEnemyAttacks());
-    //    //character_scale_disp(10, 220, SCALE, SCALE, 0);
-    //}
+    stBUBBLE* bubbles = GAME_MANAGER_GetBubble();
+    for (int i = 0; i < CONFIG_OBJECT_BUBBLE_MAX; ++i) {
     
-#if 0
+        if (bubbles[i].obj.is_active) {
+            render_bubble(&bubbles[i]);
+        }
+    }
+    
 
-    stars_draw();
-    aliens_draw();
-    shots_draw();
-    fx_draw();
-    ship_draw();
-
-    hud_draw();
-
-#endif
+    render_enemy_throw_attack(GAME_MANAGER_GetEnemyAttacks());
+    stENEMY* enemies = GAME_MANAGER_GetEnemy();
+    for (int i = 0; i < CONFIG_OBJECT_ENEMY_MAX; ++i) {
+        stENEMY* enemy = enemies + i;
+        if (!enemy->obj.is_active) continue;
+        switch (enemy->type) 
+        {
+        case eENEMY_TYPE_BASIC:
+            
+            render_enemy_easy_move(enemy);
+            break;
+           
+        case eENEMY_TYPE_THROW:
+            render_enemy_hard_move(enemy);
+            break;
+        }
+        /*if (enemy->obj.is_active == true) {
+            render_enemy_easy_move(enemy);
+        }*/
+    }
     disp_post_draw();
 }
 
