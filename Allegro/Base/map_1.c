@@ -67,6 +67,7 @@ static stSTAGE_ENEMY_DATA enemy1_data[CONFIG_OBJECT_ENEMY_MAX] = {
 		.type = eENEMY_TYPE_BASIC,
 		.pos = {.x = 150, .y = 50 }
 	},
+
 };
 
 static stSTAGE_DATA stage1_data = {

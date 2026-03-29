@@ -22,7 +22,7 @@ stTILE* stTILE_init(stTILE* tile, stPOSITION* pos)
 
 void map_init_stage(stTILE* map, stENEMY* enemy, stSTAGE_DATA *data) {
 	init_player(GAME_MANAGER_GetPlayer(0));
-
+	memset(enemy, 0, sizeof(stENEMY) * CONFIG_OBJECT_ENEMY_MAX);
 	for (int i = 0; i < CONFIG_OBJECT_ENEMY_MAX; ++i) {
 		stSTAGE_ENEMY_DATA* e_data = data->enemies + i;
 		if (e_data->is_active == true) {

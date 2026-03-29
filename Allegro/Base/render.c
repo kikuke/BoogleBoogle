@@ -13,9 +13,18 @@
 /*         Local Structure Declaration          */
 /************************************************/
 
+#define ZERO (0)
+#define TITLE_X (224)
 #define FLAG_0 (0)
+#define TITLE_W (176)
+#define TITLE_H (145)
+#define SCALE_TITLE_W (80)
+#define SCALE_TITLE_H (60)
+#define TEXT_X (100)
+#define TEXT_Y (215)
 #define MAP (28)
 #define SCALE (10)
+#define SCALE_ATTACK (5)
 #define CHARACTER (48)
 #define HEART (30)
 #define SPRITE_PLAYER_MAX (5)
@@ -32,12 +41,15 @@
 typedef struct 
 {
     int idx;
+    int attack_idx;
     ALLEGRO_BITMAP* left[SPRITE_PLAYER_MAX];
     ALLEGRO_BITMAP* right[SPRITE_PLAYER_MAX];
     ALLEGRO_BITMAP* stay[SPRITE_PLAYER_STAY];
     ALLEGRO_BITMAP* left_attack[SPRITE_PLAYER_ATTACK];
     ALLEGRO_BITMAP* right_attack[SPRITE_PLAYER_ATTACK];
     ALLEGRO_BITMAP* curr_move;
+    ALLEGRO_BITMAP* curr_attack;
+    ALLEGRO_BITMAP* gameover;
 } stSPRITE_PLAYER;
 
 typedef struct 
@@ -70,13 +82,15 @@ typedef struct
 typedef struct SPRITES
 {
     ALLEGRO_BITMAP* _sheet;
-    ALLEGRO_BITMAP* _title_sheet;
+    ALLEGRO_BITMAP* _extra_sheet;
     ALLEGRO_BITMAP* heart;
     ALLEGRO_BITMAP* map;
+    ALLEGRO_BITMAP* title;
     stSPRITE_PLAYER player;
     stSPRITE_ENEMY_EASY enemy_easy;
     stSPRITE_ENEMY_HARD enemy_hard;
     stSPRITE_BUBBLE bubble;
+
 } SPRITES;
 
 /************************************************/
@@ -97,6 +111,7 @@ void render_map(stTILE* tiles, size_t tile_len);
 
 //player
 void render_player_move(stPLAYER* player);
+void render_player_attack(stPLAYER* player);
 void character_scale_disp(ALLEGRO_BITMAP* sprite, float px, float py, float dw, float dh, int flags);
 
 //enemy
@@ -130,8 +145,11 @@ void render_draw_main(void)
 {
     disp_pre_draw();
     al_clear_to_color(al_map_rgb(0, 0, 0));
-
-    al_draw_text(font, al_map_rgb(255, 255, 255), BUFFER_W/2, BUFFER_H/2, 0, "Press Space Bar");
+    if (sprites.title != NULL) {
+        al_draw_scaled_bitmap(sprites.title, ZERO, ZERO, TITLE_W, TITLE_H, SCALE_TITLE_W, SCALE_TITLE_H, BUFFER_W/2, BUFFER_H/2, FLAG_0);
+    }
+    
+    al_draw_text(font, al_map_rgb(255, 255, 255), TEXT_X, TEXT_Y, FLAG_0, "Press Space Bar");
 
     disp_post_draw();
 }
@@ -167,9 +185,21 @@ void render_draw_ingame(eGAME_STATE state)
         stPLAYER* player = GAME_MANAGER_GetPlayer(0);
 
         test_render_heart(player->lives);
-
+        al_draw_textf(font, al_map_rgb(255, 255, 255), 10, 0, 0, "score %04d", 1234);
         if ((player->obj.is_active == true) && (player->invincible_timer % 10 == 0)) {
-            render_player_move(player);
+            switch (player->state)
+            {
+            case ePLAYER_STATE_ATTACK:
+                render_player_attack(player);
+                break;
+            default:
+                render_player_move(player);
+                break;
+            
+
+            }
+    
+            
         }
 
         stBUBBLE* bubbles = GAME_MANAGER_GetBubble();
@@ -309,6 +339,7 @@ static void heart_scale_disp(float dx, float dy, float dw, float dh, int flags) 
 static void bubble_scale_disp(ALLEGRO_BITMAP* sprite, float px, float py, float dw, float dh, int flags) {
     al_draw_scaled_bitmap(sprite, 0, 0, BUBBLE, BUBBLE, px, py, dw, dh, flags);
 }
+
 ALLEGRO_BITMAP* sprite_grab(int x, int y, int w, int h)
 {
     ALLEGRO_BITMAP* sprite = al_create_sub_bitmap(sprites._sheet, x, y, w, h);
@@ -318,12 +349,25 @@ ALLEGRO_BITMAP* sprite_grab(int x, int y, int w, int h)
 
 }
 
+ALLEGRO_BITMAP* extra_sprite_grab(int x, int y, int w, int h)
+{
+    ALLEGRO_BITMAP* sprite_extra = al_create_sub_bitmap(sprites._extra_sheet, x, y, w, h);
+    must_init(sprite_extra, "sprite extra grab");
+
+    return sprite_extra;
+
+}
+
+
 void sprites_init()
 {
     sprites._sheet = al_load_bitmap("Resource/Bubble_Bobble_sprite.png");
-    //sprites._title_sheet = al_load_bitmap("Resource/Bubble_Bobble_sprite_2.png");
+    sprites._extra_sheet = al_load_bitmap("Resource/Bubble_Bobble_sprite_2.png");
     must_init(sprites._sheet, "spritesheet");
-    //must_init(sprites._title_sheet, "spritesheet");
+    must_init(sprites._extra_sheet, "extrasheet");
+
+    //title
+    sprites.title = extra_sprite_grab(TITLE_X, ZERO, TITLE_W, TITLE_H);
 
     //map
     sprites.map = sprite_grab(8, 1578, MAP, MAP);
@@ -351,6 +395,9 @@ void sprites_init()
     sprites.player.right_attack[1] = sprite_grab(397, 335, CHARACTER, CHARACTER);
     sprites.player.right_attack[2] = sprite_grab(463, 335, CHARACTER, CHARACTER);
     sprites.player.right_attack[3] = sprite_grab(528, 335, CHARACTER, CHARACTER);
+
+    //p_gameover
+    sprites.player.gameover = sprite_grab(396, 459, CHARACTER, CHARACTER);
 
     //enemy_easy
     sprites.enemy_easy.left[0] = sprite_grab(14, 528,SPRITE_ENEMY_EASY, SPRITE_ENEMY_EASY);
@@ -391,6 +438,7 @@ void sprites_init()
 
 void sprites_deinit()
 {
+    al_destroy_bitmap(sprites.title);
     al_destroy_bitmap(sprites.map);
 
     al_destroy_bitmap(sprites.player.left[0]);
@@ -412,6 +460,8 @@ void sprites_deinit()
     al_destroy_bitmap(sprites.player.right_attack[1]);
     al_destroy_bitmap(sprites.player.right_attack[2]);
     al_destroy_bitmap(sprites.player.right_attack[3]);
+
+    al_destroy_bitmap(sprites.player.gameover);
 
     al_destroy_bitmap(sprites.heart);
 
@@ -448,6 +498,7 @@ void sprites_deinit()
     al_destroy_bitmap(sprites.enemy_hard.throw);
 
     al_destroy_bitmap(sprites._sheet);
+    al_destroy_bitmap(sprites._extra_sheet);
 }
 
 static void render_main_title() {
@@ -498,6 +549,38 @@ static void render_player_move(stPLAYER* player) {
 
     }
     character_scale_disp(sprites.player.curr_move, player->obj.phy.pos.x, player->obj.phy.pos.y, SCALE, SCALE, FLAG_0);
+
+}
+
+static void render_player_attack(stPLAYER* player) {
+    if (player == NULL) {
+        return;
+    }
+
+    static int attack_time = 0;
+    if (player->state != ePLAYER_STATE_ATTACK) {
+        attack_time = 0;
+    }
+ 
+    attack_time++;
+    sprites.player.attack_idx = (attack_time / 6) % SPRITE_PLAYER_ATTACK;;
+
+    switch (player->state)
+    {
+    case ePLAYER_STATE_ATTACK:
+        switch (player->obj.phy.look) 
+        {
+        case eDIR_LOOK_LEFT:
+            sprites.player.curr_attack = sprites.player.left_attack[sprites.player.attack_idx];
+            break;
+        case eDIR_LOOK_RIGHT:
+            sprites.player.curr_attack = sprites.player.right_attack[sprites.player.attack_idx];
+            break;
+        }
+        
+    }
+    
+    character_scale_disp(sprites.player.curr_attack, player->obj.phy.pos.x, player->obj.phy.pos.y, SCALE, SCALE, FLAG_0);
 
 }
 
@@ -600,12 +683,15 @@ static void render_bubble(stBUBBLE* bubble_throw) {
     {
     case eBUBBLE_STATE_SHOOTING:
         sprites.bubble.curr_move = sprites.bubble.bubble_idle;
+        bubble_scale_disp(sprites.bubble.curr_move, bubble_throw->obj.phy.pos.x, bubble_throw->obj.phy.pos.y, SCALE_ATTACK, SCALE_ATTACK, FLAG_0);
         break;
     case eBUBBLE_STATE_FLOAT:
         sprites.bubble.curr_move = sprites.bubble.bubble_idle;
+        bubble_scale_disp(sprites.bubble.curr_move, bubble_throw->obj.phy.pos.x, bubble_throw->obj.phy.pos.y, SCALE, SCALE, FLAG_0);
         break;
     case eBUBBLE_STATE_POP:
         sprites.bubble.curr_move = sprites.bubble.bubble_pop;
+        bubble_scale_disp(sprites.bubble.curr_move, bubble_throw->obj.phy.pos.x, bubble_throw->obj.phy.pos.y, SCALE, SCALE, FLAG_0);
         break;
     }
        
@@ -613,7 +699,7 @@ static void render_bubble(stBUBBLE* bubble_throw) {
 
     
     if (sprites.bubble.curr_move == NULL) return;
-    bubble_scale_disp(sprites.bubble.curr_move, bubble_throw->obj.phy.pos.x, bubble_throw->obj.phy.pos.y, SCALE, SCALE, FLAG_0);
+   /* bubble_scale_disp(sprites.bubble.curr_move, bubble_throw->obj.phy.pos.x, bubble_throw->obj.phy.pos.y, SCALE, SCALE, FLAG_0);*/
 
 }
 

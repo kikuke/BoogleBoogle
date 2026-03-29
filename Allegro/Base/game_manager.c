@@ -162,6 +162,7 @@ void GAME_MANAGER_SetStage(eGAME_STAGE stage)
 		{
 			map_init_stage(map, enemy, MAP_2_GetData());
 		}
+		break;
 	default:
 		break;
 	}

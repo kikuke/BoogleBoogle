@@ -59,6 +59,8 @@ static stSTAGE_ENEMY_DATA enemy2_data[CONFIG_OBJECT_ENEMY_MAX] = {
 		.type = eENEMY_TYPE_THROW,
 		.pos = {.x = 150, .y = 50 }
 	},
+
+
 };
 
 static stSTAGE_DATA stage2_data = {
