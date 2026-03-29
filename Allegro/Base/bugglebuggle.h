@@ -4,9 +4,11 @@
 /************************************************/
 /*               Macro Definition               */
 /************************************************/
-/* System Config */
+/* Debug Config */
 #define ENABLE_RENDER							(0)
 #define DEBUG_PLAYER							(1)
+
+/* System Config */
 #define CONFIG_GAME_FRAME						(60)
 
 /* MAP Config */
@@ -24,11 +26,11 @@
 #define CONFIG_OBJECT_ENEMY_MAX					(10)
 #define CONFIG_OBJECT_ENEMY_ATTACK_MAX			(10)
 #define CONFIG_OBJECT_MAP_MAX					(CONFIG_MAP_X_MAX * CONFIG_MAP_Y_MAX)
-#define CONFIG_OBJECT_COLLISION_TILE_SIZE		(10)
 
 /* Collision config */
-#define PLAYER_W 10
-#define PLAYER_H 10
+#define CONFIG_OBJECT_COLLISION_TILE_SIZE		(10)
+#define PLAYER_W								(CONFIG_OBJECT_COLLISION_TILE_SIZE)
+#define PLAYER_H								(CONFIG_OBJECT_COLLISION_TILE_SIZE)
 
 typedef enum {
 	eMAIN_STATE_WAIT = 0,

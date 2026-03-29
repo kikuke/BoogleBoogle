@@ -18,6 +18,11 @@ typedef struct {
 } stGAME_MANAGER;
 
 /************************************************/
+/*         Local Function Declaration           */
+/************************************************/
+void GAME_MANAGER_SetStage(eGAME_STAGE stage);
+
+/************************************************/
 /*         Local Variable Definition            */
 /************************************************/
 /* Object Resourece */
@@ -32,30 +37,19 @@ static stGAME_MANAGER game_manager;
 /************************************************/
 /*          Global Function Definition          */
 /************************************************/
-void GAME_MANAGER_SetGameState(eGAME_STATE state)
-{
-	game_manager.state = state;
-}
-
-void GAME_MANAGER_SetGameStage_Next(void)
-{
-	game_manager.state = eGAME_STATE_INGAME;
-	game_manager.flag_next_stage = true;
-}
-
 eGAME_STATE GAME_MANAGER_UpdateState(void)
 {
 	switch (game_manager.state) {
 	case eGAME_STATE_MAIN:
 		break;
 	case eGAME_STATE_INGAME:
-		{
-			if (game_manager.flag_next_stage == true) {
-				GAME_MANAGER_SetStage(++game_manager.stage);// Need To Condition
-				game_manager.flag_next_stage = false;
-			}
+	{
+		if (game_manager.flag_next_stage == true) {
+			GAME_MANAGER_SetStage(++game_manager.stage);// Need To Condition
+			game_manager.flag_next_stage = false;
 		}
-		break;
+	}
+	break;
 	case eGAME_STATE_SCORE:
 		break;
 	case eGAME_STATE_END:
@@ -65,6 +59,17 @@ eGAME_STATE GAME_MANAGER_UpdateState(void)
 	}
 
 	return game_manager.state;
+}
+
+void GAME_MANAGER_SetGameState(eGAME_STATE state)
+{
+	game_manager.state = state;
+}
+
+void GAME_MANAGER_SetGameStage_Next(void)
+{
+	game_manager.state = eGAME_STATE_INGAME;
+	game_manager.flag_next_stage = true;
 }
 
 stPLAYER *GAME_MANAGER_GetPlayer(int player_id)
@@ -87,8 +92,9 @@ stOBJECT* GAME_MANAGER_GetEnemyAttacks(void)
 	return enemy_attack;
 }
 
-void GAME_MANAGER_InitStageObject(eGAME_STAGE stage, stOBJECT *obj)
+stTILE* GAME_MANAGER_GetMap(void)
 {
+	return map;
 }
 
 void GAME_MANAGER_CheckCollision(void)
@@ -145,12 +151,10 @@ void GAME_MANAGER_UpdateObject(void)
 	bubble_update_frame(bubble);
 }
 
-stTILE* GAME_MANAGER_GetMap(void)
-{
-	return map;
-}
-
-void GAME_MANAGER_SetStage(eGAME_STAGE stage)
+/************************************************/
+/*          Local Function Definition           */
+/************************************************/
+static void GAME_MANAGER_SetStage(eGAME_STAGE stage)
 {
 	switch (stage) {
 	case eGAME_STAGE_1:
