@@ -35,6 +35,7 @@ typedef struct {
 
 //stENEMY
 //├── stOBJECT obj
+//│   ├── bool is_active
 //│   ├── stCOLLISION coll
 //│   │   ├── bool is_static
 //│   │   ├── eOBJ_TAG tag
@@ -63,7 +64,8 @@ typedef struct {
 //│   │       ├── double x
 //│   │       └── double y
 //│   └── stRENDER rend
-//│       └── int is_active
+//│       ├── int is_active
+//│       └── bool is_move
 //├── eENEMY_STATE state
 //│   ├── eENEMY_STATE_IDLE(0)
 //│   ├── eENEMY_STATE_MOVE(1)
@@ -80,19 +82,15 @@ typedef struct {
 //├── int throw_timer
 //└── bool is_angry
 
-#if 0
 // make random number between 1 to 9
 int Get_RandNum_1_to_9(void);
 
-// pool management
-void Enemy_InitializePool(stENEMY* enemy);						// initialize enemy pool when begin
-int Enemy_GetActiveCount(stENEMY* enemy);						// get number of active enemies
-#endif
+void Enemy_Update_ALL(stENEMY* enemy, stPLAYER* player, stOBJECT* throw);
+void Throw_Update_ALL(stENEMY* enemy, stPLAYER* player, stOBJECT* throw);
 
 // single enemy manage
 stENEMY* Enemy_Create(stENEMY* enemy, eENEMY_TYPE type, int x, int y);			// create n initialize an enemy
 
-#if 0
 // for main update
 void Enemy_Update(stENEMY* enemy, stOBJECT* target_player, stOBJECT* throw);	// update single enemy
 void Throw_Update(stOBJECT* throw, stOBJECT* target_player);					// update throw
@@ -125,5 +123,4 @@ void Throw_MoveTowardPlayer(stOBJECT* throw, stOBJECT* target_player);			// keep
 // make random number between 1 to 9
 int Get_RandNum_1_to_9(void);
 
-#endif
 #endif
