@@ -50,7 +50,7 @@ typedef struct
     ALLEGRO_BITMAP* right_attack[SPRITE_PLAYER_ATTACK];
     ALLEGRO_BITMAP* curr_move;
     ALLEGRO_BITMAP* curr_attack;
-    ALLEGRO_BITMAP* gameover;
+    ALLEGRO_BITMAP* dead;
 } stSPRITE_PLAYER;
 
 typedef struct 
@@ -116,6 +116,7 @@ void render_map(stTILE* tiles, size_t tile_len);
 void render_player_move(stPLAYER* player);
 void render_player_attack(stPLAYER* player);
 void character_scale_disp(ALLEGRO_BITMAP* sprite, float px, float py, float dw, float dh, int flags);
+void render_player_dead(stPLAYER* player);
 
 //enemy
 void enemy_easy_scale_disp(ALLEGRO_BITMAP* sprite, float px, float py, float dw, float dh, int flags);
@@ -124,6 +125,7 @@ void render_enemy_easy_move(stENEMY* enemy);
 void render_enemy_easy_trapped(stENEMY* enemy);
 void enemy_trapped_scale_disp(ALLEGRO_BITMAP* sprite, float px, float py, float dw, float dh, int flags);
 void render_enemy_hard_move(stENEMY* enemy);
+void render_enemy_hard_trapped(stENEMY* enemy);
 void render_enemy_throw_attack(stOBJECT* enemy_throw);
 void enemy_throw_scale_disp(ALLEGRO_BITMAP* sprite, float px, float py, float dw, float dh, int flags);
 static ALLEGRO_FONT* font;
@@ -175,20 +177,29 @@ void render_draw_ingame(void)
 
     test_render_heart(player->lives);
     al_draw_textf(font, al_map_rgb(255, 255, 255), 10, 0, 0, "score %04d", 1234);
-    if ((player->obj.is_active == true) && (player->invincible_timer % 10 == 0)) {
+    if ((player->obj.is_active == true) && (player->invincible_timer % 10 == 0)) 
+    {
         switch (player->state)
         {
         case ePLAYER_STATE_ATTACK:
             render_player_attack(player);
             break;
+            
+        /*case ePLAYER_STATE_DEAD:
+            render_player_dead(player);
+            break;*/
         default:
             render_player_move(player);
+            
             break;
         
 
         }
     
         
+    }
+    else if (player->obj.is_active == false) {
+        render_player_dead(player);
     }
 
     stBUBBLE* bubbles = GAME_MANAGER_GetBubble();
@@ -211,8 +222,7 @@ void render_draw_ingame(void)
             
             render_enemy_easy_move(enemy);
             if (enemy->state == eENEMY_STATE_TRAPPED) {
-                enemy_trapped_scale_disp(sprites.enemy_easy.trapped, enemy->obj.phy.pos.x, enemy->obj.phy.pos.y, SCALE, SCALE, FLAG_0);
-
+                render_enemy_easy_trapped(enemy);
             }
 
             /*break;
@@ -229,8 +239,7 @@ void render_draw_ingame(void)
         case eENEMY_TYPE_THROW:
             render_enemy_hard_move(enemy); 
             if (enemy->state == eENEMY_STATE_TRAPPED) {
-                enemy_trapped_scale_disp(sprites.enemy_hard.trapped, enemy->obj.phy.pos.x, enemy->obj.phy.pos.y, SCALE, SCALE, FLAG_0);
-
+                render_enemy_hard_trapped(enemy);
             }
             break;
         }
@@ -374,8 +383,8 @@ void sprites_init()
     sprites.player.right_attack[2] = sprite_grab(463, 335, CHARACTER, CHARACTER);
     sprites.player.right_attack[3] = sprite_grab(528, 335, CHARACTER, CHARACTER);
 
-    //p_gameover
-    sprites.player.gameover = sprite_grab(396, 459, CHARACTER, CHARACTER);
+    //p_dead
+    sprites.player.dead = sprite_grab(396, 459, CHARACTER, CHARACTER);
 
     //enemy_easy
     sprites.enemy_easy.left[0] = sprite_grab(14, 528,SPRITE_ENEMY_EASY, SPRITE_ENEMY_EASY);
@@ -442,7 +451,7 @@ void sprites_deinit()
     al_destroy_bitmap(sprites.player.right_attack[2]);
     al_destroy_bitmap(sprites.player.right_attack[3]);
 
-    al_destroy_bitmap(sprites.player.gameover);
+    al_destroy_bitmap(sprites.player.dead);
 
     al_destroy_bitmap(sprites.heart);
 
@@ -565,6 +574,11 @@ static void render_player_attack(stPLAYER* player) {
     character_scale_disp(sprites.player.curr_attack, player->obj.phy.pos.x, player->obj.phy.pos.y, SCALE, SCALE, FLAG_0);
 
 }
+static void render_player_dead(stPLAYER* player) {
+    
+    character_scale_disp(sprites.player.dead, player->obj.phy.pos.x, player->obj.phy.pos.y, SCALE, SCALE, FLAG_0);
+
+}
 
 static void render_enemy_easy_move(stENEMY* enemy) {
     if (enemy == NULL) return;
@@ -603,6 +617,11 @@ static void render_enemy_easy_move(stENEMY* enemy) {
     }
     enemy_easy_scale_disp(sprites.enemy_easy.curr_move, enemy->obj.phy.pos.x, enemy->obj.phy.pos.y, SCALE, SCALE, FLAG_0);
 
+}
+
+static void render_enemy_easy_trapped(stENEMY* enemy) {
+    enemy_trapped_scale_disp(sprites.enemy_easy.trapped, enemy->obj.phy.pos.x, enemy->obj.phy.pos.y, SCALE, SCALE, FLAG_0);
+      
 }
 //static void render_enemy_easy_trapped(stENEMY* enemy) {
 //    if (enemy == NULL) {
@@ -660,6 +679,11 @@ static void render_enemy_hard_move(stENEMY* enemy) {
 
     }
     enemy_hard_scale_disp(sprites.enemy_hard.curr_move, enemy->obj.phy.pos.x, enemy->obj.phy.pos.y, SCALE, SCALE, FLAG_0);
+
+}
+
+static void render_enemy_hard_trapped(stENEMY* enemy) {
+    enemy_trapped_scale_disp(sprites.enemy_hard.trapped, enemy->obj.phy.pos.x, enemy->obj.phy.pos.y, SCALE, SCALE, FLAG_0);
 
 }
 
@@ -729,6 +753,23 @@ static void render_heart() {
     heart_scale_disp(10, 0, SCALE, SCALE, FLAG_0);
     heart_scale_disp(20, 0, SCALE, SCALE, FLAG_0);
     
+
+}
+
+static void render_stage(eGAME_STAGE stage) {
+    switch (stage) {
+    case eGAME_STAGE_1:
+        al_draw_text(font, al_map_rgb(255, 255, 255), 264, 0, FLAG_0, "STAGE 1");
+        break;
+    case eGAME_STAGE_2:
+        al_draw_text(font, al_map_rgb(255, 255, 255), 264, 0, FLAG_0, "STAGE 2");
+        break;
+    case eGAME_STAGE_3:
+        al_draw_text(font, al_map_rgb(255, 255, 255), 264, 0, FLAG_0, "STAGE 3");
+        break;
+    default:
+        break;
+    }
 
 }
 #if 0
