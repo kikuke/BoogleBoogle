@@ -6,7 +6,7 @@
 #include "player.h"
 
 #define BUBBLE_SPEED    (2.0)
-#define BUBBLE_UP_SPEED (-1.0)    
+#define BUBBLE_UP_SPEED (-0.7)    
 
 typedef enum _bubble_state {
 

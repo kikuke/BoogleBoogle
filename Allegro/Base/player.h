@@ -19,6 +19,7 @@ typedef struct {
 	int shot_timer;
 	int lives;
 	int invincible_timer;
+	int attack_timer;
 } stPLAYER;
 
 void init_player(stPLAYER* player);

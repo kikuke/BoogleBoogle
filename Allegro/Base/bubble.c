@@ -58,6 +58,7 @@ void bubble_update(stBUBBLE* bubbles)
     for (int i = 0; i < BUBBLES_N; ++i)
     {
         if (!bubbles[i].obj.is_active) continue;
+        
 
         if (bubbles[i].frame >= bubbles[i].dur) {
             bubbles[i].state = eBUBBLE_STATE_POP;

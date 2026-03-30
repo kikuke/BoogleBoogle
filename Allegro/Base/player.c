@@ -8,6 +8,7 @@
 
 // fix it later
 const static double PLAYER_SPEED = 3.0;
+#define REND_DURATION  (30)
 
 void init_player(stPLAYER* player)
 {
@@ -27,12 +28,13 @@ void init_player(stPLAYER* player)
 		.obj.phy.pos.y = 210.0,
 #endif
 		.state = ePLAYER_STATE_IDLE,
-		.shot_timer = 0,
+		.shot_timer = 30,
 		.lives = CONFIG_GAME_PLAYER_HEART_MAX,
 		.invincible_timer = 0,
 		.obj.is_active = true,
 		.obj.phy.is_gravity = true,
 		.obj.phy.is_jump = false,
+		.attack_timer = 0,
 		//.obj.rend,
 	};
 }
@@ -64,11 +66,18 @@ void player_update_input(stPLAYER* player, int allegro_key, unsigned char flag)
 		player->state = ePLAYER_STATE_MOVE;
 	}
 	break;
+	case ALLEGRO_KEY_DOWN:
+	{
+		player->obj.phy.pos.y += 3;
+		player->obj.phy.is_jump = false;
+		player->state = ePLAYER_STATE_MOVE;
+	}
+	break;
 	case ALLEGRO_KEY_SPACE:
 	{
 		if (player->shot_timer <= 0 && bubble_add(player, GAME_MANAGER_GetBubble())) {
 			player->shot_timer = 60;
-			player->state = ePLAYER_STATE_ATTACK;
+			player->attack_timer = 30;
 		}
 	}
 	break;
@@ -85,11 +94,19 @@ void player_update_frame(stPLAYER* player) {
 #endif
 	// TODO: Need To Modify
 #if 01
-	if ((player->obj.phy.speed.x == 0 && player->state != ePLAYER_STATE_ATTACK)/* && (player->obj.phy.speed.y == 0)*/) {
+	if ((player->obj.phy.speed.x == 0)/* && (player->obj.phy.speed.y == 0)*/) {
 		player->state = ePLAYER_STATE_IDLE;
 	}
 #endif
 
+	if (player->attack_timer > 0) {
+		player->state = ePLAYER_STATE_ATTACK;
+		player->attack_timer--;
+	}
+	else {
+		player->state = ePLAYER_STATE_IDLE;
+	}
+		
 	if (player->shot_timer > 0) player->shot_timer--;
 	if (player->invincible_timer > 0) player->invincible_timer--;
 }

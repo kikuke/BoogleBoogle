@@ -159,14 +159,14 @@ void GAME_MANAGER_CheckCollision(void)
 
 			Collide_Object_Tile(pPlayer, tile);
 		}
-		for (int i = 0; i < CONFIG_OBJECT_ENEMY_MAX; ++i) {
-			stOBJECT* obj = &enemy[i].obj;
+		for (int iEnemy = 0; iEnemy < CONFIG_OBJECT_ENEMY_MAX; ++iEnemy) {
+			stOBJECT* obj = &enemy[iEnemy].obj;
 			if (obj->is_active == true) {
 				Collide_Object_Tile(obj, tile);
 			}
 		}
-		for (int i = 0; i < CONFIG_OBJECT_BUBBLE_MAX; ++i) {
-			stOBJECT* obj = &bubble[i].obj;
+		for (int iBubble = 0; iBubble < CONFIG_OBJECT_BUBBLE_MAX; ++iBubble) {
+			stOBJECT* obj = &bubble[iBubble].obj;
 			if (obj->is_active == true) {
 				Collide_Object_Tile(obj, tile);
 			}
@@ -174,28 +174,34 @@ void GAME_MANAGER_CheckCollision(void)
 	}
 
 	/* Collide_Enemy_Player */
-	for (int i = 0; i < CONFIG_OBJECT_ENEMY_MAX; ++i) {
-		stOBJECT* obj = &enemy[i].obj;
+	for (int iEnemy = 0; iEnemy < CONFIG_OBJECT_ENEMY_MAX; ++iEnemy) {
+		stOBJECT* obj = &enemy[iEnemy].obj;
 		if (obj->is_active == true) {
 			Collide_Enemy_Player(obj, &player[0]);
 		}
 	}
 
-	/* Collide_Object_Bubble */ 
-	for (int iPlayer = 0; iPlayer < CONFIG_OBJECT_PLAYER_MAX; ++iPlayer) {
-		stPLAYER* pPlayer = &player[iPlayer];
-		if (pPlayer->obj.is_active == false)
-			continue;
+	/* enemy throw add later */
 
-		Collide_Object_Bubble(&player[0], bubble);
-	}
-	for (int i = 0; i < CONFIG_OBJECT_ENEMY_MAX; ++i) {
-		stOBJECT* obj = &enemy[i].obj;
-		if (obj->is_active == true) {
-			Collide_Object_Bubble(obj, bubble);
+
+
+	/* Collide_Object_Bubble */ 
+
+	for (int i = 0; i < CONFIG_OBJECT_BUBBLE_MAX; ++i) {
+		if (bubble[i].obj.is_active) {
+			Collide_Object_Bubble(&(player[0].obj), &bubble[i]);
 		}
 	}
 
+	for (int iEnemy = 0; iEnemy < CONFIG_OBJECT_ENEMY_MAX; ++iEnemy) {
+		if (!enemy[iEnemy].obj.is_active) continue;
+
+		for (int iBubble = 0; iBubble < CONFIG_OBJECT_BUBBLE_MAX; ++iBubble) {
+			if (!bubble[iBubble].obj.is_active) continue;
+
+			Collide_Object_Bubble(&(enemy[iEnemy].obj), &bubble[iBubble]);
+		}
+	}
 }
 
 void GAME_MANAGER_UpdatePhysics(void)

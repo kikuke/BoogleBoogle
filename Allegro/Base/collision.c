@@ -113,15 +113,15 @@ void Collide_Enemy_Player(stOBJECT* object, stPLAYER* player) {
     }
 
     if (object->coll.tag == eOBJ_TAG_ENEMY) {
-        stENEMY* e = (stENEMY*)object;
-        /* fix? */
-        if (e->state == eENEMY_STATE_TRAPPED) {
-            e->state = eENEMY_STATE_DEAD;
-            e->obj.is_active = false;
-        }
-        else {
-            if (AABB_to_AABB(object, &(player->obj))) {
 
+        if (AABB_to_AABB(object, &(player->obj))) {
+            stENEMY* e = (stENEMY*)object;
+
+            if (e->state == eENEMY_STATE_TRAPPED) {
+                e->state = eENEMY_STATE_DEAD;
+                e->obj.is_active = false;
+            }
+            else {
                 player->lives--;
 
                 if (player->lives <= 0) {
@@ -156,7 +156,6 @@ void Collide_Enemy_Player(stOBJECT* object, stPLAYER* player) {
 void Collide_Object_Bubble(stOBJECT* object, stBUBBLE* bubble) {
 
     if (object->coll.tag == eOBJ_TAG_PLAYER) {
-
         if (AABB_to_AABB(object, &(bubble->obj))) {
             if (bubble->state == eBUBBLE_STATE_FLOAT) {
                 if (object->phy.speed.y > 0) {
@@ -164,14 +163,13 @@ void Collide_Object_Bubble(stOBJECT* object, stBUBBLE* bubble) {
                 }
             }
         }
-
     }
     else if (object->coll.tag == eOBJ_TAG_ENEMY) {
-
         if (bubble->state == eBUBBLE_STATE_SHOOTING) {
             if (AABB_to_AABB(object, &(bubble->obj))) {
                 stENEMY* e = (stENEMY*)object;
                 e->state = eENEMY_STATE_TRAPPED;
+
                 bubble->obj.is_active = false;
             }
         }
