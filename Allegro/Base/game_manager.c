@@ -119,6 +119,12 @@ void GAME_MANAGER_CheckCollision(void)
 				Collide_Object_Tile(obj, tile);
 			}
 		}
+		for (int i = 0; i < CONFIG_OBJECT_BUBBLE_MAX; ++i) {
+			stOBJECT* obj = &bubble[i].obj;
+			if (obj->is_active == true) {
+				Collide_Object_Tile(obj, tile);
+			}
+		}
 	}
 
 	/* Collide_Enemy_Player */
@@ -128,6 +134,22 @@ void GAME_MANAGER_CheckCollision(void)
 			Collide_Enemy_Player(obj, &player[0]);
 		}
 	}
+
+	/* Collide_Object_Bubble */ 
+	for (int iPlayer = 0; iPlayer < CONFIG_OBJECT_PLAYER_MAX; ++iPlayer) {
+		stPLAYER* pPlayer = &player[iPlayer];
+		if (pPlayer->obj.is_active == false)
+			continue;
+
+		Collide_Object_Bubble(&player[0], bubble);
+	}
+	for (int i = 0; i < CONFIG_OBJECT_ENEMY_MAX; ++i) {
+		stOBJECT* obj = &enemy[i].obj;
+		if (obj->is_active == true) {
+			Collide_Object_Bubble(obj, bubble);
+		}
+	}
+
 }
 
 void GAME_MANAGER_UpdatePhysics(void)
