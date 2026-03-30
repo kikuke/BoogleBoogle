@@ -29,16 +29,20 @@ void map_init_stage(stTILE* map, stENEMY* enemy, stSTAGE_DATA *data) {
 			Enemy_Create(enemy, e_data->type, e_data->pos.x, e_data->pos.y);
 		}
 	}
-
+		
+	
 	for (int i = 0; i < CONFIG_MAP_Y_MAX; ++i) {
 		for (int j = 0; j < CONFIG_MAP_X_MAX; ++j) {
 			stPOSITION pos = {
 				.x = j * 10,
 				.y = i * 10
 			};
+			stTILE* tile = &map[(i * CONFIG_MAP_X_MAX) + j];
+
+			tile->obj.is_active = false;
 
 			if (data->stage[i][j] != 0) {
-				stTILE_init(&map[(i * CONFIG_MAP_X_MAX) + j], &pos);
+				stTILE_init(tile, &pos);
 			}
 		}
 	}

@@ -510,6 +510,10 @@ static void render_map(stTILE  *tiles, size_t tile_len) {
     for (int i = 0; i < tile_len; ++i) {
         float x = tiles[i].obj.phy.pos.x;
         float y = tiles[i].obj.phy.pos.y;
+
+        if (tiles[i].obj.is_active == false)
+            continue;
+
         map_scale_disp(x, y, SCALE, SCALE, FLAG_0);
     }
 }
