@@ -16,13 +16,13 @@
 #define ENEMY_BOSS_TRAPPED_TIMER    (300)
 
 
-#define ENEMY_BASIC_SPEED           (1.0f)
-#define ENEMY_BASIC_SPEED_ANGRY     (1.8f)
-#define ENEMY_BASIC_JUMP            (-10.0f)
+#define ENEMY_BASIC_SPEED           (1.2f)
+#define ENEMY_BASIC_SPEED_ANGRY     (1.5f)
+#define ENEMY_BASIC_JUMP            (-4.2f)
 #define ENEMY_BASIC_JUMP_CHANCE     (5) // 1 to 9
-#define ENEMY_THROW_SPEED           (1.0f)
-#define ENEMY_THROW_SPEED_ANGRY     (2.0f)
-#define THROW_SPEED                 (2)
+#define ENEMY_THROW_SPEED           (0.8f)
+#define ENEMY_THROW_SPEED_ANGRY     (1.2f)
+#define THROW_SPEED                 (2.5)
 
 /************************************************/
 /*         Local Function Declaration           */

@@ -20,9 +20,9 @@
 #define CONFIG_MAP_Y_MAX						(24)
 
 /* Physics Config */
-#define CONFIG_PHYSICS_GRAVITY_FORCE			(1.0)
-#define CONFIG_PHYSICS_JUMP_FORCE				(8.0)
-#define CONFIG_PHYSICS_PLAYER_INV_TIME			(1)
+#define CONFIG_PHYSICS_GRAVITY_FORCE			(0.25)
+#define CONFIG_PHYSICS_JUMP_FORCE				(4.2)
+#define CONFIG_PHYSICS_PLAYER_INV_TIME			(2)
 
 /* Object Config */
 #define CONFIG_OBJECT_PLAYER_MAX				(1)
