@@ -1,5 +1,8 @@
 #include "collision.h"
 
+#define MAP_Y_MAX (10)
+#define MAP_Y_MIN (220)
+
 // Need to Optimization
 static bool AABB_to_AABB(stOBJECT* object1, stOBJECT* object2)
 {
@@ -43,9 +46,9 @@ void Collide_Object_Tile(stOBJECT* object, stTILE* tile) {
 
         // map out
         if (obj_speed_y < 0) {
-            if (next_y < 10) {
+            if (next_y < MAP_Y_MAX) {
                 object->phy.speed.y = 0;
-                object->phy.pos.y = 10;
+                object->phy.pos.y = MAP_Y_MAX;
             }
         }
         /* check gravity */
@@ -53,9 +56,9 @@ void Collide_Object_Tile(stOBJECT* object, stTILE* tile) {
             double curr_bottom = obj_y + obj_h;
             double next_bottom = next_y + obj_h;
 
-            if (next_y > 220) {
+            if (next_y > MAP_Y_MIN) {
                 object->phy.speed.y = 0;
-                object->phy.pos.y = 220;
+                object->phy.pos.y = MAP_Y_MIN;
             }
 
             if (curr_bottom <= tile_t && next_bottom >= tile_t) {
