@@ -186,9 +186,12 @@ void GAME_MANAGER_CheckCollision(void)
 		}
 	}
 
-	/* enemy throw add later */
-
-
+	/* enemy throw */
+	for (int iThrow = 0; iThrow < CONFIG_OBJECT_ENEMY_ATTACK_MAX; ++iThrow) {
+		if (enemy_attack[iThrow].is_active == true) {
+			Collide_Enemy_Player(&enemy_attack[iThrow], &player[0]);
+		}
+	}
 
 	/* Collide_Object_Bubble */ 
 

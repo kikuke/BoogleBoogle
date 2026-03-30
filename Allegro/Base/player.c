@@ -8,7 +8,9 @@
 
 // fix it later
 const static double PLAYER_SPEED = 3.0;
-#define REND_DURATION  (30)
+#define REND_DURATION		(30)
+#define BUBBLE_COOL_TIME	(60)
+
 
 void init_player(stPLAYER* player)
 {
@@ -28,7 +30,7 @@ void init_player(stPLAYER* player)
 		.obj.phy.pos.y = 210.0,
 #endif
 		.state = ePLAYER_STATE_IDLE,
-		.shot_timer = 30,
+		.shot_timer = REND_DURATION,
 		.lives = CONFIG_GAME_PLAYER_HEART_MAX,
 		.invincible_timer = 0,
 		.obj.is_active = true,
@@ -76,8 +78,8 @@ void player_update_input(stPLAYER* player, int allegro_key, unsigned char flag)
 	case ALLEGRO_KEY_SPACE:
 	{
 		if (player->shot_timer <= 0 && bubble_add(player, GAME_MANAGER_GetBubble())) {
-			player->shot_timer = 60;
-			player->attack_timer = 30;
+			player->shot_timer = BUBBLE_COOL_TIME;
+			player->attack_timer = REND_DURATION;
 		}
 	}
 	break;
