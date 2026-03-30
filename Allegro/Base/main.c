@@ -152,7 +152,7 @@ static ALLEGRO_EVENT_QUEUE* init_queue(void)
 
 static ALLEGRO_TIMER* init_timer(ALLEGRO_EVENT_QUEUE* queue)
 {
-    ALLEGRO_TIMER* timer = al_create_timer(1.0 / CONFIG_GAME_FRAME);
+    ALLEGRO_TIMER* timer = al_create_timer(1.0 / CONFIG_SYSTEM_GAME_FRAME);
     must_init(timer, "timer");
     al_register_event_source(queue, al_get_timer_event_source(timer));
 

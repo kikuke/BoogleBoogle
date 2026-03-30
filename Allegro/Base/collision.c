@@ -129,7 +129,7 @@ void Collide_Enemy_Player(stOBJECT* object, stPLAYER* player) {
                     player->obj.is_active = false;
                 }
                 else {
-                    player->invincible_timer = CONFIG_PHYSICS_PLAYER_INV_TIME * CONFIG_GAME_FRAME; // 2s
+                    player->invincible_timer = CONFIG_PHYSICS_PLAYER_INV_TIME * CONFIG_SYSTEM_GAME_FRAME; // 2s
                 }
             }
         }
