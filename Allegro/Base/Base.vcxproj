@@ -141,6 +141,7 @@
     <ClCompile Include="keyboard.c" />
     <ClCompile Include="main.c" />
     <ClCompile Include="map.c" />
+    <ClCompile Include="map_3.c" />
     <ClCompile Include="map_1.c" />
     <ClCompile Include="map_2.c" />
     <ClCompile Include="physics.c" />
@@ -159,6 +160,7 @@
     <ClInclude Include="map.h" />
     <ClInclude Include="map_1.h" />
     <ClInclude Include="map_2.h" />
+    <ClInclude Include="map_3.h" />
     <ClInclude Include="object.h" />
     <ClInclude Include="physics.h" />
     <ClInclude Include="player.h" />

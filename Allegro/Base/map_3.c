@@ -1,6 +1,6 @@
 #include "map.h"
 
-static int stage2[CONFIG_MAP_Y_MAX][CONFIG_MAP_X_MAX] =
+static int stage3[CONFIG_MAP_Y_MAX][CONFIG_MAP_X_MAX] =
 {
 {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
 {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
@@ -11,7 +11,7 @@ static int stage2[CONFIG_MAP_Y_MAX][CONFIG_MAP_X_MAX] =
 {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
 {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
 {1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1},
-{1, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 1},
+{1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
 {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
 {1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1},
 {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
@@ -28,7 +28,7 @@ static int stage2[CONFIG_MAP_Y_MAX][CONFIG_MAP_X_MAX] =
 {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1}
 };
 
-static stSTAGE_ENEMY_DATA enemy2_data[CONFIG_OBJECT_ENEMY_MAX] = {
+static stSTAGE_ENEMY_DATA enemy3_data[CONFIG_OBJECT_ENEMY_MAX] = {
 	{
 		.is_active = true,
 		.type = eENEMY_TYPE_THROW,
@@ -46,31 +46,31 @@ static stSTAGE_ENEMY_DATA enemy2_data[CONFIG_OBJECT_ENEMY_MAX] = {
 	},
 	{
 		.is_active = true,
-		.type = eENEMY_TYPE_THROW,
+		.type = eENEMY_TYPE_BASIC,
 		.pos = {.x = 90, .y = 50 }
 	},
 	{
 		.is_active = true,
-		.type = eENEMY_TYPE_THROW,
+		.type = eENEMY_TYPE_BASIC,
 		.pos = {.x = 120, .y = 50 }
 	},
 	{
 		.is_active = true,
-		.type = eENEMY_TYPE_THROW,
+		.type = eENEMY_TYPE_BASIC,
 		.pos = {.x = 150, .y = 50 }
 	},
 
 
 };
 
-static stSTAGE_DATA stage2_data = {
-	.stage = stage2,
-	.enemies = enemy2_data
+static stSTAGE_DATA stage3_data = {
+	.stage = stage3,
+	.enemies = enemy3_data
 };
 
-stSTAGE_DATA* MAP_2_GetData(void)
+stSTAGE_DATA* MAP_3_GetData(void)
 {
-	return &stage2_data;
+	return &stage3_data;
 }
 
 

@@ -6,6 +6,7 @@
 #include "bubble.h"
 #include "map_1.h"
 #include "map_2.h" 
+#include "map_3.h"
 
 /************************************************/
 /*         Local Variable Declaration           */
@@ -191,6 +192,11 @@ static void GAME_MANAGER_SetStage(eGAME_STAGE stage)
 	case eGAME_STAGE_2:
 		{
 			map_init_stage(map, enemy, MAP_2_GetData());
+		}
+		break;
+	case eGAME_STAGE_3:
+		{
+			map_init_stage(map, enemy, MAP_3_GetData());
 		}
 		break;
 	default:
