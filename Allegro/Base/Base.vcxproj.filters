@@ -57,6 +57,9 @@
     <ClCompile Include="keyboard.c">
       <Filter>소스 파일</Filter>
     </ClCompile>
+    <ClCompile Include="sqlite3.c">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="player.h">
@@ -102,6 +105,9 @@
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="keyboard.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="sqlite3.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
   </ItemGroup>

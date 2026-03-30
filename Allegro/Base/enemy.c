@@ -11,6 +11,19 @@
 #include "collision.h"
 #include "game_manager.h"
 
+#define ENEMY_BASIC_TRAPPED_TIMER   (300)
+#define ENEMY_THROW_TRAPPED_TIMER   (300)
+#define ENEMY_BOSS_TRAPPED_TIMER    (300)
+
+
+#define ENEMY_BASIC_SPEED           (1.0f)
+#define ENEMY_BASIC_SPEED_ANGRY     (1.8f)
+#define ENEMY_BASIC_JUMP            (-10.0f)
+#define ENEMY_BASIC_JUMP_CHANCE     (5) // 1 to 9
+#define ENEMY_THROW_SPEED           (1.0f)
+#define ENEMY_THROW_SPEED_ANGRY     (2.0f)
+#define THROW_SPEED                 (2)
+
 /************************************************/
 /*         Local Function Declaration           */
 /************************************************/
@@ -56,13 +69,13 @@ stENEMY* Enemy_Create(stENEMY* enemy_pool, eENEMY_TYPE type, int x, int y) {
 
             switch (type) {
             case eENEMY_TYPE_BASIC:
-                new_enemy->trapped_timer = 300;
+                new_enemy->trapped_timer = ENEMY_BASIC_TRAPPED_TIMER;
                 break;
             case eENEMY_TYPE_THROW:
-                new_enemy->trapped_timer = 300;
+                new_enemy->trapped_timer = ENEMY_THROW_TRAPPED_TIMER;
                 break;
             case eENEMY_TYPE_BOSS:
-                new_enemy->trapped_timer = 600;
+                new_enemy->trapped_timer = ENEMY_BOSS_TRAPPED_TIMER;
                 break;
             }
 
@@ -119,13 +132,6 @@ void Throw_Update(stOBJECT* throw, stOBJECT* target_player) {
     }
 }
 
-void Enemy_ChangeState(stENEMY* e, eENEMY_STATE newState) {
-    if (e == NULL || e->state == newState) return;
-
-    e->state = newState;
-    e->state_timer = 0;
-}
-
 void Enemy_Update_ALL(stENEMY* enemy, stPLAYER* player, stOBJECT* throw) {
     for (int i = 0; i < CONFIG_OBJECT_ENEMY_MAX; i++) {
         if (enemy[i].obj.is_active) {
@@ -139,6 +145,13 @@ void Throw_Update_ALL(stENEMY* enemy, stPLAYER* player, stOBJECT* throw) {
             Throw_Update(&throw[i], &player[0].obj);
         }
     }
+}
+
+void Enemy_ChangeState(stENEMY* e, eENEMY_STATE newState) {
+    if (e == NULL || e->state == newState) return;
+
+    e->state = newState;
+    e->state_timer = 0;
 }
 
 /************************************************/
@@ -199,8 +212,7 @@ void Enemy_ToPlayer_Ground(stENEMY* enemy, stOBJECT* target) {
     stPOSITION* e_speed = &enemy->obj.phy.speed;
     eDIR_LOOK* e_look = &enemy->obj.phy.look;
 
-    float begin_speed = 1.0f;
-    float cur_speed = begin_speed * (enemy->is_angry ? 1.8f : 1.0f);
+    float cur_speed = (enemy->is_angry ? ENEMY_BASIC_SPEED_ANGRY : ENEMY_BASIC_SPEED);
 
     // is_move == false -> enemy hit the wall -> change dir
     if (enemy->state_timer > 1 && enemy->obj.rend.is_move == false) {
@@ -223,8 +235,9 @@ void Enemy_ToPlayer_Ground(stENEMY* enemy, stOBJECT* target) {
 
     if (enemy->state == eENEMY_STATE_MOVE && !enemy->obj.phy.is_jump) {
         // if char upper then enemy && 1 per second && 50% chance
-        if ((target->phy.pos.y < e_pos->y - 10.0f) && (enemy->state_timer % 60 == 0) && (Get_RandNum_1_to_9() <= 5)) {
-            e_speed->y = -10.0f;
+        if ((target->phy.pos.y < e_pos->y - 10.0f) && (enemy->state_timer % 60 == 0) 
+            && (Get_RandNum_1_to_9() <= ENEMY_BASIC_JUMP_CHANCE)) {
+            e_speed->y = ENEMY_BASIC_JUMP;
             enemy->obj.phy.is_jump = true;
         }
     }
@@ -237,9 +250,7 @@ void Enemy_ToPlayer_Fly(stENEMY* enemy, stOBJECT* player) {
     stPOSITION* e_speed = &enemy->obj.phy.speed;
     eDIR_LOOK* e_look = &enemy->obj.phy.look;
 
-    float begin_speed = 1.0f;
-    float speed_mul = (enemy->is_angry ? 2.0f : 1.0f);
-    float cur_speed = begin_speed * speed_mul;
+    float cur_speed = (enemy->is_angry ? ENEMY_THROW_SPEED_ANGRY : ENEMY_THROW_SPEED);
 
     // no gravity
     enemy->obj.phy.is_gravity = false;
@@ -325,7 +336,7 @@ void Throw_MoveTowardPlayer(stOBJECT* throw, stOBJECT* target_player) {
     float dy = (float)p_pos->y - (float)t_pos->y;
 
     float dist = (float)sqrt(dx * dx + dy * dy);
-    int speed = 2;
+    int speed = THROW_SPEED;
 
     if (dist > 0) {
         t_speed->x = (dx / dist) * speed;

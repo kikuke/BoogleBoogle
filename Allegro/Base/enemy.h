@@ -85,15 +85,16 @@ typedef struct {
 // make random number between 1 to 9
 int Get_RandNum_1_to_9(void);
 
-void Enemy_Update_ALL(stENEMY* enemy, stPLAYER* player, stOBJECT* throw);
-void Throw_Update_ALL(stENEMY* enemy, stPLAYER* player, stOBJECT* throw);
-
 // single enemy manage
 stENEMY* Enemy_Create(stENEMY* enemy, eENEMY_TYPE type, int x, int y);			// create n initialize an enemy
 
 // for main update
 void Enemy_Update(stENEMY* enemy, stOBJECT* target_player, stOBJECT* throw);	// update single enemy
 void Throw_Update(stOBJECT* throw, stOBJECT* target_player);					// update throw
+
+// Update state all
+void Enemy_Update_ALL(stENEMY* enemy, stPLAYER* player, stOBJECT* throw);
+void Throw_Update_ALL(stENEMY* enemy, stPLAYER* player, stOBJECT* throw);
 
 // state manage
 void Enemy_ChangeState(stENEMY* enemy, eENEMY_STATE newState);					// change the enemy's current state
@@ -107,7 +108,6 @@ void Enemy_UpdateIdle(stENEMY* enemy);											// update IDLE state
 void Enemy_UpdateMove(stENEMY* enemy, stOBJECT* target_player);					// update MOVE state
 void Enemy_UpdateAttack(stENEMY* enemy, stOBJECT* target_player, stOBJECT* throw);// update ATTACK state
 void Enemy_UpdateTrapped(stENEMY* enemy);										// update TRAPPED (bubble) state
-void Enemy_UpdateDead(stENEMY* enemy);											// update DEAD state
 
 // AI n behavior
 void Enemy_ToPlayer_Ground(stENEMY* enemy, stOBJECT* target_player);			// move enemy toward the player
