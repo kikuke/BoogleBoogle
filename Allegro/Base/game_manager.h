@@ -29,6 +29,7 @@ typedef struct {
 /* Game State */
 eGAME_STATE GAME_MANAGER_UpdateState(void);
 void GAME_MANAGER_SetGameState(eGAME_STATE state);
+eGAME_STAGE GAME_MANAGER_GetGameStage(void);
 void GAME_MANAGER_SetGameStage_Next(void);
 void GAME_MANAGER_UpdateStage(void);
 const stSTAGE_INFO* GAME_MANAGER_GetStageInfo(eGAME_STAGE stage);

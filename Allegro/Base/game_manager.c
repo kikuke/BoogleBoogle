@@ -95,6 +95,11 @@ void GAME_MANAGER_SetGameState(eGAME_STATE state)
 	game_manager.state = state;
 }
 
+eGAME_STAGE GAME_MANAGER_GetGameStage(void)
+{
+	return game_manager.stage;
+}
+
 void GAME_MANAGER_SetGameStage_Next(void)
 {
 	game_manager.is_loading = true;

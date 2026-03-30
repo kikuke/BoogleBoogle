@@ -104,9 +104,10 @@ void disp_post_draw();
 void render_heart();
 void test_disp(float x, float y);
 void test_scale_disp(float dx, float dy, float dw, float dh, int flags);
-
+void render_loading(eGAME_STAGE stage);
 void heart_scale_disp(float dx, float dy, float dw, float dh, int flags);
 void test_render_heart(int heart_cnt);
+void render_stage(eGAME_STAGE stage);
 
 //map
 void map_scale_disp(float dx, float dy, float dw, float dh, int flags);
@@ -152,6 +153,8 @@ void render_draw_main(void)
 {
     disp_pre_draw();
     al_clear_to_color(al_map_rgb(0, 0, 0));
+    
+
     if (sprites.title != NULL) {
         al_draw_scaled_bitmap(sprites.title, ZERO, ZERO, TITLE_W, TITLE_H, SCALE_TITLE_W, SCALE_TITLE_H, BUFFER_W/2, BUFFER_H/2, FLAG_0);
     }
@@ -176,7 +179,13 @@ void render_draw_ingame(void)
     stPLAYER* player = GAME_MANAGER_GetPlayer(0);
 
     test_render_heart(player->lives);
+
     al_draw_textf(font, al_map_rgb(255, 255, 255), 10, 0, 0, "score %04d", 1234);
+    render_loading(GAME_MANAGER_GetGameStage());
+    render_stage(GAME_MANAGER_GetGameStage());
+   /* if (GAME_MANAGER_IsLoading() == true) {
+        al_draw_text(font, al_map_rgb(255, 255, 255), TEXT_X, TEXT_Y, FLAG_0, "STAGE 1");
+    }*/
     if ((player->obj.is_active == true) && (player->invincible_timer % 10 == 0)) 
     {
         switch (player->state)
@@ -754,6 +763,23 @@ static void render_heart() {
     heart_scale_disp(20, 0, SCALE, SCALE, FLAG_0);
     
 
+}
+
+static void render_loading(eGAME_STAGE stage) {
+    if (GAME_MANAGER_IsLoading() == true) {
+        switch (stage) {
+        case eGAME_STAGE_1:
+            al_draw_text(font, al_map_rgb(255, 255, 255), TEXT_X, TEXT_Y, FLAG_0, "STAGE 1");
+            break;
+        case eGAME_STAGE_2:
+            al_draw_text(font, al_map_rgb(255, 255, 255), TEXT_X, TEXT_Y, FLAG_0, "STAGE 2");
+            break;
+        case eGAME_STAGE_3:
+            al_draw_text(font, al_map_rgb(255, 255, 255), TEXT_X, TEXT_Y, FLAG_0, "STAGE 3");
+            break;
+        }
+    
+    }
 }
 
 static void render_stage(eGAME_STAGE stage) {
