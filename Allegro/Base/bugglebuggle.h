@@ -5,8 +5,8 @@
 /*               Macro Definition               */
 /************************************************/
 /* Debug Config */
-#define ENABLE_RENDER							(0)
 #define DEBUG_PLAYER							(1)
+#define DEBUG_STAGE								(1)
 
 /* System Config */
 #define CONFIG_GAME_FRAME						(60)
@@ -28,9 +28,7 @@
 #define CONFIG_OBJECT_MAP_MAX					(CONFIG_MAP_X_MAX * CONFIG_MAP_Y_MAX)
 
 /* Collision config */
-#define CONFIG_OBJECT_COLLISION_TILE_SIZE		(10)
-#define PLAYER_W								(CONFIG_OBJECT_COLLISION_TILE_SIZE)
-#define PLAYER_H								(CONFIG_OBJECT_COLLISION_TILE_SIZE)
+#define CONFIG_COLLISION_TILE_SIZE				(10)
 
 typedef enum {
 	eMAIN_STATE_WAIT = 0,

@@ -3,7 +3,7 @@
 
 #define BUBBLES_N       (CONFIG_OBJECT_BUBBLE_MAX)
 
-#define PLAYER_H      (10)
+#define CONFIG_COLLISION_TILE_SIZE      (10)
 #define BUBBLE_SHOT_H (10)
 #define BUBBLE_SHOT_W (10)
 
@@ -28,7 +28,7 @@ bool bubble_add(stPLAYER* player, stBUBBLE* bubbles)
 
         bubbles[i].obj.is_active = true;
         bubbles[i].obj.phy.pos.x = player->obj.phy.pos.x;
-        bubbles[i].obj.phy.pos.y = player->obj.phy.pos.y + (PLAYER_H / 2) - (BUBBLE_SHOT_H / 2);
+        bubbles[i].obj.phy.pos.y = player->obj.phy.pos.y + (CONFIG_COLLISION_TILE_SIZE / 2) - (BUBBLE_SHOT_H / 2);
 
         if (player->obj.phy.look == eDIR_LOOK_RIGHT) {
             bubbles[i].obj.phy.speed.x = BUBBLE_SPEED;

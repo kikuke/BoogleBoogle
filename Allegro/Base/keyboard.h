@@ -17,6 +17,9 @@ void init_keyboard(ALLEGRO_EVENT_QUEUE* queue);
 void keyboard_update(ALLEGRO_EVENT* event);
 eMAIN_STATE keyboard_processing_main(void);
 void keyboard_processing_ingame(void);
+
+#if (DEBUG_STAGE == 1)
 bool test_next_stage_input(void);
+#endif
 
 #endif

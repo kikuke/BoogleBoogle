@@ -12,8 +12,8 @@ const static double PLAYER_SPEED = 3.0;
 void init_player(stPLAYER* player)
 {
 	*player = (stPLAYER){
-		.obj.coll.box.height = PLAYER_H, // fix it later
-		.obj.coll.box.width = PLAYER_W,
+		.obj.coll.box.height = CONFIG_COLLISION_TILE_SIZE, // fix it later
+		.obj.coll.box.width = CONFIG_COLLISION_TILE_SIZE,
 		.obj.coll.is_static = false,
 		.obj.coll.tag = eOBJ_TAG_PLAYER,
 		.obj.phy.look = eDIR_LOOK_RIGHT,

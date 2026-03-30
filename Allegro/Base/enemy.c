@@ -48,8 +48,8 @@ stENEMY* Enemy_Create(stENEMY* enemy_pool, eENEMY_TYPE type, int x, int y) {
 
             phy->speed.x = 0;
             phy->speed.y = 0;
-            coll->box.width = PLAYER_W;
-            coll->box.height = PLAYER_W;
+            coll->box.width = CONFIG_COLLISION_TILE_SIZE;
+            coll->box.height = CONFIG_COLLISION_TILE_SIZE;
 
             phy->pos.x = x;
             phy->pos.y = y;
@@ -112,8 +112,8 @@ void Throw_Update(stOBJECT* throw, stOBJECT* target_player) {
     t_pos->x += t_speed->x;
     t_pos->y += t_speed->y;
 
-    if (t_pos->x < 0 || t_pos->x > CONFIG_MAP_X_MAX * CONFIG_OBJECT_COLLISION_TILE_SIZE ||
-        t_pos->y < 0 || t_pos->y > CONFIG_MAP_Y_MAX * CONFIG_OBJECT_COLLISION_TILE_SIZE) {
+    if (t_pos->x < 0 || t_pos->x > CONFIG_MAP_X_MAX * CONFIG_COLLISION_TILE_SIZE ||
+        t_pos->y < 0 || t_pos->y > CONFIG_MAP_Y_MAX * CONFIG_COLLISION_TILE_SIZE) {
         t_active = false;
         throw->is_active = false;
     }
@@ -301,8 +301,8 @@ stOBJECT* Throw_Create(stOBJECT* throw_pool, int x, int y) {
             phy->speed.x = 0;
             phy->speed.y = 0;
 
-            coll->box.width = CONFIG_OBJECT_COLLISION_TILE_SIZE;
-            coll->box.height = CONFIG_OBJECT_COLLISION_TILE_SIZE;
+            coll->box.width = CONFIG_COLLISION_TILE_SIZE;
+            coll->box.height = CONFIG_COLLISION_TILE_SIZE;
             coll->tag = eOBJ_TAG_ENEMY_ATTACK;
             coll->is_static = false;
 

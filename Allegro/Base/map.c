@@ -10,8 +10,8 @@ stTILE* stTILE_init(stTILE* tile, stPOSITION* pos)
 			.is_static = true,
 			.tag = eOBJ_TAG_TILE,
 			.box = (stCOLLISION_BOX){
-				.height	= CONFIG_OBJECT_COLLISION_TILE_SIZE,
-				.width	= CONFIG_OBJECT_COLLISION_TILE_SIZE
+				.height	= CONFIG_COLLISION_TILE_SIZE,
+				.width	= CONFIG_COLLISION_TILE_SIZE
 			},
 		},
 		.phy.pos = *pos

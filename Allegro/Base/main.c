@@ -15,7 +15,10 @@
 /* Init Modules */
 ALLEGRO_EVENT_QUEUE* init_queue(void);
 ALLEGRO_TIMER* init_timer(ALLEGRO_EVENT_QUEUE* queue);
+
+/* Main Routine */
 int routine_game(eGAME_STATE game_state);
+/* Sub Routine */
 void routine_main(void);
 void routine_ingame(void);
 
@@ -132,10 +135,11 @@ static void routine_ingame(void)
     /* Rendering */
     render_draw_ingame();
     
-    /* TODO: TEST_CODE!!! */
+#if (DEBUG_STAGE == 1)
     if (test_next_stage_input()) {
         GAME_MANAGER_SetGameStage_Next();
     }
+#endif
 }
 
 static ALLEGRO_EVENT_QUEUE* init_queue(void)
