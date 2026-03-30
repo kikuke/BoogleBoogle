@@ -162,7 +162,7 @@ bool GAME_MANAGER_IsLoading(void)
 
 const stSTAGE_INFO* GAME_MANAGER_GetStageInfo(void)
 {
-	return &game_manager.stage_info;
+	return game_manager.stage_info;
 }
 
 stPLAYER *GAME_MANAGER_GetPlayer(int player_id)

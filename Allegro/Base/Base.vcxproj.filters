@@ -33,9 +33,6 @@
     <ClCompile Include="enemy.c">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="ingame_manager.c">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
     <ClCompile Include="game_manager.c">
       <Filter>소스 파일</Filter>
     </ClCompile>
@@ -63,6 +60,9 @@
     <ClCompile Include="sqlite3.c">
       <Filter>소스 파일</Filter>
     </ClCompile>
+    <ClCompile Include="score.c">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="player.h">
@@ -81,9 +81,6 @@
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="enemy.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="ingame_manager.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="game_manager.h">
@@ -114,6 +111,9 @@
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="sqlite3.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="score.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
   </ItemGroup>
