@@ -9,7 +9,7 @@
 
 #define SHOOT_DURATION  (60)
 #define TOTAL_DURATION  (300)
-
+#define POP_DURATION  (330)
 
 
 void bubble_init(stBUBBLE* bubbles)
@@ -62,9 +62,11 @@ void bubble_update(stBUBBLE* bubbles)
 
         if (bubbles[i].frame >= bubbles[i].dur) {
             bubbles[i].state = eBUBBLE_STATE_POP;
-            bubbles[i].obj.is_active = false;
-            continue;
         }
+        if (bubbles[i].frame >= POP_DURATION) {
+            bubbles[i].obj.is_active = false;
+        }
+        continue;
 
         if (bubbles[i].state == eBUBBLE_STATE_SHOOTING) {
             if (bubbles[i].frame >= SHOOT_DURATION) {
