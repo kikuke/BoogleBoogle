@@ -47,6 +47,6 @@ void Score_Add(ALLEGRO_FONT* font, const char* name, int score);
 
 stBOARD* Score_Get(void);
 
-void Score_Print(ALLEGRO_FONT* font, stSTAGE_INFO* score_manager);
+void Score_Print(ALLEGRO_FONT* font, stSTAGE_INFO* stage_info);
 
 #endif
