@@ -11,21 +11,21 @@
 /************************************************/
 /*          Global Function Declaration         */
 /************************************************/
+/* Game State */
+eGAME_STATE GAME_MANAGER_UpdateState(void);
 void GAME_MANAGER_SetGameState(eGAME_STATE state);
 void GAME_MANAGER_SetGameStage_Next(void);
-eGAME_STATE GAME_MANAGER_UpdateState(void);
 
+/* Request Resource */
 stPLAYER* GAME_MANAGER_GetPlayer(int player_id);
 stBUBBLE* GAME_MANAGER_GetBubble(void);
 stENEMY* GAME_MANAGER_GetEnemy(void);
 stOBJECT* GAME_MANAGER_GetEnemyAttacks(void);
-/* Need to apply map.c */
-void GAME_MANAGER_InitStageObject(eGAME_STAGE stage, stOBJECT *obj);
 stTILE* GAME_MANAGER_GetMap(void);
+
+/* Processing Collision, Physics, Object State */
 void GAME_MANAGER_CheckCollision(void);
 void GAME_MANAGER_UpdatePhysics(void);
 void GAME_MANAGER_UpdateObject(void);
-
-void GAME_MANAGER_SetStage(eGAME_STAGE stage);
 
 #endif

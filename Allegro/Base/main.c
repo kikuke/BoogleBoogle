@@ -30,7 +30,6 @@ int main()
 {
     int frames;
     bool done = false;
-    bool redraw = true;
     ALLEGRO_EVENT event;
     ALLEGRO_EVENT_QUEUE* queue;
     ALLEGRO_TIMER* timer;
@@ -62,7 +61,6 @@ int main()
         case ALLEGRO_EVENT_TIMER:
             {
                 done = routine_game(game_state);
-                redraw = true;
                 frames++;
             }
             break;
@@ -77,12 +75,6 @@ int main()
             break;
 
         keyboard_update(&event);
-
-        if (redraw && al_is_event_queue_empty(queue))
-        {
-            render_draw_ingame(game_state);
-            redraw = false;
-        }
     }
 
     deinit_render();
@@ -137,8 +129,8 @@ static void routine_ingame(void)
     GAME_MANAGER_UpdatePhysics();
     /* Apply Object Status */
     GAME_MANAGER_UpdateObject();
-    /* Update Rendering */
-    render_update_ingame();
+    /* Rendering */
+    render_draw_ingame();
     
     /* TODO: TEST_CODE!!! */
     if (test_next_stage_input()) {
