@@ -65,6 +65,6 @@ void keyboard_processing_ingame(void)
 #if (DEBUG_STAGE == 1)
 bool test_next_stage_input(void)
 {
-    return key[ALLEGRO_KEY_N];
+    return key[ALLEGRO_KEY_N] & KEY_SEEN;
 }
 #endif

@@ -10,6 +10,7 @@
 
 /* System Config */
 #define CONFIG_SYSTEM_FRAME						(60)
+#define CONFIG_SYSTEM_LOADING_DELAY				(1 * CONFIG_SYSTEM_FRAME)
 
 /* Game Config */
 #define CONFIG_GAME_PLAYER_HEART_MAX			(3)

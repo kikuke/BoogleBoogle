@@ -21,6 +21,7 @@ int routine_game(eGAME_STATE game_state);
 /* Sub Routine */
 void routine_main(void);
 void routine_ingame(void);
+void routine_score(void);
 
 /************************************************/
 /*         Local Variable Declaration           */
@@ -103,6 +104,7 @@ static int routine_game(eGAME_STATE game_state)
         routine_ingame();
         break;
     case eGAME_STATE_SCORE:
+        routine_score();
         break;
     case eGAME_STATE_END:
         done = true;
@@ -124,22 +126,32 @@ static void routine_main(void)
 
 static void routine_ingame(void)
 {
-    /* Set Player & Enemy State, Direction, Delta Pos */
-    keyboard_processing_ingame();
-    /* Calculate Interaction & State */
-    GAME_MANAGER_CheckCollision();
-    /* Apply Calculated Physics */
-    GAME_MANAGER_UpdatePhysics();
-    /* Apply Object Status */
-    GAME_MANAGER_UpdateObject();
+    if (GAME_MANAGER_IsLoading() == false) {
+        /* Set Player & Enemy State, Direction, Delta Pos */
+        keyboard_processing_ingame();
+        /* Calculate Interaction & State */
+        GAME_MANAGER_CheckCollision();
+        /* Apply Calculated Physics */
+        GAME_MANAGER_UpdatePhysics();
+        /* Apply Object Status */
+        GAME_MANAGER_UpdateObject();
+    }
+
     /* Rendering */
     render_draw_ingame();
+    /* Update Stage */
+    GAME_MANAGER_UpdateStage();
     
 #if (DEBUG_STAGE == 1)
     if (test_next_stage_input()) {
         GAME_MANAGER_SetGameStage_Next();
     }
 #endif
+}
+
+static void routine_score(void)
+{
+    // TODO:
 }
 
 static ALLEGRO_EVENT_QUEUE* init_queue(void)

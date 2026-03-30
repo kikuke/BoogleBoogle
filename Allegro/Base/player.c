@@ -89,7 +89,7 @@ void player_update_input(stPLAYER* player, int allegro_key, unsigned char flag)
 }
 
 void player_update_frame(stPLAYER* player) {
-#if 0
+#if 1
 	if (!player->obj.is_active) {
 		return;
 	}

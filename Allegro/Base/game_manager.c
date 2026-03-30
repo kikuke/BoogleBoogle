@@ -18,6 +18,8 @@ typedef struct {
 	eGAME_STAGE stage;
 	stSTAGE_INFO stage_info[eGAME_STAGE_MAX];
 	bool flag_next_stage;
+
+	bool is_loading;
 } stGAME_MANAGER;
 
 /************************************************/
@@ -42,25 +44,42 @@ static stGAME_MANAGER game_manager;
 /************************************************/
 eGAME_STATE GAME_MANAGER_UpdateState(void)
 {
+	static int cnt_is_loading;
+
+	if (game_manager.is_loading == true) {
+		cnt_is_loading++;
+		if (cnt_is_loading >= CONFIG_SYSTEM_LOADING_DELAY) {
+			game_manager.is_loading = false;
+		}
+	}
+	else {
+		cnt_is_loading = 0;
+	}
+
 	switch (game_manager.state) {
 	case eGAME_STATE_MAIN:
+		/* Do Nothing */
 		break;
 	case eGAME_STATE_INGAME:
 	{
 		if (game_manager.flag_next_stage == true) {
+			game_manager.flag_next_stage = false;
+
 			if (++game_manager.stage >= eGAME_STAGE_MAX) {
-				// TODO: Jump to Score
+				game_manager.stage = eGAME_STAGE_NONE;
+				GAME_MANAGER_SetGameState(eGAME_STATE_SCORE);
 				break;
 			}
 
 			GAME_MANAGER_SetStage(game_manager.stage);// Need To Condition
-			game_manager.flag_next_stage = false;
 		}
 	}
 	break;
 	case eGAME_STATE_SCORE:
+		/* Do Nothing */
 		break;
 	case eGAME_STATE_END:
+		/* Do Nothing */
 		break;
 	default:
 		break;
@@ -71,11 +90,15 @@ eGAME_STATE GAME_MANAGER_UpdateState(void)
 
 void GAME_MANAGER_SetGameState(eGAME_STATE state)
 {
+	game_manager.is_loading = true;
+
 	game_manager.state = state;
 }
 
 void GAME_MANAGER_SetGameStage_Next(void)
 {
+	game_manager.is_loading = true;
+
 	game_manager.state = eGAME_STATE_INGAME;
 	game_manager.flag_next_stage = true;
 }
@@ -103,12 +126,12 @@ void GAME_MANAGER_UpdateStage(void)
 
 	info->stage_frame++;
 
-	if (info->is_player_dead) {
-		/* TODO: Go to Score */
+	if (info->enemy_remain <= 0) {
+		GAME_MANAGER_SetGameStage_Next();
 		return;
 	}
-	if (info->enemy_remain <= 0) {
-		/* TODO: Go to Next Stage */
+	if (info->is_player_dead) {
+		GAME_MANAGER_SetGameState(eGAME_STATE_SCORE);
 		return;
 	}
 }
@@ -116,6 +139,11 @@ void GAME_MANAGER_UpdateStage(void)
 int GAME_MANAGER_GetScore(void)
 {
 	//TODO: 
+}
+
+bool GAME_MANAGER_IsLoading(void)
+{
+	return game_manager.is_loading;
 }
 
 const stSTAGE_INFO* GAME_MANAGER_GetStageInfo(eGAME_STAGE stage)

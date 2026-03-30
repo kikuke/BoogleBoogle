@@ -33,6 +33,7 @@ void GAME_MANAGER_SetGameStage_Next(void);
 void GAME_MANAGER_UpdateStage(void);
 const stSTAGE_INFO* GAME_MANAGER_GetStageInfo(eGAME_STAGE stage);
 int GAME_MANAGER_GetScore(void);
+bool GAME_MANAGER_IsLoading(void);
 
 /* Request Resource */
 stPLAYER* GAME_MANAGER_GetPlayer(int player_id);
