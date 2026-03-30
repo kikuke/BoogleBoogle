@@ -40,10 +40,23 @@ void Collide_Object_Tile(stOBJECT* object, stTILE* tile) {
 
     /* Check Y Position */
     if (is_x_overlap) {
+
+        // map out
+        if (obj_speed_y < 0) {
+            if (next_y < 10) {
+                object->phy.speed.y = 0;
+                object->phy.pos.y = 10;
+            }
+        }
         /* check gravity */
         if (obj_speed_y >= 0) {
             double curr_bottom = obj_y + obj_h;
             double next_bottom = next_y + obj_h;
+
+            if (next_y > 220) {
+                object->phy.speed.y = 0;
+                object->phy.pos.y = 220;
+            }
 
             if (curr_bottom <= tile_t && next_bottom >= tile_t) {
                 object->phy.pos.y = tile_t - obj_h;
@@ -108,6 +121,7 @@ void Collide_Object_Tile(stOBJECT* object, stTILE* tile) {
 }
 
 void Collide_Enemy_Player(stOBJECT* object, stPLAYER* player) {
+
     if (player->state == ePLAYER_STATE_DEAD || player->invincible_timer > 0) {
         return;
     }

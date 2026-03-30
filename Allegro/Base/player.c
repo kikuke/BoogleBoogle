@@ -43,6 +43,10 @@ void init_player(stPLAYER* player)
 
 void player_update_input(stPLAYER* player, int allegro_key, unsigned char flag)
 {
+	if (!player->obj.is_active) {
+		return;
+	}
+
 	switch (allegro_key) {
 	case ALLEGRO_KEY_LEFT:
 	{
@@ -89,14 +93,14 @@ void player_update_input(stPLAYER* player, int allegro_key, unsigned char flag)
 }
 
 void player_update_frame(stPLAYER* player) {
-#if 0
+#if 01
 	if (!player->obj.is_active) {
 		return;
 	}
 #endif
 	// TODO: Need To Modify
 #if 01
-	if ((player->obj.phy.speed.x == 0)/* && (player->obj.phy.speed.y == 0)*/) {
+	if ((player->obj.phy.speed.x == 0)) {
 		player->state = ePLAYER_STATE_IDLE;
 	}
 #endif

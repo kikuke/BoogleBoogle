@@ -11,7 +11,7 @@ void stOBJECT_UpdatePhysics(stOBJECT* obj) {
 	obj->phy.pos.x += obj->phy.speed.x;
 	obj->phy.pos.y += obj->phy.speed.y;
 
-	if (obj->phy.is_gravity) {
+	if (obj->phy.is_gravity && obj->is_active) {
 		obj->phy.speed.y += GRAVITY;
 	}
 
