@@ -108,6 +108,9 @@ void GAME_MANAGER_UpdateStage(void)
 	info->player_lives = pPlayer->lives;
 
 	info->enemy_remain = 0;
+	for (int iType = 0; iType < eENEMY_TYPE_MAX; ++iType) {
+		info->enemy_el[iType] = 0;
+	}
 	for (int i = 0; i < CONFIG_OBJECT_ENEMY_MAX; ++i) {
 		stENEMY* pEnemy = &enemy[i];
 		if (pEnemy->obj.is_active == false)

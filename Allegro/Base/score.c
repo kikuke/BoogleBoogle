@@ -13,6 +13,7 @@
 #include "bugglebuggle.h"
 #include "sqlite3.h"
 #include "render.h"
+#include "keyboard.h"
 
 int stage_timer_arr[STAGE_NUM_TOT] = { 0 };	// [ s1, s2, s3 ]
 int enemy_num_arr[3] = { 0 };			// [ Basic, Throw, Boss ]
@@ -98,15 +99,19 @@ void Score_Print(ALLEGRO_FONT* font, stSTAGE_INFO* stage_info) {
     int tot_time = 0;
 
     for (int i = 0; i < eGAME_STAGE_MAX; i++) {
-        //stSTAGE_INFO* = stage_info[i];
-        basic += stage_info->enemy_el[eENEMY_TYPE_BASIC];
-        fly += stage_info->enemy_el[eENEMY_TYPE_THROW];
-        tot_time += stage_info->stage_frame;
+        stSTAGE_INFO* info = &stage_info[i];
+        basic += info->enemy_el[eENEMY_TYPE_BASIC];
+        fly += info->enemy_el[eENEMY_TYPE_THROW];
+        tot_time += info->stage_frame;
     }
+    tot_time /= CONFIG_SYSTEM_FRAME;
 
-    al_draw_textf(font, al_map_rgb(255, 255, 255), 110, 15, 0,
+    al_draw_textf(font, al_map_rgb(255, 255, 255), 110, 10, 0,
         "Score Board");
-    
+
+    al_draw_textf(font, al_map_rgb(255, 255, 255), 70, 25, 0,
+        "Name: %-12s", keboard_get_name());
+
     al_draw_textf(font, al_map_rgb(255, 255, 255), 70, 40, 0,
         "Basic: %2d      Fly: %2d", basic, fly);
 
