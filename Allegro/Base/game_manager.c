@@ -58,7 +58,7 @@ eGAME_STATE GAME_MANAGER_UpdateState(void)
 
 			if (++game_manager.stage >= eGAME_STAGE_MAX) {
 				game_manager.stage = eGAME_STAGE_NONE;
-				GAME_MANAGER_SetGameState(eGAME_STATE_SCORE);
+				GAME_MANAGER_SetGameState(eGAME_STATE_NAME);
 				break;
 			}
 
@@ -82,7 +82,7 @@ eGAME_STATE GAME_MANAGER_UpdateState(void)
 void GAME_MANAGER_SetGameState(eGAME_STATE state)
 {
 	game_manager.is_loading = true;
-
+	game_manager.stage = eGAME_STAGE_NONE;
 	game_manager.state = state;
 }
 

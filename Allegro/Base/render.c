@@ -171,7 +171,6 @@ void render_draw_game_end(void)
     disp_pre_draw();
     al_clear_to_color(al_map_rgb(0, 0, 0));
 
-
     al_draw_text(font, al_map_rgb(255, 255, 255), GAME_END_X, STAGE_TEXT_Y, FLAG_0, "Game End");
 
     disp_post_draw();

@@ -65,6 +65,17 @@ void keyboard_processing_ingame(void)
     }
 }
 
+bool keyboard_processing_name(void)
+{
+
+    return key[ALLEGRO_KEY_SPACE] & KEY_SEEN;
+}
+
+bool keyboard_processing_score(void)
+{
+    return key[ALLEGRO_KEY_SPACE] & KEY_SEEN;
+}
+
 #if (DEBUG_STAGE == 1)
 bool test_next_stage_input(void)
 {

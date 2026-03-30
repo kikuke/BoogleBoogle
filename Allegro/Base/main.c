@@ -21,6 +21,7 @@ int routine_game(ALLEGRO_EVENT_QUEUE* queue, eGAME_STATE game_state);
 /* Sub Routine */
 void routine_main(ALLEGRO_EVENT_QUEUE* queue);
 void routine_ingame(ALLEGRO_EVENT_QUEUE* queue);
+void routine_name(ALLEGRO_EVENT_QUEUE* queue);
 void routine_score(ALLEGRO_EVENT_QUEUE* queue);
 
 /************************************************/
@@ -103,6 +104,9 @@ static int routine_game(ALLEGRO_EVENT_QUEUE* queue, eGAME_STATE game_state)
     case eGAME_STATE_INGAME:
         routine_ingame(queue);
         break;
+    case eGAME_STATE_NAME:
+        routine_name(queue);
+        break;
     case eGAME_STATE_SCORE:
         routine_score(queue);
         break;
@@ -118,6 +122,9 @@ static int routine_game(ALLEGRO_EVENT_QUEUE* queue, eGAME_STATE game_state)
 
 static void routine_main(ALLEGRO_EVENT_QUEUE* queue)
 {
+    if (GAME_MANAGER_IsLoading() == true)
+        return;
+
     if (keyboard_processing_main() == eMAIN_STATE_START) {
         GAME_MANAGER_SetGameStage_Next();
     }
@@ -153,6 +160,17 @@ static void routine_ingame(ALLEGRO_EVENT_QUEUE* queue)
 #endif
 }
 
+static void routine_name(ALLEGRO_EVENT_QUEUE* queue)
+{
+    if (GAME_MANAGER_IsLoading() == true)
+        return;
+
+    if (keyboard_processing_name()) {
+        GAME_MANAGER_SetGameState(eGAME_STATE_SCORE);
+        //render_draw_main();
+    }
+}
+
 static void routine_score(ALLEGRO_EVENT_QUEUE* queue)
 {
     if (GAME_MANAGER_IsLoading() == true) {
@@ -162,6 +180,9 @@ static void routine_score(ALLEGRO_EVENT_QUEUE* queue)
     }
     if (al_is_event_queue_empty(queue)) {
         render_draw_score();
+    }
+    if (keyboard_processing_score()) {
+        GAME_MANAGER_SetGameState(eGAME_STATE_MAIN);
     }
 }
 

@@ -43,6 +43,7 @@ typedef enum {
 typedef enum {
 	eGAME_STATE_MAIN = 0,
 	eGAME_STATE_INGAME,
+	eGAME_STATE_NAME,
 	eGAME_STATE_SCORE,
 	eGAME_STATE_END,
 	eGAME_STATE_MAX
