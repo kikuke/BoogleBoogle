@@ -168,9 +168,12 @@ void Collide_Object_Bubble(stOBJECT* object, stBUBBLE* bubble) {
         if (bubble->state == eBUBBLE_STATE_SHOOTING) {
             if (AABB_to_AABB(object, &(bubble->obj))) {
                 stENEMY* e = (stENEMY*)object;
-                e->state = eENEMY_STATE_TRAPPED;
 
-                bubble->obj.is_active = false;
+                if (e->state != eENEMY_STATE_TRAPPED) {
+                    e->state = eENEMY_STATE_TRAPPED;
+                    bubble->obj.is_active = false;
+                }
+
             }
         }
     }
