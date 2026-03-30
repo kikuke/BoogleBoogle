@@ -14,6 +14,7 @@
 #include "sqlite3.h"
 #include "render.h"
 #include "keyboard.h"
+#include "game_manager.h"
 
 int stage_timer_arr[STAGE_NUM_TOT] = { 0 };	// [ s1, s2, s3 ]
 int enemy_num_arr[3] = { 0 };			// [ Basic, Throw, Boss ]
@@ -116,7 +117,7 @@ void Score_Print(ALLEGRO_FONT* font, stSTAGE_INFO* stage_info) {
         "Basic: %2d      Fly: %2d", basic, fly);
 
     al_draw_textf(font, al_map_rgb(255, 255, 255), 30, 55, 0,
-        "Elapsed time: %5d Score: %5d", tot_time, 2000);
+        "Elapsed time: %5d Score: %5d", tot_time, GAME_MANAGER_GetScore());
 
     al_draw_textf(font, al_map_rgb(255, 255, 255), 40, 80, 0,
         "Rank. Name%-12sScore"," ");
