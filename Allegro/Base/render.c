@@ -7,6 +7,7 @@
 #include "util.h"
 #include "render.h"
 #include "map.h"
+#include "score.h"
 #include "game_manager.h"
 
 /************************************************/
@@ -252,6 +253,13 @@ void render_draw_ingame(void)
         }*/
     }
     disp_post_draw();
+}
+
+void render_draw_score(void)
+{
+    Score_Add(font, "IRE", 1234);
+    Score_Get();
+    Score_Print(font, GAME_MANAGER_GetStageInfo());
 }
 
 void disp_init()

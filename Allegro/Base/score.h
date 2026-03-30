@@ -1,15 +1,14 @@
-#ifndef __INGAME_MANAGER_H__
-#define __INGAME_MANAGER_H__
+#ifndef __SCORE_H__
+#define __SCORE_H__
 
+#include <allegro5/allegro_font.h>
 #include "object.h"
-#include "sqlite3.h"
+#include "enemy.h"
 
 #define PLAYER_NAME_MAX (12)
 #define STAGE_NUM_TOT (3)
 
-int stage_timer_arr[STAGE_NUM_TOT] = { 0 };	// [ s1, s2, s3 ]
-int enemy_num_arr[3] = { 0 };			// [ Basic, Throw, Boss ]
-
+#if 0
 typedef struct {
 	char* player_name[PLAYER_NAME_MAX];
 	int score;				// curr point
@@ -19,24 +18,35 @@ typedef struct {
 	int* enemy_num;			// number of killed
 
 } stSCORE;
+#endif
+
+typedef struct {
+	bool is_player_dead;
+	int player_lives;
+
+	/* eliminated eneymy */
+	int enemy_remain;
+	int enemy_el[eENEMY_TYPE_MAX];
+	int enemy_max[eENEMY_TYPE_MAX];
+
+	int stage_frame;
+} stSTAGE_INFO;
 
 typedef struct {
 	int rank;
-	char* player_name[PLAYER_NAME_MAX];
+	char player_name[PLAYER_NAME_MAX];
 	int score;
 } stBOARD;
-
-stBOARD* leaderboard[11];
 
 
 void Score_Test(ALLEGRO_FONT* font);
 
 //void Score_Create(char* name, int score);
 
-void Score_Add(ALLEGRO_FONT* font, stSCORE* score_manager);
+void Score_Add(ALLEGRO_FONT* font, const char* name, int score);
 
-stBOARD* Score_Get(ALLEGRO_FONT* font, stSCORE* score_manager, stBOARD* leaderboard);
+stBOARD* Score_Get(void);
 
-void Score_Print(ALLEGRO_FONT* font, stSCORE* score_manager, stBOARD* leaderboard);
+void Score_Print(ALLEGRO_FONT* font, stSTAGE_INFO* score_manager);
 
 #endif

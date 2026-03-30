@@ -19,9 +19,9 @@ ALLEGRO_TIMER* init_timer(ALLEGRO_EVENT_QUEUE* queue);
 /* Main Routine */
 int routine_game(ALLEGRO_EVENT_QUEUE* queue, eGAME_STATE game_state);
 /* Sub Routine */
-void routine_main(void);
+void routine_main(ALLEGRO_EVENT_QUEUE* queue);
 void routine_ingame(ALLEGRO_EVENT_QUEUE* queue);
-void routine_score(void);
+void routine_score(ALLEGRO_EVENT_QUEUE* queue);
 
 /************************************************/
 /*         Local Variable Declaration           */
@@ -98,13 +98,13 @@ static int routine_game(ALLEGRO_EVENT_QUEUE* queue, eGAME_STATE game_state)
 
     switch (game_state) {
     case eGAME_STATE_MAIN:
-        routine_main();
+        routine_main(queue);
         break;
     case eGAME_STATE_INGAME:
         routine_ingame(queue);
         break;
     case eGAME_STATE_SCORE:
-        routine_score();
+        routine_score(queue);
         break;
     case eGAME_STATE_END:
         done = true;
@@ -116,12 +116,14 @@ static int routine_game(ALLEGRO_EVENT_QUEUE* queue, eGAME_STATE game_state)
     return done;
 }
 
-static void routine_main(void)
+static void routine_main(ALLEGRO_EVENT_QUEUE* queue)
 {
     if (keyboard_processing_main() == eMAIN_STATE_START) {
         GAME_MANAGER_SetGameStage_Next();
     }
-    render_draw_main();
+    if (al_is_event_queue_empty(queue)) {
+        render_draw_main();
+    }
 }
 
 static void routine_ingame(ALLEGRO_EVENT_QUEUE* queue)
@@ -151,9 +153,11 @@ static void routine_ingame(ALLEGRO_EVENT_QUEUE* queue)
 #endif
 }
 
-static void routine_score(void)
+static void routine_score(ALLEGRO_EVENT_QUEUE* queue)
 {
-    // TODO:
+    if (al_is_event_queue_empty(queue)) {
+        render_draw_score();
+    }
 }
 
 static ALLEGRO_EVENT_QUEUE* init_queue(void)

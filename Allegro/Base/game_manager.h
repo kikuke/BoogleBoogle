@@ -6,23 +6,8 @@
 #include "player.h"
 #include "bubble.h"
 #include "map.h"
+#include "score.h"
 #include "enemy.h"
-
-/************************************************/
-/*         Global Variable Declaration          */
-/************************************************/
-typedef struct {
-	bool is_player_dead;
-	int player_lives;
-
-	/* eliminated eneymy */
-	int enemy_remain;
-	int enemy_el[eENEMY_TYPE_MAX];
-	int enemy_max[eENEMY_TYPE_MAX];
-
-	int stage_frame;
-} stSTAGE_INFO;
-
 /************************************************/
 /*          Global Function Declaration         */
 /************************************************/
@@ -32,7 +17,7 @@ void GAME_MANAGER_SetGameState(eGAME_STATE state);
 eGAME_STAGE GAME_MANAGER_GetGameStage(void);
 void GAME_MANAGER_SetGameStage_Next(void);
 void GAME_MANAGER_UpdateStage(void);
-const stSTAGE_INFO* GAME_MANAGER_GetStageInfo(eGAME_STAGE stage);
+const stSTAGE_INFO* GAME_MANAGER_GetStageInfo(void);
 int GAME_MANAGER_GetScore(void);
 bool GAME_MANAGER_IsLoading(void);
 
