@@ -88,10 +88,30 @@ stBOARD* Score_Get(void) {
     return leaderboard;
 }
 
-void Score_Print(ALLEGRO_FONT* font, stSTAGE_INFO* score_manager) {
+void Score_Print(ALLEGRO_FONT* font, stSTAGE_INFO* stage_info) {
 
     disp_pre_draw();
     al_clear_to_color(al_map_rgb(0, 0, 0));
+
+    int basic = 0;
+    int fly = 0;
+    int tot_time = 0;
+
+    for (int i = 0; i < eGAME_STAGE_MAX; i++) {
+        //stSTAGE_INFO* = stage_info[i];
+        basic += stage_info->enemy_el[eENEMY_TYPE_BASIC];
+        fly += stage_info->enemy_el[eENEMY_TYPE_THROW];
+        tot_time += stage_info->stage_frame;
+    }
+
+    al_draw_textf(font, al_map_rgb(255, 255, 255), 110, 15, 0,
+        "Score Board");
+    
+    al_draw_textf(font, al_map_rgb(255, 255, 255), 70, 40, 0,
+        "Basic: %2d      Fly: %2d", basic, fly);
+
+    al_draw_textf(font, al_map_rgb(255, 255, 255), 30, 55, 0,
+        "Elapsed time: %5d Score: %5d", tot_time, 2000);
 
     al_draw_textf(font, al_map_rgb(255, 255, 255), 40, 80, 0,
         "Rank. Name%-12sScore"," ");
@@ -103,6 +123,9 @@ void Score_Print(ALLEGRO_FONT* font, stSTAGE_INFO* score_manager) {
         al_draw_textf(font, al_map_rgb(255, 255, 255), 55, 100 + dy, 0,
             "%2d. %-12s : %6d", leaderboard[i].rank, leaderboard[i].player_name, leaderboard[i].score);
     }
+
+    al_draw_textf(font, al_map_rgb(255, 255, 255), 70, 215, 0,
+        "Press Space bar to Main");
 
     disp_post_draw();
 }
