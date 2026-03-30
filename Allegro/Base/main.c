@@ -168,10 +168,13 @@ static void routine_name(ALLEGRO_EVENT_QUEUE* queue)
         return;
     }
 
+    render_draw_name();
+
     if (keyboard_processing_name()) {
         GAME_MANAGER_SetGameState(eGAME_STATE_SCORE);
         render_draw_score();
     }
+
 }
 
 static void routine_score(ALLEGRO_EVENT_QUEUE* queue)

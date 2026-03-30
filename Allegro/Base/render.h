@@ -22,5 +22,6 @@ void render_draw_game_end(void);
 void render_draw_game_over(void);
 void disp_pre_draw();
 void disp_post_draw();
+void render_draw_name();
 
 #endif

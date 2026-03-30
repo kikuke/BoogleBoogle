@@ -41,7 +41,7 @@ void keyboard_update(ALLEGRO_EVENT* event)
         if (player_name.is_input) {
             // TODO: Need to check bound
             player_name.data[player_name.idx++] = event->keyboard.keycode + 'A' - 1;
-            player_name.data[player_name.idx] = 0
+            player_name.data[player_name.idx] = 0;
         }
         break;
     case ALLEGRO_EVENT_KEY_UP:

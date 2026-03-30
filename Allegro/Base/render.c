@@ -975,3 +975,17 @@ void deinit_render()
 {
     disp_deinit();
 }
+
+void render_draw_name() {
+    disp_pre_draw();
+    al_clear_to_color(al_map_rgb(0, 0, 0));
+    
+    al_draw_textf(font, al_map_rgb(255, 255, 255), 70, 80, 0,
+        "Name : %-12s", keboard_get_name());
+
+    al_draw_textf(font, al_map_rgb(255, 255, 255), 70, 215, 0,
+        "Press Space bar to Next");
+
+    disp_post_draw();
+
+}
