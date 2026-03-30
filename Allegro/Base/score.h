@@ -4,13 +4,14 @@
 #include "object.h"
 #include "sqlite3.h"
 
-
+#define PLAYER_NAME_MAX (12)
 #define STAGE_NUM_TOT (3)
 
 int stage_timer_arr[STAGE_NUM_TOT] = { 0 };	// [ s1, s2, s3 ]
 int enemy_num_arr[3] = { 0 };			// [ Basic, Throw, Boss ]
 
 typedef struct {
+	char* player_name[PLAYER_NAME_MAX];
 	int score;				// curr point
 	int stage;				// curr stage num
 	int lives;				// num of lives
@@ -19,14 +20,23 @@ typedef struct {
 
 } stSCORE;
 
-void Score_Create(char* name, int score);
+typedef struct {
+	int rank;
+	char* player_name[PLAYER_NAME_MAX];
+	int score;
+} stBOARD;
 
-// score Manage
-void Score_AddScore(int stage_num, int points);	// add points to curr score n update high score if exceeded
-int Score_GetScore(stSCORE* score_manager);				// get curr score val
-int Score_GetHighScore(stSCORE* score_manager);			// get high score val
+stBOARD* leaderboard[11];
 
-// stage timer
-void Score_UpdateStageTimer(stSCORE* score_manager);		// increment stage timer per frame
+
+void Score_Test();
+
+//void Score_Create(char* name, int score);
+
+void Score_Add(stSCORE* score_manager);
+
+stBOARD* Score_Get(stSCORE* score_manager, stBOARD* leaderboard);
+
+void Score_Print(stSCORE* score_manager, stBOARD* leaderboard);
 
 #endif

@@ -137,7 +137,7 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="game_manager.c" />
-    <ClCompile Include="ingame_manager.c" />
+    <ClCompile Include="score.c" />
     <ClCompile Include="keyboard.c" />
     <ClCompile Include="main.c" />
     <ClCompile Include="map.c" />
@@ -156,7 +156,7 @@
     <ClInclude Include="collision.h" />
     <ClInclude Include="enemy.h" />
     <ClInclude Include="game_manager.h" />
-    <ClInclude Include="ingame_manager.h" />
+    <ClInclude Include="score.h" />
     <ClInclude Include="keyboard.h" />
     <ClInclude Include="map.h" />
     <ClInclude Include="map_1.h" />
