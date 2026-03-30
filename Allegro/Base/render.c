@@ -37,12 +37,15 @@
 #define SPRITE_PLAYER_ATTACK (4)
 #define BUBBLE (55)
 #define BUBBLE_POP (70)
+#define BUBBLE_POP_2 (18)
 #define SPRITE_ENEMY_MAX (5)
 #define SPRITE_ENEMY_STAY (2)
 #define SPRITE_ENEMY_TRAPPED (16)
 #define SPRITE_ENEMY_EASY (50)
 #define SPRITE_ENEMY_HARD (47)
-#define ENEMY_THROW (21)
+//#define ENEMY_THROW (21)
+#define ENEMY_THROW (8)
+#define ENEMY_THROW_SCALE (7)
 
 typedef struct 
 {
@@ -84,6 +87,7 @@ typedef struct
     int idx;
     ALLEGRO_BITMAP* bubble_idle;
     ALLEGRO_BITMAP* bubble_pop;
+    ALLEGRO_BITMAP* bubble_pop_2;
     ALLEGRO_BITMAP* curr_move;
 } stSPRITE_BUBBLE;
 
@@ -202,7 +206,7 @@ void render_draw_ingame(void)
     stPLAYER* player = GAME_MANAGER_GetPlayer(0);
 
     test_render_heart(player->lives);
-    al_draw_textf(font, al_map_rgb(WHITE, WHITE, WHITE), 10, 0, 0, "score %04d", GAME_MANAGER_GetScore());
+    al_draw_textf(font, al_map_rgb(WHITE, WHITE, WHITE), 50, 0, 0, "score %04d", GAME_MANAGER_GetScore());
     
     render_loading(GAME_MANAGER_GetGameStage());
     render_stage(GAME_MANAGER_GetGameStage());
@@ -443,7 +447,8 @@ void sprites_init()
     sprites.enemy_easy.trapped = extra_sprite_grab(110,72, SPRITE_ENEMY_TRAPPED, SPRITE_ENEMY_TRAPPED);
 
     //enemy_hard
-    sprites.enemy_hard.throw = sprite_grab(50, 659, ENEMY_THROW, ENEMY_THROW);
+    //sprites.enemy_hard.throw = sprite_grab(50, 659, ENEMY_THROW, ENEMY_THROW);
+    sprites.enemy_hard.throw = extra_sprite_grab(445, 435, ENEMY_THROW, ENEMY_THROW);
 
     sprites.enemy_hard.left[0] = sprite_grab(16, 1309, SPRITE_ENEMY_HARD, SPRITE_ENEMY_HARD);
     sprites.enemy_hard.left[1] = sprite_grab(80, 1309, SPRITE_ENEMY_HARD, SPRITE_ENEMY_HARD);
@@ -462,6 +467,7 @@ void sprites_init()
     //bubble
     sprites.bubble.bubble_idle = sprite_grab(135,1467,BUBBLE ,BUBBLE);
     sprites.bubble.bubble_pop = sprite_grab(416, 1460, BUBBLE_POP, BUBBLE_POP);
+    sprites.bubble.bubble_pop_2 = extra_sprite_grab(144, 54, BUBBLE_POP_2, BUBBLE_POP_2);
     //hud
     sprites.heart = sprite_grab(8, 1436, HEART, HEART);
 }
@@ -732,7 +738,7 @@ static void render_enemy_throw_attack(stOBJECT* enemy_throw) {
     if (enemy_throw == NULL) return;
     for (int i = 0; i < CONFIG_OBJECT_ENEMY_ATTACK_MAX; ++i) {
         if (enemy_throw[i].rend.is_active) {
-            enemy_throw_scale_disp(sprites.enemy_hard.throw, enemy_throw[i].phy.pos.x, enemy_throw[i].phy.pos.y, SCALE, SCALE, FLAG_0);
+            enemy_throw_scale_disp(sprites.enemy_hard.throw, enemy_throw[i].phy.pos.x, enemy_throw[i].phy.pos.y, ENEMY_THROW_SCALE, ENEMY_THROW_SCALE, FLAG_0);
         }
     }
     
@@ -756,8 +762,10 @@ static void render_bubble(stBUBBLE* bubble_throw) {
         bubble_scale_disp(sprites.bubble.curr_move, bubble_throw->obj.phy.pos.x, bubble_throw->obj.phy.pos.y, SCALE, SCALE, FLAG_0);
         break;
     case eBUBBLE_STATE_POP:
-        sprites.bubble.curr_move = sprites.bubble.bubble_pop;
+        sprites.bubble.curr_move = sprites.bubble.bubble_pop_2;
         bubble_scale_disp(sprites.bubble.curr_move, bubble_throw->obj.phy.pos.x, bubble_throw->obj.phy.pos.y, SCALE, SCALE, FLAG_0);
+        break;
+    default:
         break;
     }
        
@@ -776,15 +784,15 @@ static void render_bubble(stBUBBLE* bubble_throw) {
 
 static void test_render_heart(int heart_cnt) {
     if (heart_cnt >= 1) {
-        heart_scale_disp(10, 10, SCALE, SCALE, FLAG_0);
+        heart_scale_disp(10, 0, SCALE, SCALE, FLAG_0);
         
     }
     if (heart_cnt >= 2) {
-        heart_scale_disp(20, 10, SCALE, SCALE, FLAG_0);
+        heart_scale_disp(20, 0, SCALE, SCALE, FLAG_0);
     }
     if (heart_cnt >= 3) {
 
-        heart_scale_disp(30, 10, SCALE, SCALE, FLAG_0);
+        heart_scale_disp(30, 0, SCALE, SCALE, FLAG_0);
     }
     
 }

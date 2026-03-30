@@ -40,32 +40,32 @@ static stSTAGE_ENEMY_DATA enemy1_data[CONFIG_OBJECT_ENEMY_MAX] = {
 	{
 		.is_active = true,
 		.type = eENEMY_TYPE_BASIC,
-		.pos = { .x = 30, .y = 50 }
+		.pos = { .x = 90, .y = 190 }
 	},
 	{
 		.is_active = true,
 		.type = eENEMY_TYPE_BASIC,
-		.pos = {.x = 50, .y = 50 }
+		.pos = {.x = 130, .y = 160 }
 	},
 	{
 		.is_active = true,
 		.type = eENEMY_TYPE_BASIC,
-		.pos = {.x = 70, .y = 50 }
+		.pos = {.x = 150, .y = 130 }
 	},
 	{
 		.is_active = true,
 		.type = eENEMY_TYPE_BASIC,
-		.pos = {.x = 90, .y = 50 }
+		.pos = {.x = 100, .y = 220 }
 	},
 	{
 		.is_active = true,
 		.type = eENEMY_TYPE_BASIC,
-		.pos = {.x = 120, .y = 50 }
+		.pos = {.x = 120, .y = 100 }
 	},
 	{
 		.is_active = true,
 		.type = eENEMY_TYPE_BASIC,
-		.pos = {.x = 150, .y = 50 }
+		.pos = {.x = 150, .y = 700 }
 	},
 
 };
