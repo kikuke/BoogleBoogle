@@ -34,7 +34,7 @@
 #define BUBBLE_POP (70)
 #define SPRITE_ENEMY_MAX (5)
 #define SPRITE_ENEMY_STAY (2)
-#define SPRITE_ENEMY_EASY_TRAPPED (16)
+#define SPRITE_ENEMY_TRAPPED (16)
 #define SPRITE_ENEMY_EASY (50)
 #define SPRITE_ENEMY_HARD (47)
 #define ENEMY_THROW (21)
@@ -122,7 +122,7 @@ void enemy_easy_scale_disp(ALLEGRO_BITMAP* sprite, float px, float py, float dw,
 void enemy_hard_scale_disp(ALLEGRO_BITMAP* sprite, float px, float py, float dw, float dh, int flags);
 void render_enemy_easy_move(stENEMY* enemy);
 void render_enemy_easy_trapped(stENEMY* enemy);
-void enemy_easy_trapped_scale_disp(ALLEGRO_BITMAP* sprite, float px, float py, float dw, float dh, int flags);
+void enemy_trapped_scale_disp(ALLEGRO_BITMAP* sprite, float px, float py, float dw, float dh, int flags);
 void render_enemy_hard_move(stENEMY* enemy);
 void render_enemy_throw_attack(stOBJECT* enemy_throw);
 void enemy_throw_scale_disp(ALLEGRO_BITMAP* sprite, float px, float py, float dw, float dh, int flags);
@@ -211,8 +211,10 @@ void render_draw_ingame(void)
             
             render_enemy_easy_move(enemy);
             if (enemy->state == eENEMY_STATE_TRAPPED) {
-                render_enemy_easy_trapped(enemy);
+                enemy_trapped_scale_disp(sprites.enemy_easy.trapped, enemy->obj.phy.pos.x, enemy->obj.phy.pos.y, SCALE, SCALE, FLAG_0);
+
             }
+
             /*break;
             switch (enemy->state) 
             {
@@ -225,7 +227,11 @@ void render_draw_ingame(void)
             break;
            
         case eENEMY_TYPE_THROW:
-            render_enemy_hard_move(enemy);
+            render_enemy_hard_move(enemy); 
+            if (enemy->state == eENEMY_STATE_TRAPPED) {
+                enemy_trapped_scale_disp(sprites.enemy_hard.trapped, enemy->obj.phy.pos.x, enemy->obj.phy.pos.y, SCALE, SCALE, FLAG_0);
+
+            }
             break;
         }
         /*if (enemy->obj.is_active == true) {
@@ -293,8 +299,8 @@ static void character_scale_disp(ALLEGRO_BITMAP *sprite, float px, float py, flo
 static void enemy_easy_scale_disp(ALLEGRO_BITMAP* sprite, float px, float py, float dw, float dh, int flags) {
     al_draw_scaled_bitmap(sprite, 0, 0, SPRITE_ENEMY_EASY, SPRITE_ENEMY_EASY, px, py, dw, dh, flags);
 }
-static void enemy_easy_trapped_scale_disp(ALLEGRO_BITMAP* sprite, float px, float py, float dw, float dh, int flags) {
-    al_draw_scaled_bitmap(sprite, 0, 0, SPRITE_ENEMY_EASY_TRAPPED, SPRITE_ENEMY_EASY_TRAPPED, px, py, dw, dh, flags);
+static void enemy_trapped_scale_disp(ALLEGRO_BITMAP* sprite, float px, float py, float dw, float dh, int flags) {
+    al_draw_scaled_bitmap(sprite, 0, 0, SPRITE_ENEMY_TRAPPED, SPRITE_ENEMY_TRAPPED, px, py, dw, dh, flags);
 }
 
 static void enemy_hard_scale_disp(ALLEGRO_BITMAP* sprite, float px, float py, float dw, float dh, int flags) {
@@ -384,7 +390,7 @@ void sprites_init()
     sprites.enemy_easy.right[3] = sprite_grab(402, 528, SPRITE_ENEMY_EASY, SPRITE_ENEMY_EASY);
     sprites.enemy_easy.right[4] = sprite_grab(332, 528, SPRITE_ENEMY_EASY, SPRITE_ENEMY_EASY);
 
-    sprites.enemy_easy.trapped = extra_sprite_grab(110,72, SPRITE_ENEMY_EASY_TRAPPED, SPRITE_ENEMY_EASY_TRAPPED);
+    sprites.enemy_easy.trapped = extra_sprite_grab(110,72, SPRITE_ENEMY_TRAPPED, SPRITE_ENEMY_TRAPPED);
 
     //enemy_hard
     sprites.enemy_hard.throw = sprite_grab(50, 659, ENEMY_THROW, ENEMY_THROW);
@@ -400,6 +406,7 @@ void sprites_init()
     sprites.enemy_hard.right[2] = sprite_grab(461, 1309, SPRITE_ENEMY_HARD, SPRITE_ENEMY_HARD);
     sprites.enemy_hard.right[3] = sprite_grab(397, 1309, SPRITE_ENEMY_HARD, SPRITE_ENEMY_HARD);
     sprites.enemy_hard.right[4] = sprite_grab(333, 1309, SPRITE_ENEMY_HARD, SPRITE_ENEMY_HARD);
+    sprites.enemy_hard.trapped = extra_sprite_grab(145, 108, SPRITE_ENEMY_TRAPPED, SPRITE_ENEMY_TRAPPED);
 
 
     //bubble
@@ -455,6 +462,7 @@ void sprites_deinit()
     al_destroy_bitmap(sprites.enemy_easy.right[4]);
 
     al_destroy_bitmap(sprites.enemy_easy.trapped);
+
     al_destroy_bitmap(sprites.enemy_hard.left[0]);
     al_destroy_bitmap(sprites.enemy_hard.left[1]);
     al_destroy_bitmap(sprites.enemy_hard.left[2]);
@@ -467,7 +475,7 @@ void sprites_deinit()
     al_destroy_bitmap(sprites.enemy_hard.right[3]);
     al_destroy_bitmap(sprites.enemy_hard.right[4]);
 
-
+    al_destroy_bitmap(sprites.enemy_hard.trapped);
 
     al_destroy_bitmap(sprites.enemy_hard.throw);
 
@@ -596,26 +604,26 @@ static void render_enemy_easy_move(stENEMY* enemy) {
     enemy_easy_scale_disp(sprites.enemy_easy.curr_move, enemy->obj.phy.pos.x, enemy->obj.phy.pos.y, SCALE, SCALE, FLAG_0);
 
 }
-static void render_enemy_easy_trapped(stENEMY* enemy) {
-    if (enemy == NULL) {
-        return;
-    }
-
-
-    switch (enemy->state)
-    {
-    case eENEMY_STATE_TRAPPED:
-        
-        enemy_easy_trapped_scale_disp(sprites.enemy_easy.trapped, enemy->obj.phy.pos.x, enemy->obj.phy.pos.y, SCALE, SCALE, FLAG_0);
-        break;
-    default:
-        break;
-
-    }
-    
-
-    
-}
+//static void render_enemy_easy_trapped(stENEMY* enemy) {
+//    if (enemy == NULL) {
+//        return;
+//    }
+//
+//
+//    switch (enemy->state)
+//    {
+//    case eENEMY_STATE_TRAPPED:
+//        
+//        enemy_easy_trapped_scale_disp(sprites.enemy_easy.trapped, enemy->obj.phy.pos.x, enemy->obj.phy.pos.y, SCALE, SCALE, FLAG_0);
+//        break;
+//    default:
+//        break;
+//
+//    }
+//    
+//
+//    
+//}
 static void render_enemy_hard_move(stENEMY* enemy) {
     if (enemy == NULL) return;
 
