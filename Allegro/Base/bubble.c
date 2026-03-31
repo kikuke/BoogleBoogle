@@ -1,4 +1,3 @@
-#ifndef _BUBBLE_H_
 #include "bubble.h"
 
 #define BUBBLES_N       (CONFIG_OBJECT_BUBBLE_MAX)
@@ -90,5 +89,3 @@ void bubble_update_frame(stBUBBLE* bubbles)
         bubbles[i].frame++;
     }
 }
-
-#endif // !_BUBBLE_H_

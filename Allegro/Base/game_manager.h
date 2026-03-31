@@ -2,12 +2,10 @@
 #define __GAME_MANAGER_H__
 
 #include "bugglebuggle.h"
-#include "object.h"
-#include "player.h"
-#include "bubble.h"
-#include "map.h"
+#include "bubble.h" 
 #include "score.h"
-#include "enemy.h"
+#include "map.h"
+
 /************************************************/
 /*          Global Function Declaration         */
 /************************************************/

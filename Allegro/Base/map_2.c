@@ -1,4 +1,5 @@
-#include "map.h"
+#include "map_2.h"
+#include "bugglebuggle.h"
 
 static int stage2[CONFIG_MAP_Y_MAX][CONFIG_MAP_X_MAX] =
 {

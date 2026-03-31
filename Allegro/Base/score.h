@@ -2,7 +2,6 @@
 #define __SCORE_H__
 
 #include <allegro5/allegro_font.h>
-#include "object.h"
 #include "enemy.h"
 
 #define STAGE_NUM_TOT (3)

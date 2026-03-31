@@ -2,6 +2,7 @@
 
 #include "player.h"
 #include "game_manager.h"
+#include <stdio.h>
 
 /* Player Movement Settings */
 #define PLAYER_SPEED             (2.0)

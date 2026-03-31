@@ -1,10 +1,10 @@
 #include <string.h>
 #include "game_manager.h"
 #include "collision.h"
-#include "player.h"
+#include "player.h" 
 #include "physics.h"
-#include "enemy.h"
-#include "bubble.h"
+#include "enemy.h"        
+#include "object.h" 
 #include "map_1.h"
 #include "map_2.h" 
 #include "map_3.h"
@@ -194,17 +194,16 @@ void GAME_MANAGER_CheckCollision(void)
 {
 	/* Step 1. Check Map */
 	for (int iTile = 0; iTile < CONFIG_OBJECT_MAP_MAX; ++iTile) {
-		stOBJECT* tile = &map[iTile].obj;
+		stTILE* tile = &map[iTile];
 
-		if (tile->is_active == false)
+		if (tile->obj.is_active == false)
 			continue;
 
 		for (int iPlayer = 0; iPlayer < CONFIG_OBJECT_PLAYER_MAX; ++iPlayer) {
-			stPLAYER* pPlayer = &player[iPlayer];
-			if (pPlayer->obj.is_active == false)
-				continue;
-
-			Collide_Object_Tile(pPlayer, tile);
+			stOBJECT* obj = &player[iPlayer].obj;
+			if (obj->is_active == true) {
+				Collide_Object_Tile(obj, tile);
+			}
 		}
 		for (int iEnemy = 0; iEnemy < CONFIG_OBJECT_ENEMY_MAX; ++iEnemy) {
 			stOBJECT* obj = &enemy[iEnemy].obj;

@@ -16,9 +16,6 @@
 #include "keyboard.h"
 #include "game_manager.h"
 
-int stage_timer_arr[STAGE_NUM_TOT] = { 0 };	// [ s1, s2, s3 ]
-int enemy_num_arr[3] = { 0 };			// [ Basic, Throw, Boss ]
-
 stBOARD leaderboard[11];
 
 void Score_Add(ALLEGRO_FONT* font, const char *name, int score) {
@@ -111,7 +108,7 @@ void Score_Print(ALLEGRO_FONT* font, stSTAGE_INFO* stage_info) {
         "Score Board");
 
     al_draw_textf(font, al_map_rgb(255, 255, 255), 70, 25, 0,
-        "Name: %-12s", keboard_get_name());
+        "Name: %-12s", keyboard_get_name());
 
     al_draw_textf(font, al_map_rgb(255, 255, 255), 70, 40, 0,
         "Basic: %2d      Fly: %2d", basic, fly);

@@ -289,7 +289,7 @@ void render_draw_ingame(void)
 
 void render_draw_score(void)
 {
-    Score_Add(font, keboard_get_name(), GAME_MANAGER_GetScore());
+    Score_Add(font, keyboard_get_name(), GAME_MANAGER_GetScore());
     Score_Get();
     Score_Print(font, GAME_MANAGER_GetStageInfo());
 }
@@ -989,7 +989,7 @@ void render_draw_name() {
     al_clear_to_color(al_map_rgb(0, 0, 0));
     
     al_draw_textf(font, al_map_rgb(255, 255, 255), 70, 80, 0,
-        "Name : %-12s", keboard_get_name());
+        "Name : %-12s", keyboard_get_name());
 
     al_draw_textf(font, al_map_rgb(255, 255, 255), 70, 215, 0,
         "Press Space bar to Next");

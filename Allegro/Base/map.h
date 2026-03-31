@@ -1,9 +1,7 @@
 #ifndef __MAP_H__
 #define __MAP_H__
 
-#include "bugglebuggle.h"
 #include "enemy.h"
-#include "object.h"
 
 typedef struct {
 	stOBJECT obj;

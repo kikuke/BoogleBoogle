@@ -1,7 +1,9 @@
 #ifndef __KEYBOARD_H__
 #define __KEYBOARD_H__
 
+#include <stdbool.h>
 #include <allegro5/allegro5.h>
+#include "bugglebuggle.h"      // eMAIN_STATE Á¤ÀÇ
 
 /************************************************/
 /*               Macro Definition               */
@@ -20,7 +22,7 @@ void keyboard_processing_ingame(void);
 bool keyboard_processing_name(void);
 bool keyboard_processing_score(void);
 
-const char* keboard_get_name(void);
+const char* keyboard_get_name(void);
 
 #if (DEBUG_STAGE == 1)
 bool test_next_stage_input(void);

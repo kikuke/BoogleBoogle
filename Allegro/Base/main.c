@@ -5,7 +5,6 @@
 #include "bugglebuggle.h"
 #include "util.h"
 #include "keyboard.h"
-#include "player.h"
 #include "render.h"
 #include "game_manager.h"
 

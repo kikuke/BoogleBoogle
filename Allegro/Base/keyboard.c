@@ -1,7 +1,8 @@
-#include "bugglebuggle.h"
+
 #include "keyboard.h"
 #include "game_manager.h"
-#include "player.h"
+#include "util.h"
+
 
 /************************************************/
 /*         Local Variable Declaration           */
@@ -96,7 +97,7 @@ bool keyboard_processing_score(void)
     return key[ALLEGRO_KEY_SPACE] & KEY_SEEN;
 }
 
-const char* keboard_get_name(void)
+const char* keyboard_get_name(void)
 {
     return player_name.data;
 }
