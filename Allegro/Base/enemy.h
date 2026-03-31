@@ -96,6 +96,7 @@ void Throw_Update(stOBJECT* throw, stOBJECT* target_player);					// update throw
 // Update state all
 void Enemy_Update_ALL(stENEMY* enemy, stPLAYER* player, stOBJECT* throw);
 void Throw_Update_ALL(stENEMY* enemy, stPLAYER* player, stOBJECT* throw);
+void Throw_Reset(stOBJECT* throw_pool);
 
 // state manage
 void Enemy_ChangeState(stENEMY* enemy, eENEMY_STATE newState);					// change the enemy's current state

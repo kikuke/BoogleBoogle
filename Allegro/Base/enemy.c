@@ -17,11 +17,11 @@
 
 
 #define ENEMY_BASIC_SPEED           (1.2f)
-#define ENEMY_BASIC_SPEED_ANGRY     (1.4f)
+#define ENEMY_BASIC_SPEED_ANGRY     (2.4f)
 #define ENEMY_BASIC_JUMP            (-4.2f)
 #define ENEMY_BASIC_JUMP_CHANCE     (5) // 1 to 9
 #define ENEMY_THROW_SPEED           (0.8f)
-#define ENEMY_THROW_SPEED_ANGRY     (1.2f)
+#define ENEMY_THROW_SPEED_ANGRY     (1.6f)
 #define THROW_SPEED                 (2.5)
 
 /************************************************/
@@ -339,6 +339,29 @@ stOBJECT* Throw_Create(stOBJECT* throw_pool, int x, int y) {
         }
     }
     return NULL;
+}
+
+void Throw_Reset(stOBJECT* throw_pool) {
+    if (!throw_pool) return;
+    for (int i = 0; i < CONFIG_OBJECT_ENEMY_ATTACK_MAX; ++i) {
+        stOBJECT* obj = &throw_pool[i];
+        stPHYSICS* phy = &obj->phy;
+        stCOLLISION* coll = &obj->coll;
+        stRENDER* rend = &obj->rend;
+
+        obj->is_active = false;
+        rend->is_active = false;
+
+        phy->speed.x = 0.0f;
+        phy->speed.y = 0.0f;
+        phy->pos.x = 0.0f;
+        phy->pos.y = 0.0f;
+
+        coll->box.width = CONFIG_COLLISION_TILE_SIZE;
+        coll->box.height = CONFIG_COLLISION_TILE_SIZE;
+        coll->tag = eOBJ_TAG_ENEMY_ATTACK;
+        coll->is_static = false;
+    }
 }
 
 void Throw_MoveTowardPlayer(stOBJECT* throw, stOBJECT* target_player) {

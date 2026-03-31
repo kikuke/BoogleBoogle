@@ -737,7 +737,7 @@ static void render_enemy_hard_trapped(stENEMY* enemy) {
 static void render_enemy_throw_attack(stOBJECT* enemy_throw) {
     if (enemy_throw == NULL) return;
     for (int i = 0; i < CONFIG_OBJECT_ENEMY_ATTACK_MAX; ++i) {
-        if (enemy_throw[i].rend.is_active) {
+        if (enemy_throw[i].is_active) {
             enemy_throw_scale_disp(sprites.enemy_hard.throw, enemy_throw[i].phy.pos.x, enemy_throw[i].phy.pos.y, ENEMY_THROW_SCALE, ENEMY_THROW_SCALE, FLAG_0);
         }
     }
