@@ -285,6 +285,7 @@ void GAME_MANAGER_UpdateObject(void)
 static void GAME_MANAGER_SetStage(eGAME_STAGE stage)
 {
 	Throw_Reset(enemy_attack);
+	bubble_init(bubble);
 
 	stSTAGE_INFO* info = &game_manager.stage_info[stage];
 	memset(info, 0x00, sizeof(stSTAGE_INFO));

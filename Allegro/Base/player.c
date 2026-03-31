@@ -8,8 +8,8 @@
 
 // fix it later
 const static double PLAYER_SPEED = 2.0;
-#define REND_DURATION		(20)
-#define BUBBLE_COOL_TIME	(40)
+#define REND_DURATION		(10)
+#define BUBBLE_COOL_TIME	(20)
 
 
 void init_player(stPLAYER* player)
